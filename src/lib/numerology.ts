@@ -11,10 +11,11 @@ const VOWELS = new Set(["A","E","I","O","U"]);
 /** Reduce to single digit, preserving master numbers 11, 22, 33.
  *  20 is a hidden 11 and never reduces to 2 — a pure 2 stays 2. */
 export function reduce(n: number): number {
-  if (n === 20) return 11;
   if (n <= 9 || MASTER.has(n)) return n;
   const next = [...String(n)].reduce((a, d) => a + +d, 0);
-  return reduce(next);
+  const r = reduce(next);
+  // Only a pure 2 is 2; anything bigger that lands on 2 is 11 energy.
+  return r === 2 ? 11 : r;
 }
 
 /** Calendar day-of-month energy: 18 → 9, 20 → hidden 11, 2 → pure 2. */

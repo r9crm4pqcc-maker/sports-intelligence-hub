@@ -18,6 +18,7 @@ export function annualSportsCode(year: number): { code: number; energy: number; 
   while (energy > 9 && ![11, 22, 33].includes(energy)) {
     energy = [...String(energy)].reduce((sum, digit) => sum + Number(digit), 0);
   }
+  if (energy === 2 && code !== 2) energy = 11;
   return { code, energy, label: code === energy ? String(code) : `${code}/${energy}` };
 }
 

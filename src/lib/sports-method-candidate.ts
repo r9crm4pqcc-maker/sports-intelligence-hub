@@ -20,7 +20,7 @@ function digitSum(value: number): number {
 function reducePreservingMasters(value: number): number {
   let result = value;
   while (result > 9 && !MASTER_NUMBERS.has(result)) result = digitSum(result);
-  return result;
+  return result === 2 && value !== 2 ? 11 : result;
 }
 
 /**

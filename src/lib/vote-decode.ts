@@ -45,10 +45,11 @@ export interface Vote {
 
 const MASTERS = new Set([11, 22, 33]);
 const sumDigits = (n: number) => String(Math.abs(n)).split("").reduce((a, d) => a + Number(d), 0);
+/** Only a pure 2 is 2; any bigger number that reduces to 2 (20, 101, 200…) reads as 11. */
 export function reduceNum(n: number): number {
   let x = n;
   while (x > 9 && !MASTERS.has(x)) x = sumDigits(x);
-  return x;
+  return x === 2 && Math.abs(n) !== 2 ? 11 : x;
 }
 export interface Num { compound: number; reduced: number }
 export function lifePath(y: number, m: number, d: number): Num {
@@ -114,11 +115,11 @@ export function learnedNumberRelation(a: number, b: number): "worst" | "enemy" |
 export const SIGNS = ["Rat", "Ox", "Tiger", "Cat", "Dragon", "Snake", "Horse", "Goat", "Monkey", "Rooster", "Dog", "Pig"] as const;
 export type Sign = typeof SIGNS[number];
 export const chineseSign = (year: number): Sign => SIGNS[(((year - 4) % 12) + 12) % 12];
-/** Fixed solar-month spans. Tiger opens at Lichun on Feb 4. Rat can open Dec 6 or Dec 7; Pig closes Dec 5, so Rat starts Dec 6. Cat is Mao. Goat is the Wei month. */
+/** Fixed solar-month spans; every animal month turns on the 6th (Tiger Feb 6 – Mar 5). Rat can open Dec 6 or Dec 7; Pig closes Dec 5, so Rat starts Dec 6. Cat is Mao. Goat is the Wei month. */
 export const MONTH_SPAN: Record<Sign, string> = {
   Rat: "Dec 6 / Dec 7 – Jan 5",
-  Ox: "Jan 6 – Feb 3",
-  Tiger: "Feb 4 – Mar 5",
+  Ox: "Jan 6 – Feb 5",
+  Tiger: "Feb 6 – Mar 5",
   Cat: "Mar 6 – Apr 5",
   Dragon: "Apr 6 – May 5",
   Snake: "May 6 – Jun 5",
@@ -130,7 +131,6 @@ export const MONTH_SPAN: Record<Sign, string> = {
   Pig: "Nov 6 – Dec 5",
 };
 export function chineseMonthSign(month: number, day: number): Sign {
-  if ((month === 2 && day >= 4) || (month === 3 && day < 6)) return "Tiger";
   const m = day >= 6 ? month : month - 1;
   return SIGNS[((m % 12) + 12) % 12];
 }
@@ -139,9 +139,15 @@ export const CLASHES: [Sign, Sign][] = [["Rat", "Horse"], ["Ox", "Goat"], ["Tige
 export function signRelation(a: Sign, b: Sign): "friend" | "enemy" | "neutral" {
   if (CLASHES.some(([x, y]) => (x === a && y === b) || (x === b && y === a))) return "enemy";
   if (TRINES.some(t => t.includes(a) && t.includes(b))) return "friend";
-  // CUE also counts Rat & Ox and Horse & Goat as friendly.
-  if ([["Rat", "Ox"], ["Horse", "Goat"]].some(([x, y]) => (x === a && y === b) || (x === b && y === a))) return "friend";
+  // Rat & Ox are soulmates — the only friendly pair outside the four groups.
+  if ((a === "Rat" && b === "Ox") || (a === "Ox" && b === "Rat")) return "friend";
   return "neutral";
+}
+/** Named bonds: Rat & Ox are soulmates; Horse (7th sign) & Dog (11th sign) are the greatest friends, not soulmates. */
+export function signBond(a: Sign, b: Sign): "soulmates" | "best friends" | null {
+  if ((a === "Rat" && b === "Ox") || (a === "Ox" && b === "Rat")) return "soulmates";
+  if ((a === "Horse" && b === "Dog") || (a === "Dog" && b === "Horse")) return "best friends";
+  return null;
 }
 /** Liu He secret friends. Cat stands in for Rabbit, matching this chart. */
 const SECRET_FRIEND: Record<Sign, Sign> = { Rat: "Ox", Ox: "Rat", Tiger: "Pig", Pig: "Tiger", Cat: "Dog", Dog: "Cat", Dragon: "Rooster", Rooster: "Dragon", Snake: "Monkey", Monkey: "Snake", Horse: "Goat", Goat: "Horse" };

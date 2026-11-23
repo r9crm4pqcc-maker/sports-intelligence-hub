@@ -2,8 +2,9 @@ export interface RecordStats { record?: string; streak?: string; h2h?: string; h
 export interface RecordVibration { label: string; value: number; root: number }
 export function vibrationRoot(n: number): number {
   let value=Math.abs(n);
+  const start=value;
   while(value>9 && ![11,22,33].includes(value)) value=[...String(value)].reduce((sum,d)=>sum+Number(d),0);
-  return value;
+  return value===2 && start!==2 ? 11 : value;
 }
 export function parseSportsRecord(record?: string) {
   const m=record?.match(/^\s*(\d+)\s*-\s*(\d+)(?:\s*-\s*(\d+))?/);

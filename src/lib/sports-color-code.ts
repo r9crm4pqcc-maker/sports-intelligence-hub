@@ -7,7 +7,7 @@ export const COLOR_PRIMARY: Record<string, number | readonly number[]> = {
   azure: 8, bronze: 8, ivory: 11, cream: 11, beige: 1, bisque: 1, lime: 3, auburn: 5,
   olive: 9, lavender: 9, denim: 9, "forest green": 11, "light blue": 22,
   "baby blue": 22, "electric blue": 7, "aqua marine": 8, aqua: 8, teal: 8,
-  silver: 1, pewter: 1, burgundy: 1, scarlet: 9,
+  silver: 4, pewter: 1, burgundy: 1, scarlet: 9,
 };
 export function learnedColorNumbers(name: string): number[] {
   const n = name.trim().toLowerCase();
@@ -35,7 +35,7 @@ export interface TeamLogoColorCode {
 function reduceColorCode(value: number): number {
   let result = value;
   while (result > 9 && !COLOR_MASTERS.has(result)) result = digitSum(result);
-  return result;
+  return result === 2 && value !== 2 ? 11 : result;
 }
 
 /** Sum each distinct mapped logo color once; slash-mapped colors use their compound value. */

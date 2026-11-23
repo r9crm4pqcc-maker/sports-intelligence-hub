@@ -3,8 +3,9 @@ import { CITY_TZ, instantAtVenue } from "./sports-decode";
 
 const sum = (n: number) => [...String(Math.abs(n))].reduce((a, d) => a + Number(d), 0);
 export function sportsRoot(n: number): number {
+  const start = n;
   while (n > 9 && ![11, 22, 33].includes(n)) n = sum(n);
-  return n;
+  return n === 2 && start !== 2 ? 11 : n;
 }
 /** Sports-only month boundary; the personal calendar is intentionally unchanged. */
 export function sportsCycles(birthMonth: number, birthDay: number, year: number, month: number, day: number) {

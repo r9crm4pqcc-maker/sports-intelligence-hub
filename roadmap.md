@@ -1,11 +1,13 @@
 # Roadmap
 
 - [x] Import Life Code / Sports AI app from zip
-- [x] Sports AI: Story Reading (reading-method doc) on every game, own hit record
-- [x] Sports AI: document sports rules (betting number meanings, Personal Day first, 9-streak ending, championship warnings, Fatal stronger than Challenging)
-- [x] Sports AI: Universal Year, Universal Month and planet transits in game-day energies
-- [x] Sports AI: exact college program founding dates from the document
-- [x] App: Knowledge Library with every article and guide (with working Life Path calculator)
-- [x] App: related-reading links on Western, Vedic, Chart, Calendar, Timing, Letterology, People, Sports pages; live "sky right now" in both zodiacs
-- [x] House rules check (most already match)
-- [ ] Waiting on user: replace vs beside Learned Code; perspective label; Tiger month Feb 4 vs 6; Horse & Goat; 2→11 / silver / orange
+- [x] Story Reading on every game, own hit record
+- [x] Document sports rules, Universal Year/Month, transits, college dates
+- [x] Knowledge Library + related links + sky-now cards
+- [ ] Label article perspective "The Sauce"; show "#HOMAGE GG33 & CUE" in the app
+- [ ] Animal months change on the 6th (Tiger Feb 6 – Mar 5, Ox Jan 6 – Feb 5)
+- [ ] Zodiac: Rat & Ox soulmates, Horse & Dog best friends; drop extra Horse & Goat friendship (document)
+- [ ] Only a pure 2 is 2; any bigger number reducing to 2 reads as 11
+- [ ] Silver = 4, orange = 33
+- [ ] Story Reading feeds Learned Code picks (keep Learned Code), measured on saved games
+- [ ] Tests, verify, commit
