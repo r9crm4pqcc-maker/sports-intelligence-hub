@@ -1,5 +1,4 @@
 import { Card, Page } from "./kit";
-import { RelatedReading } from "./related-reading";
 import { SkyNow } from "./sky-now";
 
 const WEST = [
@@ -89,7 +88,6 @@ export default function SkyPage() {
         </ul>
       </Card>
       <SkyNow primary="tropical" />
-      <RelatedReading page="western" />
     </Page>
   );
 }

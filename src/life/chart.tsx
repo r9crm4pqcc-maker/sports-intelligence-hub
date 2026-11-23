@@ -5,7 +5,6 @@ import { Card, CardTitle, Page, Stat, Tag } from "./kit";
 import { buildChart, animalLabel, nameReading, NUMBER_MEANINGS_FULL, type BirthProfile } from "@/lib/life-studio";
 import { calcPersonalYear } from "@/lib/numerology";
 import { PATH_28, OX_YEAR, OX_MATCHES, OX_NEXT_12, VIRGO, VIRGO_MATCHES, FRIENDLY, isPath28, yearFace, yearCopy, oxGoodYears, oxEnemyYears, birthPair } from "@/lib/path28";
-import { RelatedReading } from "./related-reading";
 
 function useNow() {
   const [now, setNow] = useState({ y: 2026, m: 11, d: 4 });
@@ -143,7 +142,6 @@ export default function ChartPage() {
           );
         })()}
       </Card>
-      <RelatedReading page="chart" />
     </Page>
   );
 }

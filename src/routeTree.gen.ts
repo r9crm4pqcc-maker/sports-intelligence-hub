@@ -27,8 +27,6 @@ import { Route as VedicRouteImport } from './routes/vedic'
 import { Route as DatesIndexRouteImport } from './routes/dates.index'
 import { Route as DatesSubRouteImport } from './routes/dates.$sub'
 import { Route as DaySubRouteImport } from './routes/day.$sub'
-import { Route as LibraryIndexRouteImport } from './routes/library.index'
-import { Route as LibraryIdRouteImport } from './routes/library.$id'
 import { Route as ApiSportsDataEspnRouteImport } from './routes/api/sports-data/espn'
 import { Route as ApiSportsDataRotowireNhlLineupsRouteImport } from './routes/api/sports-data/rotowire-nhl-lineups'
 
@@ -122,16 +120,6 @@ const DaySubRoute = DaySubRouteImport.update({
   path: '/day/$sub',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LibraryIndexRoute = LibraryIndexRouteImport.update({
-  id: '/library/',
-  path: '/library/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LibraryIdRoute = LibraryIdRouteImport.update({
-  id: '/library/$id',
-  path: '/library/$id',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ApiSportsDataEspnRoute = ApiSportsDataEspnRouteImport.update({
   id: '/api/sports-data/espn',
   path: '/api/sports-data/espn',
@@ -162,9 +150,7 @@ export interface FileRoutesByFullPath {
   '/vedic': typeof VedicRoute
   '/dates/$sub': typeof DatesSubRoute
   '/day/$sub': typeof DaySubRoute
-  '/library/$id': typeof LibraryIdRoute
   '/dates/': typeof DatesIndexRoute
-  '/library/': typeof LibraryIndexRoute
   '/api/sports-data/espn': typeof ApiSportsDataEspnRoute
   '/api/sports-data/rotowire-nhl-lineups': typeof ApiSportsDataRotowireNhlLineupsRoute
 }
@@ -186,9 +172,7 @@ export interface FileRoutesByTo {
   '/vedic': typeof VedicRoute
   '/dates/$sub': typeof DatesSubRoute
   '/day/$sub': typeof DaySubRoute
-  '/library/$id': typeof LibraryIdRoute
   '/dates': typeof DatesIndexRoute
-  '/library': typeof LibraryIndexRoute
   '/api/sports-data/espn': typeof ApiSportsDataEspnRoute
   '/api/sports-data/rotowire-nhl-lineups': typeof ApiSportsDataRotowireNhlLineupsRoute
 }
@@ -211,9 +195,7 @@ export interface FileRoutesById {
   '/vedic': typeof VedicRoute
   '/dates/$sub': typeof DatesSubRoute
   '/day/$sub': typeof DaySubRoute
-  '/library/$id': typeof LibraryIdRoute
   '/dates/': typeof DatesIndexRoute
-  '/library/': typeof LibraryIndexRoute
   '/api/sports-data/espn': typeof ApiSportsDataEspnRoute
   '/api/sports-data/rotowire-nhl-lineups': typeof ApiSportsDataRotowireNhlLineupsRoute
 }
@@ -237,9 +219,7 @@ export interface FileRouteTypes {
     | '/vedic'
     | '/dates/$sub'
     | '/day/$sub'
-    | '/library/$id'
     | '/dates/'
-    | '/library/'
     | '/api/sports-data/espn'
     | '/api/sports-data/rotowire-nhl-lineups'
   fileRoutesByTo: FileRoutesByTo
@@ -261,9 +241,7 @@ export interface FileRouteTypes {
     | '/vedic'
     | '/dates/$sub'
     | '/day/$sub'
-    | '/library/$id'
     | '/dates'
-    | '/library'
     | '/api/sports-data/espn'
     | '/api/sports-data/rotowire-nhl-lineups'
   id:
@@ -285,9 +263,7 @@ export interface FileRouteTypes {
     | '/vedic'
     | '/dates/$sub'
     | '/day/$sub'
-    | '/library/$id'
     | '/dates/'
-    | '/library/'
     | '/api/sports-data/espn'
     | '/api/sports-data/rotowire-nhl-lineups'
   fileRoutesById: FileRoutesById
@@ -310,9 +286,7 @@ export interface RootRouteChildren {
   VedicRoute: typeof VedicRoute
   DatesSubRoute: typeof DatesSubRoute
   DaySubRoute: typeof DaySubRoute
-  LibraryIdRoute: typeof LibraryIdRoute
   DatesIndexRoute: typeof DatesIndexRoute
-  LibraryIndexRoute: typeof LibraryIndexRoute
   ApiSportsDataEspnRoute: typeof ApiSportsDataEspnRoute
   ApiSportsDataRotowireNhlLineupsRoute: typeof ApiSportsDataRotowireNhlLineupsRoute
 }
@@ -445,20 +419,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DaySubRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/library/': {
-      id: '/library/'
-      path: '/library'
-      fullPath: '/library/'
-      preLoaderRoute: typeof LibraryIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/library/$id': {
-      id: '/library/$id'
-      path: '/library/$id'
-      fullPath: '/library/$id'
-      preLoaderRoute: typeof LibraryIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/api/sports-data/espn': {
       id: '/api/sports-data/espn'
       path: '/api/sports-data/espn'
@@ -494,9 +454,7 @@ const rootRouteChildren: RootRouteChildren = {
   VedicRoute: VedicRoute,
   DatesSubRoute: DatesSubRoute,
   DaySubRoute: DaySubRoute,
-  LibraryIdRoute: LibraryIdRoute,
   DatesIndexRoute: DatesIndexRoute,
-  LibraryIndexRoute: LibraryIndexRoute,
   ApiSportsDataEspnRoute: ApiSportsDataEspnRoute,
   ApiSportsDataRotowireNhlLineupsRoute: ApiSportsDataRotowireNhlLineupsRoute,
 }

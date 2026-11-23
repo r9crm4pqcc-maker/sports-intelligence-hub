@@ -14,7 +14,7 @@ import type { Tri } from "@/lib/full-decode";
 import { useOverrides } from "@/lib/date-overrides";
 import { buildMatchBrief, type MatchBrief, type Tone, type BriefEntity } from "@/lib/sports-brief";
 import { buildStoryReading, type StoryReading } from "@/lib/sports-story-reading";
-import { RelatedReading } from "@/life/related-reading";
+import { blendStoryPick } from "@/lib/sports-story-blend";
 import { cipherLine, type GematriaDecode, type GematriaSideRead } from "@/lib/sports-gematria";
 import { decodeLearnedGematria } from "@/lib/learned-screenshot-signals";
 import { venueLocalHour, venueTimeZone } from "@/lib/sports-cycles";
@@ -145,6 +145,21 @@ function BriefChunk({ brief, titles }: { brief: MatchBrief; titles: string[] }) 
 }
 
 type BoardRow = { id: string; matchup: string; pick: string; pct: number; allow: number | null; open: boolean; venue: string; time: string; record: string; result: "hit" | "miss" | "push" | "open"; storyPick?: string; storyResult?: "hit" | "miss" | "push" | "open" };
+
+/** One Story Reading per game, built from the same decode the card shows. */
+function storyFor(full: ReturnType<typeof computeFullDecode>, v: VoteResult, game: ESPNGame, league: string, year: number, month: number, day: number, learnedRelation: boolean): StoryReading {
+  return buildStoryReading({
+    away: game.awayTeam, home: game.homeTeam, dateLabel: `${month}/${day}/${year}`, league, eventName: game.eventName,
+    year, month, day, dayLp: full.ge.lp, secondary: full.ge.secondary, doyRoot: full.ge.doyRoot, woyRoot: full.ge.woyRoot,
+    moonPhase: full.ge.moon.phase, yearSign: v.yearSign, monthSign: v.monthSign,
+    relation: learnedRelation ? learnedNumberRelation : numberRelation,
+    entities: full.reads.map((x) => ({
+      side: x.e.side, kind: x.e.kind, name: x.e.name, role: x.e.role, date: x.e.date, record: x.e.record, streak: x.e.streak,
+      colors: x.e.colors, jersey: x.e.jersey,
+      read: x.r ? { lp: x.r.lp, py: x.r.py, pm: x.r.pm, pd: x.r.pd, pw: x.r.pw, ph: x.r.ph, hourKnown: x.r.hourKnown, lucky: x.r.lucky, today: x.r.matrix.today } : null,
+    })),
+  });
+}
 
 function StoryReadingBlock({ story }: { story: StoryReading }) {
   const [copied, setCopied] = useState(false);
@@ -437,7 +452,11 @@ function slateLeg(game: ESPNGame, year: number, month: number, day: number, leag
   ], [year, month, day], kickoff, learned ? {} : ov, game.startTime, venueTimeZone(venue.city, venue.stadium), learned && codeMode === "learned");
   const rawHome = v.home + full.home, rawAway = v.away + full.away;
   const totalHome = learned ? v.home : rawHome, totalAway = learned ? v.away : rawAway;
-  const finalPick: "home" | "away" = totalHome === totalAway ? v.pick : totalHome > totalAway ? "home" : "away";
+  const basePick: "home" | "away" = totalHome === totalAway ? v.pick : totalHome > totalAway ? "home" : "away";
+  const learnedStory = learned && codeMode === "learned";
+  const finalPick: "home" | "away" = learnedStory
+    ? blendStoryPick(league, { home: totalHome, away: totalAway, pick: basePick }, storyFor(full, v, game, league, year, month, day, true)).pick
+    : basePick;
   const pile = totalHome + totalAway || 1;
   const split = splitPct(totalHome, totalAway);
   const pct = learned ? v.confidence : (finalPick === "home" ? split.homePct : split.awayPct);
@@ -683,7 +702,11 @@ function GameCard({ game, year, month, day, idx, league, learned, codeMode, lear
   const rawHome = v.home + full.home, rawAway = v.away + full.away;
   const totalHome = learned ? v.home : rawHome, totalAway = learned ? v.away : rawAway;
   const recalculatedPick: "home" | "away" = totalHome === totalAway ? v.pick : totalHome > totalAway ? "home" : "away";
-  const finalPick: "home" | "away" = codeMode === "learned" ? recalculatedPick : savedLearnedPrediction?.pick ?? recalculatedPick;
+  const story = useMemo(() => storyFor(full, v, game, league, year, month, day, learned && codeMode === "learned"),
+    [full, v, game, league, year, month, day, learned, codeMode]);
+  // Story Reading pushes the Learned Code pick by each sport's fitted strength.
+  const blended = blendStoryPick(league, { home: totalHome, away: totalAway, pick: recalculatedPick }, learned && codeMode === "learned" ? story : null);
+  const finalPick: "home" | "away" = codeMode === "learned" ? blended.pick : savedLearnedPrediction?.pick ?? recalculatedPick;
   const pickName = finalPick === "home" ? game.homeTeam : game.awayTeam;
   const brief = useMemo(() => {
     const signOf = (name: string) => v.entities.find((e) => e.name === name)?.yearSign;
@@ -694,17 +717,7 @@ function GameCard({ game, year, month, day, idx, league, learned, codeMode, lear
     }));
     return buildMatchBrief(v, mapped, { home: game.homeTeam, away: game.awayTeam, month });
   }, [v, full, game.homeTeam, game.awayTeam, month]);
-  const story = useMemo(() => buildStoryReading({
-    away: game.awayTeam, home: game.homeTeam, dateLabel: `${month}/${day}/${year}`, league, eventName: game.eventName,
-    year, month, day, dayLp: full.ge.lp, secondary: full.ge.secondary, doyRoot: full.ge.doyRoot, woyRoot: full.ge.woyRoot,
-    moonPhase: full.ge.moon.phase, yearSign: v.yearSign, monthSign: v.monthSign,
-    relation: learned && codeMode === "learned" ? learnedNumberRelation : numberRelation,
-    entities: full.reads.map((x) => ({
-      side: x.e.side, kind: x.e.kind, name: x.e.name, role: x.e.role, date: x.e.date, record: x.e.record, streak: x.e.streak,
-      colors: x.e.colors, jersey: x.e.jersey,
-      read: x.r ? { lp: x.r.lp, py: x.r.py, pm: x.r.pm, pd: x.r.pd, pw: x.r.pw, ph: x.r.ph, hourKnown: x.r.hourKnown, lucky: x.r.lucky, today: x.r.matrix.today } : null,
-    })),
-  }), [full, v.yearSign, v.monthSign, game.awayTeam, game.homeTeam, game.eventName, league, year, month, day, learned, codeMode]);
+
   const gem = useMemo(() => decodeLearnedGematria(predictionInput), [predictionInput]);
   const stackGap = Math.abs(totalHome - totalAway);
   const split = splitPct(totalHome, totalAway);
@@ -938,6 +951,7 @@ function GameCard({ game, year, month, day, idx, league, learned, codeMode, lear
             {storyHit !== null && <p className="text-[10px] font-bold" style={{ color: storyHit ? GREEN : ROSE }}>{storyHit ? "HIT" : "MISS"}</p>}
           </div>
           <p className="mt-0.5 text-[10px] leading-relaxed text-white/55">{story.confidenceWhy}</p>
+          {blended.storyMoved && <p className="mt-1 text-[10px] font-bold" style={{ color: YELLOW }} data-testid="story-moved">Story Reading moved the Learned Code pick to {pickName}.</p>}
         </div>
         <button type="button" onClick={() => setOpenDecode((v) => !v)} className="mt-3 w-full rounded-lg py-2 text-[11px] font-bold tracking-[0.12em]" style={{ background: "rgba(255,255,255,0.04)", color: "rgba(255,255,255,0.75)", border: "1px solid rgba(255,255,255,0.08)" }}>
           {openDecode ? "HIDE FULL DECODE" : "SHOW FULL DECODE"}
@@ -1793,7 +1807,6 @@ export default function SportsPredictionPage() {
           {games.map((g, i) => <GameCard key={`${code}-${currentSlateScope}-${league}-${weightVersion}-${refreshRevision}-${g.id}`} game={g} year={year} month={month} day={day} idx={i} league={league} learned={true} codeMode={code} learningRevision={learningRevision} refreshRevision={refreshRevision} onReady={code === "learned" ? onReady : undefined} prices={prices} outs={outs} catalog={catalog} />)}
         </div>
       ))}
-      <RelatedReading page="sports" title="Sports notes and knowledge" />
     </div>
   );
 }

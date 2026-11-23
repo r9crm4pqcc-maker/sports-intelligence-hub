@@ -6,7 +6,7 @@
 // questions in order, resolves conflicts, and names the side whose story is
 // clearer. Internally it still has to compare, so each layer only records which
 // side it speaks for and whether it contradicts that side.
-import { numberRelation, signRelation, chineseSign, colorVsEnergy, reduceNum, fmt, type Num, type Sign } from "./vote-decode";
+import { numberRelation, signRelation, signBond, chineseSign, colorVsEnergy, reduceNum, fmt, type Num, type Sign } from "./vote-decode";
 
 export type StorySide = "home" | "away";
 export type Relation = (a: number, b: number) => "worst" | "enemy" | "soulmate" | "friend" | "same" | "neutral";
@@ -222,7 +222,7 @@ export function buildStoryReading(g: StoryGameInput): StoryReading {
     `Secondary energy ${fmt(g.secondary)}: the undercurrent is ${say(MOOD, g.secondary.reduced).replace(/^is /, "")}.`,
     `Day of year root ${g.doyRoot}, week of year root ${g.woyRoot}. Universal Year ${uy}, Universal Month ${um}.${highStakes ? " Stacked 8s / master numbers at the game level raise the stakes of every game today." : ""}`,
     `Moon: ${g.moonPhase}. ${waning ? "A waning moon backs teams closing something out or playing with urgency." : waxing ? "A waxing moon backs teams that are building." : "Full/new moon: peak or reset energy; secondary."}`,
-    `Chinese ${g.yearSign} year and ${g.monthSign} month are ${animals === "friend" ? "in harmony" : animals === "enemy" ? "in conflict" : "neutral to each other"} (supporting evidence only).`,
+    `Chinese ${g.yearSign} year and ${g.monthSign} month are ${signBond(g.yearSign, g.monthSign) ?? (animals === "friend" ? "in harmony" : animals === "enemy" ? "in conflict" : "neutral to each other")} (supporting evidence only).`,
   ] });
 
   // Section 3 + 4 — each side's full stack.

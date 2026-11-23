@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from "react";
 import { Link, useLocation } from "@/lib/wouter";
-import { CalendarDays, Target, Users, Layers, TrendingUp, Trophy, Sun, ChevronDown, ChevronRight, Menu, X, Zap, Home, UserRound, Type, Coins, Orbit, BookOpen } from "lucide-react";
+import { CalendarDays, Target, Users, Layers, TrendingUp, Trophy, Sun, ChevronDown, ChevronRight, Menu, X, Zap, Home, UserRound, Type, Coins, Orbit } from "lucide-react";
 
 const NAV = [
   { label: "Home", icon: Home, href: "/" },
@@ -14,7 +14,6 @@ const NAV = [
   { label: "Western", icon: Orbit, href: "/sky" },
   { label: "Vedic", icon: Orbit, href: "/vedic" },
   { label: "Friendly", icon: Layers, href: "/advanced" },
-  { label: "Knowledge Library", icon: BookOpen, href: "/library" },
   { label: "Sports AI", icon: Trophy, children: [
     { label: "Sports Prediction", href: "/sports-prediction" },
     { label: "Sports Database", href: "/sports-database" },
@@ -46,7 +45,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         <nav className="flex-1 overflow-y-auto p-2 space-y-px">
           {NAV.map(n => {
             const Icon = n.icon;
-            const active = n.href ? (n.href === "/library" ? loc.startsWith("/library") : loc === n.href) : !!n.children?.some(c => loc === c.href);
+            const active = n.href ? loc === n.href : !!n.children?.some(c => loc === c.href);
             const icon = <span className="shrink-0 w-5 flex items-center justify-center"><Icon size={15} style={{ color: active ? "#000" : undefined }} /></span>;
             if (n.href) return <Link key={n.label} href={n.href} onClick={close} className={`nav-item ${active ? "nav-item-active" : "nav-item-inactive"}`}>{icon}<span className="flex-1 truncate">{n.label}</span></Link>;
             return <div key={n.label}>
@@ -64,6 +63,8 @@ export function AppShell({ children }: { children: ReactNode }) {
         <div className="px-4 py-3 shrink-0" style={{ borderTop: "1px solid hsl(var(--sidebar-border))" }}>
           <div className="flex items-center gap-2"><div className="status-dot-active" /><span className="text-[11px] font-medium" style={{ color: "hsl(var(--muted-foreground))" }}>System Online</span></div>
           <p className="text-[10px] mt-0.5 font-medium" style={{ color: "rgba(255,255,255,0.4)" }}>{new Date().toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", year: "numeric" })}</p>
+          <p className="text-[11px] mt-2 font-bold tracking-[0.12em] font-display" style={{ color: "#FF6A00" }}>THE SAUCE</p>
+          <p className="text-[9.5px] tracking-[0.14em] uppercase" style={{ color: "rgba(255,255,255,0.5)" }} data-testid="homage">#HOMAGE GG33 &amp; CUE</p>
         </div>
       </aside>
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden relative z-10">

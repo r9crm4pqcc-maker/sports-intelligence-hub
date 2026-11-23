@@ -6,7 +6,6 @@ import { Card, Page, Stat, Tag } from "./kit";
 import { buildChart, chineseMonthSign, daysInMonth, padDate, readDay, seasonOf, signRelation, LIST_LABEL, MONTH_SPAN, type Sign } from "@/lib/life-studio";
 import { buildCalendarDayFit, DayFit } from "./day";
 import { CAUTION_2027, DAY_28_ON_7, MONTH_NOW, POWER_WINDOW, ROADMAP, YEAR_NOW, calendarRelationLabel, isPath28 } from "@/lib/path28";
-import { RelatedReading } from "./related-reading";
 
 export default function ReportsPage() {
   const { profile } = useLife();
@@ -94,7 +93,6 @@ export default function ReportsPage() {
           {own && <YearMarks y={cursor.y} />}
         </Card>
       )}
-      <RelatedReading page="calendar" />
     </Page>
   );
 }

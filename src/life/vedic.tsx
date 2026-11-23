@@ -1,6 +1,5 @@
 import { Card, Page } from "./kit";
 import { VEDIC_NATAL } from "@/lib/path28";
-import { RelatedReading } from "./related-reading";
 import { SkyNow } from "./sky-now";
 
 const BLOCKS = [
@@ -78,7 +77,6 @@ export default function VedicPage() {
         </ul>
       </Card>
       <SkyNow primary="sidereal" />
-      <RelatedReading page="vedic" />
     </Page>
   );
 }

@@ -4,7 +4,6 @@ import { Card, Page, Tag } from "./kit";
 import { buildChart, fullName, pairRead, readDay } from "@/lib/life-studio";
 import { birthPair, dayCompatibility, fitFace, numberFit, FRIENDLY } from "@/lib/path28";
 import { readWord } from "@/lib/letterology";
-import { RelatedReading } from "./related-reading";
 
 export default function PeoplePage() {
   const { profile, family, setFamily, lookups, setLookups } = useLife();
@@ -130,7 +129,6 @@ export default function PeoplePage() {
         </ul>
         <BrandBars you={you} saved={lookups} />
       </Card>
-      <RelatedReading page="people" />
     </Page>
   );
 }

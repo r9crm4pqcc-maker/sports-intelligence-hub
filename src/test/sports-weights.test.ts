@@ -21,12 +21,30 @@ describe("Learned Code replay on saved games", () => {
   it("NFL hits at least 12 of 13", () => { expect(hits("NFL")).toBeGreaterThanOrEqual(12); });
 });
 
-import { signRelation } from "@/lib/vote-decode";
-// User's zodiac chart: CUE counts Rat & Ox and Horse & Goat as friendly; Rat & Horse stay enemies.
+import { signRelation, signBond, chineseMonthSign, reduceNum } from "@/lib/vote-decode";
+import { reduce } from "@/lib/numerology";
+import { learnedColorNumber } from "@/lib/sports-color-code";
+// User's zodiac chart: Rat & Ox are soulmates; Horse & Dog are best friends (not soulmates); Horse & Goat are not a friendly pair.
 describe("Chinese zodiac chart", () => {
-  it("Rat and Ox are friendly", () => { expect(signRelation("Rat", "Ox")).toBe("friend"); });
-  it("Horse and Goat are friendly", () => { expect(signRelation("Goat", "Horse")).toBe("friend"); });
+  it("Rat and Ox are soulmates", () => { expect(signRelation("Rat", "Ox")).toBe("friend"); expect(signBond("Ox", "Rat")).toBe("soulmates"); });
+  it("Horse and Dog are best friends", () => { expect(signRelation("Dog", "Horse")).toBe("friend"); expect(signBond("Horse", "Dog")).toBe("best friends"); });
+  it("Horse and Goat are not a friendly pair", () => { expect(signRelation("Goat", "Horse")).toBe("neutral"); });
   it("Rat and Horse are enemies", () => { expect(signRelation("Rat", "Horse")).toBe("enemy"); });
+  it("animal months turn on the 6th: Feb 5 is Ox, Feb 6 is Tiger", () => {
+    expect(chineseMonthSign(2, 5)).toBe("Ox");
+    expect(chineseMonthSign(2, 6)).toBe("Tiger");
+    expect(chineseMonthSign(3, 5)).toBe("Tiger");
+  });
+});
+// Only a pure 2 is 2; any bigger number reducing to 2 is 11 energy.
+describe("2 vs 11", () => {
+  it("2 stays 2", () => { expect(reduceNum(2)).toBe(2); expect(reduce(2)).toBe(2); });
+  it("20, 101 and 200 read as 11", () => {
+    for (const n of [20, 101, 200]) { expect(reduceNum(n)).toBe(11); expect(reduce(n)).toBe(11); }
+  });
+});
+describe("Color numbers", () => {
+  it("silver is 4 and orange is 33", () => { expect(learnedColorNumber("Silver")).toBe(4); expect(learnedColorNumber("Orange")).toBe(33); });
 });
 // Frequency lock is weighted strongly in Learned Code.
 describe("Frequency lock weight", () => {
@@ -50,7 +68,7 @@ describe("Learned Code replay, Nov. 7–20", () => {
     expect(nov15.length).toBe(12);
     expect(nov15.filter((g) => runVotes({ ...g.input, codeMode: "learned" }).pick === g.actual).length).toBe(12);
   });
-  it("all sports hit at least 339", () => { expect(hits()).toBeGreaterThanOrEqual(339); });
-  it("NBA hits at least 81", () => { expect(hits("NBA")).toBeGreaterThanOrEqual(81); });
+  it("all sports hit at least 342", () => { expect(hits()).toBeGreaterThanOrEqual(342); });
+  it("NBA hits at least 82", () => { expect(hits("NBA")).toBeGreaterThanOrEqual(82); });
   it("NHL hits at least 72", () => { expect(hits("NHL")).toBeGreaterThanOrEqual(72); });
 });

@@ -4,7 +4,6 @@ import { Card, Page } from "./kit";
 import { readWord } from "@/lib/letterology";
 import { buildChart } from "@/lib/life-studio";
 import { fitFace, numberFit } from "@/lib/path28";
-import { RelatedReading } from "./related-reading";
 
 const LETTERS = "abcdefghijklmnopqrstuvwxyz".split("");
 
@@ -70,7 +69,6 @@ export default function LetterologyPage() {
           </div>
         )}
       </Card>
-      <RelatedReading page="letterology" />
     </Page>
   );
 }

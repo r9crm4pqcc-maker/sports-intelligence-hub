@@ -3,7 +3,6 @@ import { Link } from "@/lib/wouter";
 import { useLife } from "./context";
 import { Card, Page } from "./kit";
 import { GOALS, daysInMonth, openOn, scanMonth, yearWindows, type Goal } from "@/lib/life-studio";
-import { RelatedReading } from "./related-reading";
 
 export default function TimingPage() {
   const { profile } = useLife();
@@ -76,7 +75,6 @@ export default function TimingPage() {
           {!opened.hits.length && <li className="text-muted-foreground">None of those dates in the next year.</li>}
         </ul>
       </Card>
-      <RelatedReading page="timing" />
     </Page>
   );
 }
