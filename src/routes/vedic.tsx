@@ -1,0 +1,16 @@
+import { createFileRoute } from "@tanstack/react-router";
+import VedicPage from "@/life/vedic";
+
+export const Route = createFileRoute("/vedic")({
+  head: () => ({
+    meta: [
+      { title: "Vedic Chart — Life Code" },
+      { name: "description", content: "Your Vedic astrology chart." },
+      { property: "og:title", content: "Vedic Chart — Life Code" },
+      { property: "og:description", content: "Your Vedic astrology chart." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+    ],
+  }),
+  component: () => <VedicPage />,
+});

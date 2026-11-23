@@ -1,0 +1,174 @@
+{
+  "date": "2026-11-15",
+  "source": "ESPN final scores, current Learned team/venue/key-player inputs, and date-stamped confirmed NHL starters; retrospective replay fixture only",
+  "rows": [
+    {
+      "id": "401909985",
+      "league": "NBA",
+      "actual": "home",
+      "input": {
+        "year": 2026, "month": 11, "day": 15, "league": "NBA",
+        "gameStartTime": "2026-11-15T18:00Z", "venueTimeZone": "America/New_York", "neutralSite": false,
+        "hour": 13, "region": "PA", "cityFounded": [1701, 10, 25], "stadium": "Xfinity Mobile Arena", "city": "Philadelphia",
+        "home": {"name": "Philadelphia 76ers", "founded": [1946, 5, 14], "colors": ["Blue", "Red"], "record": "10-3", "people": [{"name": "Tyrese Maxey", "role": "player"}], "gematriaPeople": [{"name": "Tyrese Maxey", "role": "player"}]},
+        "away": {"name": "Indiana Pacers", "founded": [1967, 2, 2], "colors": ["Navy", "Yellow"], "record": "5-8", "people": [{"name": "Tyrese Haliburton", "role": "player"}], "gematriaPeople": [{"name": "Tyrese Haliburton", "role": "player"}]}
+      }
+    },
+    {
+      "id": "401909986",
+      "league": "NBA",
+      "actual": "away",
+      "input": {
+        "year": 2026, "month": 11, "day": 15, "league": "NBA",
+        "gameStartTime": "2026-11-15T21:00Z", "venueTimeZone": "America/Phoenix", "neutralSite": false,
+        "hour": 14, "region": "AZ", "cityFounded": [1881, 2, 25], "stadium": "Mortgage Matchup Center", "city": "Phoenix",
+        "home": {"name": "Phoenix Suns", "founded": [1968, 1, 22], "colors": ["Purple", "Orange"], "record": "5-6", "people": [{"name": "Devin Booker", "role": "player"}], "gematriaPeople": [{"name": "Devin Booker", "role": "player"}]},
+        "away": {"name": "Los Angeles Lakers", "founded": [1947, 11, 1], "colors": ["Purple", "Yellow"], "record": "11-2", "people": [{"name": "Luka Dončić", "role": "player"}], "gematriaPeople": [{"name": "Luka Dončić", "role": "player"}]}
+      }
+    },
+    {
+      "id": "401909987",
+      "league": "NBA",
+      "actual": "home",
+      "input": {
+        "year": 2026, "month": 11, "day": 15, "league": "NBA",
+        "gameStartTime": "2026-11-15T21:30Z", "venueTimeZone": "America/Los_Angeles", "neutralSite": false,
+        "hour": 13, "region": "CA", "stadiumOpened": [2024, 8, 15], "cityFounded": [1908, 2, 14], "stadium": "Intuit Dome", "city": "Inglewood",
+        "home": {"name": "LA Clippers", "founded": [1984, 5, 16], "colors": ["Navy", "Red"], "record": "3-8", "people": [{"name": "Kawhi Leonard", "role": "player"}], "gematriaPeople": [{"name": "Kawhi Leonard", "role": "player"}]},
+        "away": {"name": "Charlotte Hornets", "founded": [2014, 5, 20], "colors": ["Teal", "Purple"], "record": "4-8", "people": [{"name": "LaMelo Ball", "role": "player"}], "gematriaPeople": [{"name": "LaMelo Ball", "role": "player"}]}
+      }
+    },
+    {
+      "id": "401909988",
+      "league": "NBA",
+      "actual": "away",
+      "input": {
+        "year": 2026, "month": 11, "day": 15, "league": "NBA",
+        "gameStartTime": "2026-11-15T22:00Z", "venueTimeZone": "America/Denver", "neutralSite": false,
+        "hour": 15, "region": "UT", "stadiumOpened": [1991, 10, 4], "cityFounded": [1851, 1, 19], "stadium": "Delta Center", "city": "Salt Lake City",
+        "home": {"name": "Utah Jazz", "founded": [1974, 6, 7], "colors": ["Purple", "Light Blue"], "record": "1-12", "people": [{"name": "Jaren Jackson Jr.", "role": "player"}], "gematriaPeople": [{"name": "Jaren Jackson Jr.", "role": "player"}]},
+        "away": {"name": "San Antonio Spurs", "founded": [1973, 4, 9], "colors": ["Silver", "Black"], "record": "11-2", "people": [{"name": "Victor Wembanyama", "role": "player"}], "gematriaPeople": [{"name": "Victor Wembanyama", "role": "player"}]}
+      }
+    },
+    {
+      "id": "401909989",
+      "league": "NBA",
+      "actual": "home",
+      "input": {
+        "year": 2026, "month": 11, "day": 15, "league": "NBA",
+        "gameStartTime": "2026-11-15T23:00Z", "venueTimeZone": "America/New_York", "neutralSite": false,
+        "hour": 18, "region": "MA", "stadiumOpened": [1995, 9, 30], "cityFounded": [1630, 9, 7], "stadium": "TD Garden", "city": "Boston",
+        "home": {"name": "Boston Celtics", "founded": [1946, 6, 6], "colors": ["Green", "White"], "record": "10-2", "people": [{"name": "Jayson Tatum", "role": "player"}], "gematriaPeople": [{"name": "Jayson Tatum", "role": "player"}]},
+        "away": {"name": "Dallas Mavericks", "founded": [1980, 5, 1], "colors": ["Blue", "White"], "record": "7-6", "people": [{"name": "Cooper Flagg", "role": "player"}], "gematriaPeople": [{"name": "Cooper Flagg", "role": "player"}]}
+      }
+    },
+    {
+      "id": "401909990",
+      "league": "NBA",
+      "actual": "away",
+      "input": {
+        "year": 2026, "month": 11, "day": 15, "league": "NBA",
+        "gameStartTime": "2026-11-15T23:00Z", "venueTimeZone": "America/New_York", "neutralSite": false,
+        "hour": 18, "region": "ON", "stadiumOpened": [1999, 2, 19], "cityFounded": [1834, 3, 6], "stadium": "Scotiabank Arena", "city": "Toronto",
+        "home": {"name": "Toronto Raptors", "founded": [1995, 5, 5], "colors": ["Red", "Black"], "record": "5-7", "people": [{"name": "Scottie Barnes", "role": "player"}], "gematriaPeople": [{"name": "Scottie Barnes", "role": "player"}]},
+        "away": {"name": "New York Knicks", "founded": [1946, 6, 6], "colors": ["Blue", "Orange"], "record": "6-6", "people": [{"name": "Jalen Brunson", "role": "player"}], "gematriaPeople": [{"name": "Jalen Brunson", "role": "player"}]}
+      }
+    },
+    {
+      "id": "401909991",
+      "league": "NBA",
+      "actual": "away",
+      "input": {
+        "year": 2026, "month": 11, "day": 15, "league": "NBA",
+        "gameStartTime": "2026-11-16T00:00Z", "venueTimeZone": "America/New_York", "neutralSite": false,
+        "hour": 19, "region": "DC", "stadiumOpened": [1997, 12, 2], "cityFounded": [1790, 7, 16], "stadium": "Capital One Arena", "city": "Washington",
+        "home": {"name": "Washington Wizards", "founded": [1997, 12, 2], "colors": ["Navy", "Red"], "record": "4-9", "people": [{"name": "Anthony Davis", "role": "player"}], "gematriaPeople": [{"name": "Anthony Davis", "role": "player"}]},
+        "away": {"name": "Houston Rockets", "founded": [1967, 1, 11], "colors": ["Red", "Black"], "record": "10-3", "people": [{"name": "Alperen Şengün", "role": "player"}], "gematriaPeople": [{"name": "Alperen Şengün", "role": "player"}]}
+      }
+    },
+    {
+      "id": "401909992",
+      "league": "NBA",
+      "actual": "away",
+      "input": {
+        "year": 2026, "month": 11, "day": 15, "league": "NBA",
+        "gameStartTime": "2026-11-16T01:00Z", "venueTimeZone": "America/Chicago", "neutralSite": false,
+        "hour": 19, "region": "WI", "stadiumOpened": [2018, 8, 26], "cityFounded": [1846, 1, 31], "stadium": "Fiserv Forum", "city": "Milwaukee",
+        "home": {"name": "Milwaukee Bucks", "founded": [1968, 1, 22], "colors": ["Green", "Cream"], "record": "1-12", "people": [{"name": "Tyler Herro", "role": "player"}], "gematriaPeople": [{"name": "Tyler Herro", "role": "player"}]},
+        "away": {"name": "Atlanta Hawks", "founded": [1968, 5, 3], "colors": ["Red", "Yellow"], "record": "7-6", "people": [{"name": "Jalen Johnson", "role": "player"}], "gematriaPeople": [{"name": "Jalen Johnson", "role": "player"}]}
+      }
+    },
+    {
+      "id": "401909993",
+      "league": "NBA",
+      "actual": "away",
+      "input": {
+        "year": 2026, "month": 11, "day": 15, "league": "NBA",
+        "gameStartTime": "2026-11-16T02:00Z", "venueTimeZone": "America/Los_Angeles", "neutralSite": false,
+        "hour": 18, "region": "CA", "stadiumOpened": [2016, 10, 4], "cityFounded": [1850, 2, 27], "stadium": "Golden 1 Center", "city": "Sacramento",
+        "home": {"name": "Sacramento Kings", "founded": [1985, 10, 25], "colors": ["Purple", "Gray"], "record": "1-11", "people": [{"name": "Domantas Sabonis", "role": "player"}], "gematriaPeople": [{"name": "Domantas Sabonis", "role": "player"}]},
+        "away": {"name": "Oklahoma City Thunder", "founded": [2008, 9, 3], "colors": ["Light Blue", "Orange"], "record": "8-5", "people": [{"name": "Shai Gilgeous-Alexander", "role": "player"}], "gematriaPeople": [{"name": "Shai Gilgeous-Alexander", "role": "player"}]}
+      }
+    },
+    {
+      "id": "401892721",
+      "league": "NHL",
+      "actual": "away",
+      "input": {
+        "year": 2026, "month": 11, "day": 15, "league": "NHL",
+        "gameStartTime": "2026-11-16T00:30Z", "venueTimeZone": "America/New_York", "neutralSite": false,
+        "hour": 19, "region": "PA", "cityFounded": [1701, 10, 25], "stadium": "Xfinity Mobile Arena", "city": "Philadelphia",
+        "home": {"name": "Philadelphia Flyers", "founded": [1967, 10, 11], "record": "6-10-6", "people": [{"name": "Dan Vladar", "role": "goalie", "dob": "1997-08-20"}], "gematriaPeople": [{"name": "Dan Vladar", "role": "goalie", "dob": "1997-08-20"}]},
+        "away": {"name": "Edmonton Oilers", "founded": [1979, 10, 10], "record": "15-3-3", "people": [{"name": "Tristan Jarry", "role": "goalie", "dob": "1995-04-29"}], "gematriaPeople": [{"name": "Tristan Jarry", "role": "goalie", "dob": "1995-04-29"}]}
+      }
+    },
+    {
+      "id": "401892722",
+      "league": "NHL",
+      "actual": "home",
+      "input": {
+        "year": 2026, "month": 11, "day": 15, "league": "NHL",
+        "gameStartTime": "2026-11-16T01:00Z", "venueTimeZone": "America/Chicago", "neutralSite": false,
+        "hour": 19, "region": "TX", "stadiumOpened": [2001, 7, 17], "cityFounded": [1856, 2, 2], "stadium": "American Airlines Center", "city": "Dallas",
+        "home": {"name": "Dallas Stars", "founded": [1993, 3, 10], "record": "11-6-2", "people": [{"name": "Casey DeSmith", "role": "goalie", "dob": "1991-08-13"}], "gematriaPeople": [{"name": "Casey DeSmith", "role": "goalie", "dob": "1991-08-13"}]},
+        "away": {"name": "Florida Panthers", "founded": [1993, 4, 20], "record": "12-7-2", "people": [{"name": "Akira Schmid", "role": "goalie", "dob": "2000-05-12"}], "gematriaPeople": [{"name": "Akira Schmid", "role": "goalie", "dob": "2000-05-12"}]}
+      }
+    },
+    {
+      "id": "401892723",
+      "league": "NHL",
+      "actual": "home",
+      "input": {
+        "year": 2026, "month": 11, "day": 15, "league": "NHL",
+        "gameStartTime": "2026-11-16T01:00Z", "venueTimeZone": "America/Los_Angeles", "neutralSite": false,
+        "hour": 17, "region": "CA", "stadiumOpened": [1993, 6, 17], "cityFounded": [1876, 3, 18], "stadium": "Honda Center", "city": "Anaheim",
+        "home": {"name": "Anaheim Ducks", "founded": [1992, 12, 10], "record": "10-9-1", "people": [{"name": "Ville Husso", "role": "goalie", "dob": "1995-02-06"}], "gematriaPeople": [{"name": "Ville Husso", "role": "goalie", "dob": "1995-02-06"}]},
+        "away": {"name": "Calgary Flames", "founded": [1980, 6, 24], "record": "9-10-1", "people": [{"name": "Devin Cooley", "role": "goalie", "dob": "1997-05-25"}], "gematriaPeople": [{"name": "Devin Cooley", "role": "goalie", "dob": "1997-05-25"}]}
+      }
+    },
+    {
+      "id": "401892724",
+      "league": "NHL",
+      "actual": "away",
+      "input": {
+        "year": 2026, "month": 11, "day": 15, "league": "NHL",
+        "gameStartTime": "2026-11-16T02:00Z", "venueTimeZone": "America/Los_Angeles", "neutralSite": false,
+        "hour": 18, "region": "NV", "cityFounded": [1950, 1, 1], "stadium": "T-Mobile Arena", "city": "Paradise",
+        "home": {"name": "Vegas Golden Knights", "founded": [2016, 6, 22], "record": "13-5-3", "people": [{"name": "Carter Hart", "role": "goalie", "dob": "1998-08-13"}], "gematriaPeople": [{"name": "Carter Hart", "role": "goalie", "dob": "1998-08-13"}]},
+        "away": {"name": "Vancouver Canucks", "founded": [1945, 9, 22], "record": "3-17-1", "people": [{"name": "Leevi Meriläinen", "role": "goalie", "dob": "2002-08-13"}], "gematriaPeople": [{"name": "Leevi Meriläinen", "role": "goalie", "dob": "2002-08-13"}]}
+      }
+    },
+    {
+      "id": "401892725",
+      "league": "NHL",
+      "actual": "home",
+      "input": {
+        "year": 2026, "month": 11, "day": 15, "league": "NHL",
+        "gameStartTime": "2026-11-16T02:00Z", "venueTimeZone": "America/Los_Angeles", "neutralSite": false,
+        "hour": 18, "region": "CA", "stadiumOpened": [1993, 9, 7], "cityFounded": [1850, 3, 27], "stadium": "SAP Center at San Jose", "city": "San Jose",
+        "home": {"name": "San Jose Sharks", "founded": [1990, 5, 9], "record": "9-11-2", "people": [{"name": "Alex Nedeljkovic", "role": "goalie", "dob": "1996-01-07"}], "gematriaPeople": [{"name": "Alex Nedeljkovic", "role": "goalie", "dob": "1996-01-07"}]},
+        "away": {"name": "Nashville Predators", "founded": [1998, 5, 4], "record": "11-4-5", "people": [{"name": "Juuse Saros", "role": "goalie", "dob": "1995-04-19"}], "gematriaPeople": [{"name": "Juuse Saros", "role": "goalie", "dob": "1995-04-19"}]}
+      }
+    }
+  ]
+}

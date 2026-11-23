@@ -1,0 +1,247 @@
+{
+  "record-margin": {
+    "hits": 0,
+    "total": 192069,
+    "weight": 4
+  },
+  "home-field": {
+    "hits": 73487,
+    "total": 132408,
+    "pct": 55.5,
+    "weight": 0.35
+  },
+  "record-gap-50": {
+    "hits": 2182,
+    "total": 2769,
+    "pct": 78.8,
+    "weight": 5.9
+  },
+  "record-gap-40": {
+    "hits": 3329,
+    "total": 4567,
+    "pct": 72.9,
+    "weight": 4.72
+  },
+  "record-gap-30": {
+    "hits": 6933,
+    "total": 10092,
+    "pct": 68.7,
+    "weight": 4.04
+  },
+  "record-gap-15": {
+    "hits": 25762,
+    "total": 42233,
+    "pct": 61,
+    "weight": 2.31
+  },
+  "moon-full-home": {
+    "hits": 1940,
+    "total": 3572,
+    "pct": 54.3,
+    "weight": 0.54
+  },
+  "venue-both-against": {
+    "hits": 241,
+    "total": 445,
+    "pct": 54.2,
+    "weight": 0.53
+  },
+  "stadium-matches-today": {
+    "hits": 5734,
+    "total": 10638,
+    "pct": 53.9,
+    "weight": 0.49
+  },
+  "city-matches-today": {
+    "hits": 6243,
+    "total": 11572,
+    "pct": 53.9,
+    "weight": 0.49
+  },
+  "lifepath-soulmate-day": {
+    "hits": 769,
+    "total": 1449,
+    "pct": 53.1,
+    "weight": 0.39
+  },
+  "core-master": {
+    "hits": 19652,
+    "total": 37253,
+    "pct": 52.8,
+    "weight": 0.35
+  },
+  "zodiac-secret-friend-year": {
+    "hits": 8903,
+    "total": 16919,
+    "pct": 52.6,
+    "weight": 0.33
+  },
+  "personal-day-friend": {
+    "hits": 54764,
+    "total": 104608,
+    "pct": 52.4,
+    "weight": 0.3
+  },
+  "moon-underdog": {
+    "hits": 6831,
+    "total": 13051,
+    "pct": 52.3,
+    "weight": 0.29
+  },
+  "other": {
+    "hits": 35669,
+    "total": 68445,
+    "pct": 52.1,
+    "weight": 0.26
+  },
+  "personal-day-match": {
+    "hits": 8083,
+    "total": 15624,
+    "pct": 51.7,
+    "weight": 0.21
+  },
+  "player-friend-opponent": {
+    "hits": 3897,
+    "total": 7561,
+    "pct": 51.5,
+    "weight": 0.19
+  },
+  "week-root": {
+    "hits": 5560,
+    "total": 10921,
+    "pct": 50.9,
+    "weight": 0.11
+  },
+  "zodiac-secret-friend-month": {
+    "hits": 3957,
+    "total": 7797,
+    "pct": 50.8,
+    "weight": 0.1
+  },
+  "venue-friendly": {
+    "hits": 15075,
+    "total": 29781,
+    "pct": 50.6,
+    "weight": 0.08
+  },
+  "touches-today": {
+    "hits": 15384,
+    "total": 30613,
+    "pct": 50.3,
+    "weight": 0.04
+  },
+  "record-9-penalty": {
+    "hits": 1739,
+    "total": 3459,
+    "pct": 50.3,
+    "weight": 0.04
+  },
+  "day-of-year-root": {
+    "hits": 2620,
+    "total": 5222,
+    "pct": 50.2,
+    "weight": 0.03
+  },
+  "zodiac-trine": {
+    "hits": 21077,
+    "total": 42151,
+    "pct": 50,
+    "weight": 0
+  },
+  "hour-close-enemy": {
+    "hits": 5386,
+    "total": 10782,
+    "pct": 50,
+    "weight": 0
+  },
+  "hour-close-friend": {
+    "hits": 7050,
+    "total": 14190,
+    "pct": 49.7,
+    "weight": -0.04
+  },
+  "lifepath-friend-day": {
+    "hits": 24100,
+    "total": 48573,
+    "pct": 49.6,
+    "weight": -0.05
+  },
+  "zodiac-enemy-year": {
+    "hits": 3947,
+    "total": 7965,
+    "pct": 49.6,
+    "weight": -0.05
+  },
+  "lifepath-enemy-day": {
+    "hits": 9858,
+    "total": 19959,
+    "pct": 49.4,
+    "weight": -0.08
+  },
+  "moon-favorite": {
+    "hits": 6458,
+    "total": 13167,
+    "pct": 49,
+    "weight": -0.13
+  },
+  "player-clash-opponent": {
+    "hits": 7471,
+    "total": 15313,
+    "pct": 48.8,
+    "weight": -0.15
+  },
+  "zodiac-secret-enemy-month": {
+    "hits": 3267,
+    "total": 6722,
+    "pct": 48.6,
+    "weight": -0.18
+  },
+  "close-stack": {
+    "hits": 824,
+    "total": 1695,
+    "pct": 48.6,
+    "weight": -0.18
+  },
+  "core-stronger": {
+    "hits": 12678,
+    "total": 26218,
+    "pct": 48.4,
+    "weight": -0.2
+  },
+  "lifepath-worst-day": {
+    "hits": 1040,
+    "total": 2147,
+    "pct": 48.4,
+    "weight": -0.2
+  },
+  "wealth-day-favorite": {
+    "hits": 2979,
+    "total": 6187,
+    "pct": 48.1,
+    "weight": -0.24
+  },
+  "venue-against": {
+    "hits": 4794,
+    "total": 9990,
+    "pct": 48,
+    "weight": -0.25
+  },
+  "zodiac-secret-enemy-year": {
+    "hits": 7885,
+    "total": 16507,
+    "pct": 47.8,
+    "weight": -0.28
+  },
+  "personal-day-enemy": {
+    "hits": 20549,
+    "total": 43110,
+    "pct": 47.7,
+    "weight": -0.29
+  },
+  "moon-new-road": {
+    "hits": 1659,
+    "total": 3550,
+    "pct": 46.7,
+    "weight": -0.41
+  }
+}

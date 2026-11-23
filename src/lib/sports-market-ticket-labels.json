@@ -1,0 +1,354 @@
+{
+  "schemaVersion": 1,
+  "sourceNote": "User-marked NFL bets from the Oct. 19, 2025 ticket screenshot. Each listed leg and final score was independently settled against ESPN's official scoreboard. These are user-selected ticket bets, not archived Learned Code Best System Play recommendations; unmarked ATL +1.5 was excluded.",
+  "games": [
+    {
+      "id": "market-ticket-2025-1019-dolphins-browns",
+      "date": "2025-10-19",
+      "league": "NFL",
+      "home": "Cleveland Browns",
+      "away": "Miami Dolphins",
+      "startTime": "2025-10-19T17:00:00Z",
+      "finalScore": [31, 6],
+      "bets": [
+        { "id": "ticket-leg-2025-1019-dolphins-plus-2-5", "market": "spread", "selection": "Miami Dolphins +2.5", "team": "away", "line": 2.5, "result": "miss" },
+        { "id": "ticket-leg-2025-1019-dolphins-browns-over-34-5", "market": "total", "selection": "Over 34.5", "side": "over", "line": 34.5, "result": "hit" }
+      ],
+      "sourceImage": "image_1794708719126.png"
+    },
+    {
+      "id": "market-ticket-2025-1019-eagles-vikings",
+      "date": "2025-10-19",
+      "league": "NFL",
+      "home": "Minnesota Vikings",
+      "away": "Philadelphia Eagles",
+      "startTime": "2025-10-19T17:00:00Z",
+      "finalScore": [22, 28],
+      "bets": [
+        { "id": "ticket-leg-2025-1019-eagles-moneyline", "market": "moneyline", "selection": "Philadelphia Eagles", "team": "away", "result": "hit" }
+      ],
+      "sourceImage": "image_1794708719126.png"
+    },
+    {
+      "id": "market-ticket-2025-1019-colts-chargers",
+      "date": "2025-10-19",
+      "league": "NFL",
+      "home": "Los Angeles Chargers",
+      "away": "Indianapolis Colts",
+      "startTime": "2025-10-19T20:05:00Z",
+      "finalScore": [24, 38],
+      "bets": [
+        { "id": "ticket-leg-2025-1019-colts-plus-2-5", "market": "spread", "selection": "Indianapolis Colts +2.5", "team": "away", "line": 2.5, "result": "hit" }
+      ],
+      "sourceImage": "image_1794708719126.png"
+    },
+    {
+      "id": "market-ticket-2025-1019-saints-bears",
+      "date": "2025-10-19",
+      "league": "NFL",
+      "home": "Chicago Bears",
+      "away": "New Orleans Saints",
+      "startTime": "2025-10-19T17:00:00Z",
+      "finalScore": [26, 14],
+      "bets": [
+        { "id": "ticket-leg-2025-1019-bears-minus-4", "market": "spread", "selection": "Chicago Bears -4", "team": "home", "line": -4, "result": "hit" }
+      ],
+      "sourceImage": "image_1794708719126.png"
+    },
+    {
+      "id": "market-ticket-2025-1019-panthers-jets",
+      "date": "2025-10-19",
+      "league": "NFL",
+      "home": "New York Jets",
+      "away": "Carolina Panthers",
+      "startTime": "2025-10-19T17:00:00Z",
+      "finalScore": [6, 13],
+      "bets": [
+        { "id": "ticket-leg-2025-1019-panthers-moneyline", "market": "moneyline", "selection": "Carolina Panthers", "team": "away", "result": "hit" },
+        { "id": "ticket-leg-2025-1019-panthers-jets-over-40-5", "market": "total", "selection": "Over 40.5", "side": "over", "line": 40.5, "result": "miss" }
+      ],
+      "sourceImage": "image_1794708719126.png"
+    },
+    {
+      "id": "market-ticket-2025-1019-raiders-chiefs",
+      "date": "2025-10-19",
+      "league": "NFL",
+      "home": "Kansas City Chiefs",
+      "away": "Las Vegas Raiders",
+      "startTime": "2025-10-19T17:00:00Z",
+      "finalScore": [31, 0],
+      "bets": [
+        { "id": "ticket-leg-2025-1019-raiders-plus-13", "market": "spread", "selection": "Las Vegas Raiders +13", "team": "away", "line": 13, "result": "miss" }
+      ],
+      "sourceImage": "image_1794708719126.png"
+    },
+    {
+      "id": "market-ticket-2025-1019-commanders-cowboys",
+      "date": "2025-10-19",
+      "league": "NFL",
+      "home": "Dallas Cowboys",
+      "away": "Washington Commanders",
+      "startTime": "2025-10-19T20:25:00Z",
+      "finalScore": [44, 22],
+      "bets": [
+        { "id": "ticket-leg-2025-1019-cowboys-moneyline", "market": "moneyline", "selection": "Dallas Cowboys", "team": "home", "odds": "-125", "result": "hit" }
+      ],
+      "sourceImage": "image_1794708719126.png"
+    },
+    {
+      "id": "market-ticket-2025-1019-giants-broncos",
+      "date": "2025-10-19",
+      "league": "NFL",
+      "home": "Denver Broncos",
+      "away": "New York Giants",
+      "startTime": "2025-10-19T20:05:00Z",
+      "finalScore": [33, 32],
+      "bets": [
+        { "id": "ticket-leg-2025-1019-giants-plus-9-5", "market": "spread", "selection": "New York Giants +8, bought to +9.5", "team": "away", "printedLine": 8, "line": 9.5, "result": "hit" }
+      ],
+      "sourceImage": "image_1794708719126.png"
+    },
+    {
+      "id": "market-ticket-2025-1019-patriots-titans",
+      "date": "2025-10-19",
+      "league": "NFL",
+      "home": "Tennessee Titans",
+      "away": "New England Patriots",
+      "startTime": "2025-10-19T17:00:00Z",
+      "finalScore": [13, 31],
+      "bets": [
+        { "id": "ticket-leg-2025-1019-patriots-titans-over-40-5", "market": "total", "selection": "Over 40.5", "side": "over", "line": 40.5, "result": "hit" }
+      ],
+      "sourceImage": "image_1794708719126.png"
+    },
+    {
+      "id": "market-ticket-2026-0125-panthers-blackhawks",
+      "date": "2026-01-25",
+      "league": "NHL",
+      "home": "Chicago Blackhawks",
+      "away": "Florida Panthers",
+      "startTime": "2026-01-26T00:00:00Z",
+      "finalScore": [1, 5],
+      "bets": [
+        { "id": "ticket-leg-2026-0125-panthers-moneyline", "market": "moneyline", "selection": "Florida Panthers", "team": "away", "result": "hit" },
+        { "id": "ticket-leg-2026-0125-panthers-blackhawks-over-4-5", "market": "total", "selection": "Over 4.5 goals", "side": "over", "line": 4.5, "result": "hit" },
+        { "id": "ticket-leg-2026-0125-panthers-blackhawks-over-5-5", "market": "total", "selection": "Over 5.5 goals", "side": "over", "line": 5.5, "result": "hit" }
+      ],
+      "sourceImage": "image_1794708676062.png"
+    },
+    {
+      "id": "market-ticket-2026-0125-heat-suns",
+      "date": "2026-01-25",
+      "league": "NBA",
+      "home": "Phoenix Suns",
+      "away": "Miami Heat",
+      "startTime": "2026-01-26T01:00:00Z",
+      "finalScore": [102, 111],
+      "bets": [
+        { "id": "ticket-leg-2026-0125-heat-plus-10-5", "market": "spread", "selection": "Miami Heat +10.5", "team": "away", "line": 10.5, "result": "hit" },
+        { "id": "ticket-leg-2026-0125-heat-plus-9-5", "market": "spread", "selection": "Miami Heat +9.5", "team": "away", "line": 9.5, "result": "hit" }
+      ],
+      "sourceImage": "image_1794708676062.png"
+    },
+    {
+      "id": "market-ticket-2026-0125-warriors-timberwolves",
+      "date": "2026-01-25",
+      "league": "NBA",
+      "home": "Minnesota Timberwolves",
+      "away": "Golden State Warriors",
+      "startTime": "2026-01-25T22:30:00Z",
+      "finalScore": [85, 111],
+      "bets": [
+        { "id": "ticket-leg-2026-0125-warriors-plus-11-5", "market": "spread", "selection": "Golden State Warriors +11.5", "team": "away", "line": 11.5, "result": "hit" },
+        { "id": "ticket-leg-2026-0125-warriors-plus-9-5", "market": "spread", "selection": "Golden State Warriors +9.5", "team": "away", "line": 9.5, "result": "hit" }
+      ],
+      "sourceImage": "image_1794708676062.png"
+    },
+    {
+      "id": "market-ticket-2026-0125-rams-seahawks",
+      "date": "2026-01-25",
+      "league": "NFL",
+      "home": "Seattle Seahawks",
+      "away": "Los Angeles Rams",
+      "startTime": "2026-01-25T23:30:00Z",
+      "finalScore": [31, 27],
+      "bets": [
+        { "id": "ticket-leg-2026-0125-seahawks-moneyline", "market": "moneyline", "selection": "Seattle Seahawks", "team": "home", "result": "hit" },
+        { "id": "ticket-leg-2026-0125-rams-seahawks-over-36-5", "market": "total", "selection": "Over 36.5 points", "side": "over", "line": 36.5, "result": "hit" },
+        { "id": "ticket-leg-2026-0125-seahawks-plus-1-5", "market": "spread", "selection": "Seattle Seahawks +1.5", "team": "home", "line": 1.5, "result": "hit" }
+      ],
+      "sourceImage": "image_1794708676062.png"
+    },
+    {
+      "id": "market-ticket-2025-0206-avalanche-flames",
+      "date": "2025-02-06",
+      "league": "NHL",
+      "home": "Calgary Flames",
+      "away": "Colorado Avalanche",
+      "startTime": "2025-02-07T02:00:00Z",
+      "finalScore": [2, 4],
+      "bets": [
+        { "id": "ticket-leg-2025-0206-avalanche-moneyline", "market": "moneyline", "selection": "Colorado Avalanche", "team": "away", "result": "hit" },
+        { "id": "ticket-leg-2025-0206-avalanche-flames-over-5-5", "market": "total", "selection": "Over 5.5 goals", "side": "over", "line": 5.5, "result": "hit" }
+      ],
+      "sourceImage": "image_1794708682238.png"
+    },
+    {
+      "id": "market-ticket-2025-0206-panthers-blues",
+      "date": "2025-02-06",
+      "league": "NHL",
+      "home": "St. Louis Blues",
+      "away": "Florida Panthers",
+      "startTime": "2025-02-07T01:00:00Z",
+      "finalScore": [2, 3],
+      "bets": [
+        { "id": "ticket-leg-2025-0206-panthers-moneyline", "market": "moneyline", "selection": "Florida Panthers", "team": "away", "result": "hit" }
+      ],
+      "sourceImage": "image_1794708682238.png"
+    },
+    {
+      "id": "market-ticket-2025-0206-knights-devils",
+      "date": "2025-02-06",
+      "league": "NHL",
+      "home": "New Jersey Devils",
+      "away": "Vegas Golden Knights",
+      "startTime": "2025-02-07T00:00:00Z",
+      "finalScore": [1, 3],
+      "bets": [
+        { "id": "ticket-leg-2025-0206-knights-moneyline", "market": "moneyline", "selection": "Vegas Golden Knights", "team": "away", "result": "hit" }
+      ],
+      "sourceImage": "image_1794708682238.png"
+    },
+    {
+      "id": "market-ticket-2025-0206-utah-columbus",
+      "date": "2025-02-06",
+      "league": "NHL",
+      "home": "Columbus Blue Jackets",
+      "away": "Utah Hockey Club",
+      "startTime": "2025-02-07T00:00:00Z",
+      "finalScore": [2, 3],
+      "bets": [
+        { "id": "ticket-leg-2025-0206-utah-moneyline", "market": "moneyline", "selection": "Utah Hockey Club", "team": "away", "result": "hit" }
+      ],
+      "sourceImage": "image_1794708682238.png"
+    },
+    {
+      "id": "market-ticket-2025-0206-maple-leafs-kraken",
+      "date": "2025-02-06",
+      "league": "NHL",
+      "home": "Seattle Kraken",
+      "away": "Toronto Maple Leafs",
+      "startTime": "2025-02-07T03:00:00Z",
+      "finalScore": [1, 3],
+      "bets": [
+        { "id": "ticket-leg-2025-0206-maple-leafs-moneyline", "market": "moneyline", "selection": "Toronto Maple Leafs", "team": "away", "result": "hit" }
+      ],
+      "sourceImage": "image_1794708682238.png"
+    },
+    {
+      "id": "market-ticket-2025-0811-rockies-cardinals",
+      "date": "2025-08-11",
+      "league": "MLB",
+      "home": "St. Louis Cardinals",
+      "away": "Colorado Rockies",
+      "startTime": "2025-08-12T00:00:00Z",
+      "finalScore": [3, 2],
+      "bets": [
+        { "id": "ticket-leg-2025-0811-cardinals-moneyline", "market": "moneyline", "selection": "St. Louis Cardinals", "team": "home", "odds": "+220", "result": "hit" }
+      ],
+      "sourceImage": "image_1794710559072.png"
+    },
+    {
+      "id": "market-ticket-2025-0811-diamondbacks-rangers",
+      "date": "2025-08-11",
+      "league": "MLB",
+      "home": "Texas Rangers",
+      "away": "Arizona Diamondbacks",
+      "startTime": "2025-08-12T00:05:00Z",
+      "finalScore": [7, 6],
+      "bets": [
+        { "id": "ticket-leg-2025-0811-rangers-moneyline", "market": "moneyline", "selection": "Texas Rangers", "team": "home", "odds": "+1900", "result": "hit" }
+      ],
+      "sourceImage": "image_1794710559072.png"
+    },
+    {
+      "id": "market-ticket-2024-0813-braves-giants",
+      "date": "2024-08-13",
+      "league": "MLB",
+      "home": "San Francisco Giants",
+      "away": "Atlanta Braves",
+      "startTime": "2024-08-14T01:45:00Z",
+      "finalScore": [3, 4],
+      "bets": [
+        { "id": "ticket-leg-2024-0813-braves-moneyline", "market": "moneyline", "selection": "Atlanta Braves", "team": "away", "result": "hit" }
+      ],
+      "sourceImage": "image_1794710582590.png"
+    },
+    {
+      "id": "market-ticket-2024-0813-blue-jays-angels",
+      "date": "2024-08-13",
+      "league": "MLB",
+      "home": "Los Angeles Angels",
+      "away": "Toronto Blue Jays",
+      "startTime": "2024-08-14T01:38:00Z",
+      "finalScore": [1, 6],
+      "bets": [
+        { "id": "ticket-leg-2024-0813-blue-jays-moneyline", "market": "moneyline", "selection": "Toronto Blue Jays", "team": "away", "result": "hit" }
+      ],
+      "sourceImage": "image_1794710582590.png"
+    },
+    {
+      "id": "market-ticket-2024-0813-twins-royals",
+      "date": "2024-08-13",
+      "league": "MLB",
+      "home": "Minnesota Twins",
+      "away": "Kansas City Royals",
+      "startTime": "2024-08-13T23:40:00Z",
+      "finalScore": [13, 3],
+      "bets": [
+        { "id": "ticket-leg-2024-0813-twins-moneyline", "market": "moneyline", "selection": "Minnesota Twins", "team": "home", "result": "hit" }
+      ],
+      "sourceImage": "image_1794710582590.png"
+    },
+    {
+      "id": "market-ticket-2024-0813-yankees-white-sox",
+      "date": "2024-08-13",
+      "league": "MLB",
+      "home": "Chicago White Sox",
+      "away": "New York Yankees",
+      "startTime": "2024-08-14T00:10:00Z",
+      "finalScore": [1, 4],
+      "bets": [
+        { "id": "ticket-leg-2024-0813-yankees-minus-1-5", "market": "spread", "selection": "New York Yankees -1.5", "team": "away", "line": -1.5, "result": "hit" }
+      ],
+      "sourceImage": "image_1794710582590.png"
+    },
+    {
+      "id": "market-ticket-2024-0813-padres-pirates",
+      "date": "2024-08-13",
+      "league": "MLB",
+      "home": "San Diego Padres",
+      "away": "Pittsburgh Pirates",
+      "startTime": "2024-08-14T01:40:00Z",
+      "finalScore": [3, 0],
+      "bets": [
+        { "id": "ticket-leg-2024-0813-padres-moneyline", "market": "moneyline", "selection": "San Diego Padres", "team": "home", "result": "hit" },
+        { "id": "ticket-leg-2024-0813-padres-minus-1-5", "market": "spread", "selection": "San Diego Padres -1.5", "team": "home", "line": -1.5, "result": "hit" }
+      ],
+      "sourceImage": "image_1794710582590.png"
+    },
+    {
+      "id": "market-ticket-2024-0813-dodgers-brewers",
+      "date": "2024-08-13",
+      "league": "MLB",
+      "home": "Milwaukee Brewers",
+      "away": "Los Angeles Dodgers",
+      "startTime": "2024-08-14T00:10:00Z",
+      "finalScore": [2, 7],
+      "bets": [
+        { "id": "ticket-leg-2024-0813-dodgers-moneyline", "market": "moneyline", "selection": "Los Angeles Dodgers", "team": "away", "result": "hit" }
+      ],
+      "sourceImage": "image_1794710582590.png"
+    }
+  ]
+}

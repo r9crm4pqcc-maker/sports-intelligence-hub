@@ -10,33 +10,311 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdvancedRouteImport } from './routes/advanced'
+import { Route as ChartRouteImport } from './routes/chart'
+import { Route as CryptoRouteImport } from './routes/crypto'
+import { Route as LetterologyRouteImport } from './routes/letterology'
+import { Route as PeopleRouteImport } from './routes/people'
+import { Route as ReportsRouteImport } from './routes/reports'
+import { Route as SkyRouteImport } from './routes/sky'
+import { Route as SoccerAiRouteImport } from './routes/soccer-ai'
+import { Route as SportsCatalogRouteImport } from './routes/sports-catalog'
+import { Route as SportsDatabaseRouteImport } from './routes/sports-database'
+import { Route as SportsPredictionRouteImport } from './routes/sports-prediction'
+import { Route as TimingRouteImport } from './routes/timing'
+import { Route as TradingAiRouteImport } from './routes/trading-ai'
+import { Route as VedicRouteImport } from './routes/vedic'
+import { Route as DatesIndexRouteImport } from './routes/dates.index'
+import { Route as DatesSubRouteImport } from './routes/dates.$sub'
+import { Route as DaySubRouteImport } from './routes/day.$sub'
+import { Route as LibraryIndexRouteImport } from './routes/library.index'
+import { Route as LibraryIdRouteImport } from './routes/library.$id'
+import { Route as ApiSportsDataEspnRouteImport } from './routes/api/sports-data/espn'
+import { Route as ApiSportsDataRotowireNhlLineupsRouteImport } from './routes/api/sports-data/rotowire-nhl-lineups'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdvancedRoute = AdvancedRouteImport.update({
+  id: '/advanced',
+  path: '/advanced',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChartRoute = ChartRouteImport.update({
+  id: '/chart',
+  path: '/chart',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CryptoRoute = CryptoRouteImport.update({
+  id: '/crypto',
+  path: '/crypto',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LetterologyRoute = LetterologyRouteImport.update({
+  id: '/letterology',
+  path: '/letterology',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PeopleRoute = PeopleRouteImport.update({
+  id: '/people',
+  path: '/people',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReportsRoute = ReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SkyRoute = SkyRouteImport.update({
+  id: '/sky',
+  path: '/sky',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SoccerAiRoute = SoccerAiRouteImport.update({
+  id: '/soccer-ai',
+  path: '/soccer-ai',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SportsCatalogRoute = SportsCatalogRouteImport.update({
+  id: '/sports-catalog',
+  path: '/sports-catalog',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SportsDatabaseRoute = SportsDatabaseRouteImport.update({
+  id: '/sports-database',
+  path: '/sports-database',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SportsPredictionRoute = SportsPredictionRouteImport.update({
+  id: '/sports-prediction',
+  path: '/sports-prediction',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TimingRoute = TimingRouteImport.update({
+  id: '/timing',
+  path: '/timing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TradingAiRoute = TradingAiRouteImport.update({
+  id: '/trading-ai',
+  path: '/trading-ai',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VedicRoute = VedicRouteImport.update({
+  id: '/vedic',
+  path: '/vedic',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DatesIndexRoute = DatesIndexRouteImport.update({
+  id: '/dates/',
+  path: '/dates/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DatesSubRoute = DatesSubRouteImport.update({
+  id: '/dates/$sub',
+  path: '/dates/$sub',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DaySubRoute = DaySubRouteImport.update({
+  id: '/day/$sub',
+  path: '/day/$sub',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LibraryIndexRoute = LibraryIndexRouteImport.update({
+  id: '/library/',
+  path: '/library/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LibraryIdRoute = LibraryIdRouteImport.update({
+  id: '/library/$id',
+  path: '/library/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiSportsDataEspnRoute = ApiSportsDataEspnRouteImport.update({
+  id: '/api/sports-data/espn',
+  path: '/api/sports-data/espn',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiSportsDataRotowireNhlLineupsRoute =
+  ApiSportsDataRotowireNhlLineupsRouteImport.update({
+    id: '/api/sports-data/rotowire-nhl-lineups',
+    path: '/api/sports-data/rotowire-nhl-lineups',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/advanced': typeof AdvancedRoute
+  '/chart': typeof ChartRoute
+  '/crypto': typeof CryptoRoute
+  '/letterology': typeof LetterologyRoute
+  '/people': typeof PeopleRoute
+  '/reports': typeof ReportsRoute
+  '/sky': typeof SkyRoute
+  '/soccer-ai': typeof SoccerAiRoute
+  '/sports-catalog': typeof SportsCatalogRoute
+  '/sports-database': typeof SportsDatabaseRoute
+  '/sports-prediction': typeof SportsPredictionRoute
+  '/timing': typeof TimingRoute
+  '/trading-ai': typeof TradingAiRoute
+  '/vedic': typeof VedicRoute
+  '/dates/$sub': typeof DatesSubRoute
+  '/day/$sub': typeof DaySubRoute
+  '/library/$id': typeof LibraryIdRoute
+  '/dates/': typeof DatesIndexRoute
+  '/library/': typeof LibraryIndexRoute
+  '/api/sports-data/espn': typeof ApiSportsDataEspnRoute
+  '/api/sports-data/rotowire-nhl-lineups': typeof ApiSportsDataRotowireNhlLineupsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/advanced': typeof AdvancedRoute
+  '/chart': typeof ChartRoute
+  '/crypto': typeof CryptoRoute
+  '/letterology': typeof LetterologyRoute
+  '/people': typeof PeopleRoute
+  '/reports': typeof ReportsRoute
+  '/sky': typeof SkyRoute
+  '/soccer-ai': typeof SoccerAiRoute
+  '/sports-catalog': typeof SportsCatalogRoute
+  '/sports-database': typeof SportsDatabaseRoute
+  '/sports-prediction': typeof SportsPredictionRoute
+  '/timing': typeof TimingRoute
+  '/trading-ai': typeof TradingAiRoute
+  '/vedic': typeof VedicRoute
+  '/dates/$sub': typeof DatesSubRoute
+  '/day/$sub': typeof DaySubRoute
+  '/library/$id': typeof LibraryIdRoute
+  '/dates': typeof DatesIndexRoute
+  '/library': typeof LibraryIndexRoute
+  '/api/sports-data/espn': typeof ApiSportsDataEspnRoute
+  '/api/sports-data/rotowire-nhl-lineups': typeof ApiSportsDataRotowireNhlLineupsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/advanced': typeof AdvancedRoute
+  '/chart': typeof ChartRoute
+  '/crypto': typeof CryptoRoute
+  '/letterology': typeof LetterologyRoute
+  '/people': typeof PeopleRoute
+  '/reports': typeof ReportsRoute
+  '/sky': typeof SkyRoute
+  '/soccer-ai': typeof SoccerAiRoute
+  '/sports-catalog': typeof SportsCatalogRoute
+  '/sports-database': typeof SportsDatabaseRoute
+  '/sports-prediction': typeof SportsPredictionRoute
+  '/timing': typeof TimingRoute
+  '/trading-ai': typeof TradingAiRoute
+  '/vedic': typeof VedicRoute
+  '/dates/$sub': typeof DatesSubRoute
+  '/day/$sub': typeof DaySubRoute
+  '/library/$id': typeof LibraryIdRoute
+  '/dates/': typeof DatesIndexRoute
+  '/library/': typeof LibraryIndexRoute
+  '/api/sports-data/espn': typeof ApiSportsDataEspnRoute
+  '/api/sports-data/rotowire-nhl-lineups': typeof ApiSportsDataRotowireNhlLineupsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/advanced'
+    | '/chart'
+    | '/crypto'
+    | '/letterology'
+    | '/people'
+    | '/reports'
+    | '/sky'
+    | '/soccer-ai'
+    | '/sports-catalog'
+    | '/sports-database'
+    | '/sports-prediction'
+    | '/timing'
+    | '/trading-ai'
+    | '/vedic'
+    | '/dates/$sub'
+    | '/day/$sub'
+    | '/library/$id'
+    | '/dates/'
+    | '/library/'
+    | '/api/sports-data/espn'
+    | '/api/sports-data/rotowire-nhl-lineups'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/advanced'
+    | '/chart'
+    | '/crypto'
+    | '/letterology'
+    | '/people'
+    | '/reports'
+    | '/sky'
+    | '/soccer-ai'
+    | '/sports-catalog'
+    | '/sports-database'
+    | '/sports-prediction'
+    | '/timing'
+    | '/trading-ai'
+    | '/vedic'
+    | '/dates/$sub'
+    | '/day/$sub'
+    | '/library/$id'
+    | '/dates'
+    | '/library'
+    | '/api/sports-data/espn'
+    | '/api/sports-data/rotowire-nhl-lineups'
+  id:
+    | '__root__'
+    | '/'
+    | '/advanced'
+    | '/chart'
+    | '/crypto'
+    | '/letterology'
+    | '/people'
+    | '/reports'
+    | '/sky'
+    | '/soccer-ai'
+    | '/sports-catalog'
+    | '/sports-database'
+    | '/sports-prediction'
+    | '/timing'
+    | '/trading-ai'
+    | '/vedic'
+    | '/dates/$sub'
+    | '/day/$sub'
+    | '/library/$id'
+    | '/dates/'
+    | '/library/'
+    | '/api/sports-data/espn'
+    | '/api/sports-data/rotowire-nhl-lineups'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdvancedRoute: typeof AdvancedRoute
+  ChartRoute: typeof ChartRoute
+  CryptoRoute: typeof CryptoRoute
+  LetterologyRoute: typeof LetterologyRoute
+  PeopleRoute: typeof PeopleRoute
+  ReportsRoute: typeof ReportsRoute
+  SkyRoute: typeof SkyRoute
+  SoccerAiRoute: typeof SoccerAiRoute
+  SportsCatalogRoute: typeof SportsCatalogRoute
+  SportsDatabaseRoute: typeof SportsDatabaseRoute
+  SportsPredictionRoute: typeof SportsPredictionRoute
+  TimingRoute: typeof TimingRoute
+  TradingAiRoute: typeof TradingAiRoute
+  VedicRoute: typeof VedicRoute
+  DatesSubRoute: typeof DatesSubRoute
+  DaySubRoute: typeof DaySubRoute
+  LibraryIdRoute: typeof LibraryIdRoute
+  DatesIndexRoute: typeof DatesIndexRoute
+  LibraryIndexRoute: typeof LibraryIndexRoute
+  ApiSportsDataEspnRoute: typeof ApiSportsDataEspnRoute
+  ApiSportsDataRotowireNhlLineupsRoute: typeof ApiSportsDataRotowireNhlLineupsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +326,179 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/advanced': {
+      id: '/advanced'
+      path: '/advanced'
+      fullPath: '/advanced'
+      preLoaderRoute: typeof AdvancedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/chart': {
+      id: '/chart'
+      path: '/chart'
+      fullPath: '/chart'
+      preLoaderRoute: typeof ChartRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/crypto': {
+      id: '/crypto'
+      path: '/crypto'
+      fullPath: '/crypto'
+      preLoaderRoute: typeof CryptoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/letterology': {
+      id: '/letterology'
+      path: '/letterology'
+      fullPath: '/letterology'
+      preLoaderRoute: typeof LetterologyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/people': {
+      id: '/people'
+      path: '/people'
+      fullPath: '/people'
+      preLoaderRoute: typeof PeopleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reports': {
+      id: '/reports'
+      path: '/reports'
+      fullPath: '/reports'
+      preLoaderRoute: typeof ReportsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sky': {
+      id: '/sky'
+      path: '/sky'
+      fullPath: '/sky'
+      preLoaderRoute: typeof SkyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/soccer-ai': {
+      id: '/soccer-ai'
+      path: '/soccer-ai'
+      fullPath: '/soccer-ai'
+      preLoaderRoute: typeof SoccerAiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sports-catalog': {
+      id: '/sports-catalog'
+      path: '/sports-catalog'
+      fullPath: '/sports-catalog'
+      preLoaderRoute: typeof SportsCatalogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sports-database': {
+      id: '/sports-database'
+      path: '/sports-database'
+      fullPath: '/sports-database'
+      preLoaderRoute: typeof SportsDatabaseRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sports-prediction': {
+      id: '/sports-prediction'
+      path: '/sports-prediction'
+      fullPath: '/sports-prediction'
+      preLoaderRoute: typeof SportsPredictionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/timing': {
+      id: '/timing'
+      path: '/timing'
+      fullPath: '/timing'
+      preLoaderRoute: typeof TimingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/trading-ai': {
+      id: '/trading-ai'
+      path: '/trading-ai'
+      fullPath: '/trading-ai'
+      preLoaderRoute: typeof TradingAiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/vedic': {
+      id: '/vedic'
+      path: '/vedic'
+      fullPath: '/vedic'
+      preLoaderRoute: typeof VedicRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dates/': {
+      id: '/dates/'
+      path: '/dates'
+      fullPath: '/dates/'
+      preLoaderRoute: typeof DatesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dates/$sub': {
+      id: '/dates/$sub'
+      path: '/dates/$sub'
+      fullPath: '/dates/$sub'
+      preLoaderRoute: typeof DatesSubRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/day/$sub': {
+      id: '/day/$sub'
+      path: '/day/$sub'
+      fullPath: '/day/$sub'
+      preLoaderRoute: typeof DaySubRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/library/': {
+      id: '/library/'
+      path: '/library'
+      fullPath: '/library/'
+      preLoaderRoute: typeof LibraryIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/library/$id': {
+      id: '/library/$id'
+      path: '/library/$id'
+      fullPath: '/library/$id'
+      preLoaderRoute: typeof LibraryIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/sports-data/espn': {
+      id: '/api/sports-data/espn'
+      path: '/api/sports-data/espn'
+      fullPath: '/api/sports-data/espn'
+      preLoaderRoute: typeof ApiSportsDataEspnRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/sports-data/rotowire-nhl-lineups': {
+      id: '/api/sports-data/rotowire-nhl-lineups'
+      path: '/api/sports-data/rotowire-nhl-lineups'
+      fullPath: '/api/sports-data/rotowire-nhl-lineups'
+      preLoaderRoute: typeof ApiSportsDataRotowireNhlLineupsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdvancedRoute: AdvancedRoute,
+  ChartRoute: ChartRoute,
+  CryptoRoute: CryptoRoute,
+  LetterologyRoute: LetterologyRoute,
+  PeopleRoute: PeopleRoute,
+  ReportsRoute: ReportsRoute,
+  SkyRoute: SkyRoute,
+  SoccerAiRoute: SoccerAiRoute,
+  SportsCatalogRoute: SportsCatalogRoute,
+  SportsDatabaseRoute: SportsDatabaseRoute,
+  SportsPredictionRoute: SportsPredictionRoute,
+  TimingRoute: TimingRoute,
+  TradingAiRoute: TradingAiRoute,
+  VedicRoute: VedicRoute,
+  DatesSubRoute: DatesSubRoute,
+  DaySubRoute: DaySubRoute,
+  LibraryIdRoute: LibraryIdRoute,
+  DatesIndexRoute: DatesIndexRoute,
+  LibraryIndexRoute: LibraryIndexRoute,
+  ApiSportsDataEspnRoute: ApiSportsDataEspnRoute,
+  ApiSportsDataRotowireNhlLineupsRoute: ApiSportsDataRotowireNhlLineupsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

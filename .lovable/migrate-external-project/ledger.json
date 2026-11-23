@@ -1,0 +1,58 @@
+[
+ {
+  "capability": "code",
+  "source": "sports-ai-edge-main.zip (Lovable TanStack Start app, same template)",
+  "outcome": "migrate",
+  "status": "verified",
+  "next_action": "none"
+ },
+ {
+  "capability": "schema",
+  "source": "none detected (no database; data lives in bundled JSON + browser localStorage)",
+  "outcome": "not_applicable",
+  "status": "verified",
+  "next_action": "none"
+ },
+ {
+  "capability": "records",
+  "source": "bundled JSON files in src/lib",
+  "outcome": "migrate",
+  "status": "verified",
+  "next_action": "none"
+ },
+ {
+  "capability": "auth",
+  "source": "none detected",
+  "outcome": "not_applicable",
+  "status": "verified",
+  "next_action": "none"
+ },
+ {
+  "capability": "public_endpoints",
+  "source": "src/routes/api/sports-data/espn.ts, rotowire-nhl-lineups.ts (ESPN/FanDuel/RotoWire proxies)",
+  "outcome": "preserve",
+  "status": "verified",
+  "next_action": "none"
+ },
+ {
+  "capability": "knowledge_reading_method",
+  "source": "uploaded 'This document teaches the system...' text",
+  "outcome": "apply to Sports AI prediction",
+  "status": "verified",
+  "next_action": "none"
+ },
+ {
+  "capability": "knowledge_tropical_vs_sidereal",
+  "source": "uploaded 'Two Ways of Seeing Tropical vs Sidereal' text",
+  "outcome": "apply to app astrology pages",
+  "status": "verified",
+  "next_action": "house-rule differences await user answer"
+ },
+ {
+  "capability": "verification",
+  "source": "-",
+  "outcome": "verify",
+  "status": "verified",
+  "next_action": "none"
+ }
+]

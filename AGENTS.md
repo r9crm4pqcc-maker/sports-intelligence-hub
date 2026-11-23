@@ -28,3 +28,14 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+## Imported Life Code app
+- Pages from the imported app live in src/life and src/imported-pages; each TanStack route file just renders one page. Why: keeps the original UI untouched.
+- src/lib/wouter.tsx is a shim mapping the old Link/useLocation/useSearch API onto TanStack Router. Why: imported pages keep their navigation calls without a second router.
+- The app shell renders inside ClientOnly in __root. Why: imported code reads localStorage during render.
+- ESPN/FanDuel and RotoWire feeds go through server routes under src/routes/api/sports-data. Why: browser cannot call those hosts directly (CORS).
+- tsconfig strict extras (noUncheckedIndexedAccess, exactOptionalPropertyTypes, etc.) are off. Why: imported code was written without them.
+- Learned Code weights: sports-weight-profile.json `leagues` holds a per-sport best-replay fit, with `global` as fallback. Why: each sport scores best with its own weights.
+- Story Reading (src/lib/sports-story-reading.ts) is a pure function fed by computeFullDecode reads; it is shown on game cards with its own hit tally and never feeds Learned Code votes. Why: the user's reading method sits beside the tuned picks without changing them.
+- Knowledge Library content is src/lib/knowledge-library.json (articles + guides parsed from the user's upload); /library/$id serves both by id, and RELATED in src/lib/knowledge-library.ts picks each page's links. Why: one data file keeps every page's links in sync.
+- Planet transits come from astronomy-engine in src/lib/transits.ts (sidereal = tropical − Lahiri ayanamsa) and are display-only in Game Energies and the Western/Vedic "sky right now" cards. Why: adds the requested transits without moving scored picks.
