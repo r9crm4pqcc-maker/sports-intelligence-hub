@@ -12,3 +12,8 @@
 - [x] Silver = 4, orange = 33
 - [x] Story Reading feeds Learned Code picks (keep Learned Code), measured on saved games
 - [x] Tests, verify, commit
+- [x] Sports Prediction restyled to app colors (picker, cards, hit/miss colors)
+- [x] Sports Prediction speed: decode only the open sport, cards skip needless redraws
+- [ ] Remove Story Reading from the sports screens (strip, decode section, tally)
+- [ ] Save user's NFL week 1–11 picks; score Learned Code against them and tune NFL toward them
+- [ ] Test closing hour (1, 8, 9, 11) as the deciding layer when layers disagree (user's rule) against the NFL picks

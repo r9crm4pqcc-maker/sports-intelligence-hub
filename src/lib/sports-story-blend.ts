@@ -12,6 +12,8 @@ export const STORY_PICK_WEIGHT: Record<string, number> = {
   "UEFA Nations League": 0.6,
 };
 
+export const storyPushOn = (league: string) => (STORY_PICK_WEIGHT[league] ?? 0) > 0;
+
 const LEAN = { High: 3, "Medium-High": 2, Medium: 1 } as const;
 
 export interface LearnedTotals { home: number; away: number; pick: StorySide }

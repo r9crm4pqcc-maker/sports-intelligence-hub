@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { useState, useMemo, useEffect, useCallback, useRef } from "react";
+import { useState, useMemo, useEffect, useCallback, useRef, memo } from "react";
 import { ArrowLeft, ChevronDown, ChevronUp, RefreshCw, Loader2, AlertCircle, Calendar } from "lucide-react";
 import { useLocation, useSearch } from "@/lib/wouter";
 import { clearESPNGamesCache, fetchESPNGames, fetchFanDuelBoard, fetchOuts, getLeagueInfo, fetchFighterDob, type ESPNGame, type OddsBlock } from "@/lib/espn";
@@ -14,7 +14,7 @@ import type { Tri } from "@/lib/full-decode";
 import { useOverrides } from "@/lib/date-overrides";
 import { buildMatchBrief, type MatchBrief, type Tone, type BriefEntity } from "@/lib/sports-brief";
 import { buildStoryReading, type StoryReading } from "@/lib/sports-story-reading";
-import { blendStoryPick } from "@/lib/sports-story-blend";
+import { blendStoryPick, storyPushOn } from "@/lib/sports-story-blend";
 import { cipherLine, type GematriaDecode, type GematriaSideRead } from "@/lib/sports-gematria";
 import { decodeLearnedGematria } from "@/lib/learned-screenshot-signals";
 import { venueLocalHour, venueTimeZone } from "@/lib/sports-cycles";
@@ -66,11 +66,11 @@ function splitPct(home: number, away: number) {
   const homePct = cap((100 * h) / (h + a || 1));
   return { homePct, awayPct: 100 - homePct };
 }
-const YELLOW = "#FF6A00";
-const BLUE = "#60A5FA";
-const GREEN = "#4ade80";
-const ROSE = "#f472b6";
-const PURPLE = "#a78bfa";
+const YELLOW = "hsl(var(--primary))";
+const BLUE = "hsl(var(--foreground))";
+const GREEN = "hsl(var(--primary))";
+const ROSE = "hsl(var(--destructive))";
+const PURPLE = "hsl(var(--muted-foreground))";
 
 const US_LEAGUES = ["NBA", "NFL", "MLB", "NHL", "UFC", "WNBA", "College Football", "College Basketball"];
 const SOCCER_LEAGUES = [
@@ -98,11 +98,11 @@ function sportForLeague(league: string | null) {
 }
 
 const TONE_COLOR: Record<Tone, string> = {
-  friend: "#4ade80",
-  enemy: "#f87171",
-  master: "#FF6A00",
-  neutral: "rgba(255,255,255,0.55)",
-  info: "rgba(255,255,255,0.78)",
+  friend: "hsl(var(--primary))",
+  enemy: "hsl(var(--destructive))",
+  master: "hsl(var(--primary))",
+  neutral: "hsl(var(--muted-foreground))",
+  info: "hsl(var(--foreground))",
 };
 
 function kickLabel(iso?: string) {
@@ -114,12 +114,12 @@ function kickLabel(iso?: string) {
 function Fold({ title, children, startOpen = false }: { title: string; children: React.ReactNode; startOpen?: boolean }) {
   const [open, setOpen] = useState(startOpen);
   return (
-    <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.08)" }}>
-      <button type="button" onClick={() => setOpen((v) => !v)} className="w-full flex items-center justify-between px-3 py-2.5 text-left" style={{ background: "rgba(255,255,255,0.03)" }}>
-        <span className="text-[11px] font-bold tracking-[0.14em] text-white">{title}</span>
-        {open ? <ChevronUp size={14} className="text-white/40" /> : <ChevronDown size={14} className="text-white/40" />}
+    <div className="rounded-xl overflow-hidden" style={{ border: "1px solid hsl(var(--border))" }}>
+      <button type="button" onClick={() => setOpen((v) => !v)} className="w-full flex items-center justify-between px-3 py-2.5 text-left" style={{ background: "hsl(var(--muted))" }}>
+        <span className="text-[11px] font-bold tracking-[0.14em] text-foreground">{title}</span>
+        {open ? <ChevronUp size={14} className="text-muted-foreground" /> : <ChevronDown size={14} className="text-muted-foreground" />}
       </button>
-      {open && <div className="p-3 border-t border-white/5">{children}</div>}
+      {open && <div className="p-3 border-t border-border">{children}</div>}
     </div>
   );
 }
@@ -127,7 +127,7 @@ function Fold({ title, children, startOpen = false }: { title: string; children:
 function BriefChunk({ brief, titles }: { brief: MatchBrief; titles: string[] }) {
   const want = new Set(titles.map((t) => t.toLowerCase()));
   const sections = [...brief.sections, ...brief.upgrades].filter((s) => want.has(s.title.toLowerCase()));
-  if (!sections.length) return <p className="text-[11px] text-white/40">Nothing on this layer for this game.</p>;
+  if (!sections.length) return <p className="text-[11px] text-muted-foreground">Nothing on this layer for this game.</p>;
   return (
     <div className="space-y-3">
       {sections.map((section) => (
@@ -144,7 +144,7 @@ function BriefChunk({ brief, titles }: { brief: MatchBrief; titles: string[] }) 
   );
 }
 
-type BoardRow = { id: string; matchup: string; pick: string; pct: number; allow: number | null; open: boolean; venue: string; time: string; record: string; result: "hit" | "miss" | "push" | "open"; storyPick?: string; storyResult?: "hit" | "miss" | "push" | "open" };
+type BoardRow = { id: string; matchup: string; pick: string; pct: number; allow: number | null; open: boolean; venue: string; time: string; record: string; result: "hit" | "miss" | "push" | "open" };
 
 /** One Story Reading per game, built from the same decode the card shows. */
 function storyFor(full: ReturnType<typeof computeFullDecode>, v: VoteResult, game: ESPNGame, league: string, year: number, month: number, day: number, learnedRelation: boolean): StoryReading {
@@ -161,58 +161,10 @@ function storyFor(full: ReturnType<typeof computeFullDecode>, v: VoteResult, gam
   });
 }
 
-function StoryReadingBlock({ story }: { story: StoryReading }) {
-  const [copied, setCopied] = useState(false);
-  return (
-    <div className="space-y-3 text-[11px] text-white/80">
-      <div>
-        <p className="text-[10px] font-bold tracking-[0.12em]" style={{ color: YELLOW }}>GAME</p>
-        <p className="font-bold text-white">{story.game}</p>
-      </div>
-      <div>
-        <p className="text-[10px] font-bold tracking-[0.12em]" style={{ color: YELLOW }}>SELECTED SIDE</p>
-        <p className="text-[13px] font-black text-white">{story.selectedName}</p>
-      </div>
-      <div>
-        <p className="text-[10px] font-bold tracking-[0.12em]" style={{ color: YELLOW }}>FULL READING SUMMARY</p>
-        <p className="leading-relaxed">{story.summary}</p>
-      </div>
-      <div>
-        <p className="text-[10px] font-bold tracking-[0.12em]" style={{ color: YELLOW }}>KEY CONVERGENCE POINTS</p>
-        <ul className="space-y-0.5">{story.convergence.map((c, i) => <li key={i}>• {c}</li>)}</ul>
-      </div>
-      <div>
-        <p className="text-[10px] font-bold tracking-[0.12em]" style={{ color: YELLOW }}>CONFLICTING LAYER AND RESOLUTION</p>
-        <p className="leading-relaxed">{story.conflict}</p>
-      </div>
-      <div>
-        <p className="text-[10px] font-bold tracking-[0.12em]" style={{ color: YELLOW }}>CONFIDENCE: {story.confidence.toUpperCase()}</p>
-        <p>{story.confidenceWhy}</p>
-        {story.selective && <p className="mt-1 text-white/55">{story.selective}</p>}
-      </div>
-      <Fold title="The seven questions">
-        <ol className="space-y-1.5">{story.questions.map((q) => <li key={q.n}><span className="font-bold text-white">{q.n}. {q.question}</span><br />{q.answer}</li>)}</ol>
-      </Fold>
-      <Fold title="Every layer, translated">
-        <div className="space-y-2">{story.layers.map((l) => (
-          <div key={l.title}>
-            <p className="text-[10px] font-bold tracking-[0.12em] mb-0.5" style={{ color: YELLOW }}>{l.title.toUpperCase()}</p>
-            <ul className="space-y-0.5">{l.lines.map((line, i) => <li key={i}>• {line}</li>)}</ul>
-          </div>
-        ))}</div>
-      </Fold>
-      <button type="button" onClick={() => { void navigator.clipboard?.writeText(story.text); setCopied(true); window.setTimeout(() => setCopied(false), 1500); }}
-        className="rounded-md px-3 py-1.5 text-[10px] font-bold tracking-[0.12em]" style={{ background: "rgba(255,106,0,0.12)", color: YELLOW, border: "1px solid rgba(255,106,0,0.35)" }}>
-        {copied ? "COPIED" : "COPY READING"}
-      </button>
-    </div>
-  );
-}
-
 function StatusBadge({ status, detail }: { status: string; detail: string }) {
-  if (status === "in") return <span className="inline-flex items-center gap-1 text-[9px] font-bold px-2 py-0.5 rounded-full" style={{ background: "rgba(239,68,68,0.15)", color: "#ef4444" }}>LIVE</span>;
-  if (status === "post") return <span className="text-[9px] font-bold px-2 py-0.5 rounded-full" style={{ background: "rgba(74,222,128,0.12)", color: GREEN }}>FINAL</span>;
-  return <span className="text-[9px] font-medium px-2 py-0.5 rounded-full" style={{ background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.55)" }}>{detail || "Scheduled"}</span>;
+  if (status === "in") return <span className="inline-flex items-center gap-1 text-[9px] font-bold px-2 py-0.5 rounded-full" style={{ background: "hsl(var(--destructive) / 0.15)", color: "hsl(var(--destructive))" }}>LIVE</span>;
+  if (status === "post") return <span className="text-[9px] font-bold px-2 py-0.5 rounded-full" style={{ background: "hsl(var(--primary) / 0.12)", color: GREEN }}>FINAL</span>;
+  return <span className="text-[9px] font-medium px-2 py-0.5 rounded-full" style={{ background: "hsl(var(--muted))", color: "hsl(var(--muted-foreground))" }}>{detail || "Scheduled"}</span>;
 }
 
 function Pill({ children, tone = "muted" }: { children: React.ReactNode; tone?: "muted" | "primary" | "danger" }) {
@@ -252,7 +204,7 @@ function GematriaBlock({ data }: { data: GematriaDecode }) {
       </div>
       <p className="text-[12px] font-bold text-foreground">Clash: {data.clash ? "Yes" : "No"}{data.clash ? ` — ${data.clashNote.replace(/^Yes — /, "")}` : ""}</p>
       <p className="text-[10px] text-muted-foreground">Clash compares full Ordinal and Reverse totals. A shared single-digit reduction is not a clash.</p>
-      <p className="text-[12px] font-bold" style={{ color: data.ignored ? "rgba(255,255,255,0.55)" : PURPLE }}>Net Gematria Edge: {data.edge}</p>
+      <p className="text-[12px] font-bold" style={{ color: data.ignored ? "hsl(var(--muted-foreground))" : PURPLE }}>Net Gematria Edge: {data.edge}</p>
       <p className="text-[11px] text-foreground">{data.decision}</p>
     </div>
   );
@@ -453,7 +405,7 @@ function slateLeg(game: ESPNGame, year: number, month: number, day: number, leag
   const rawHome = v.home + full.home, rawAway = v.away + full.away;
   const totalHome = learned ? v.home : rawHome, totalAway = learned ? v.away : rawAway;
   const basePick: "home" | "away" = totalHome === totalAway ? v.pick : totalHome > totalAway ? "home" : "away";
-  const learnedStory = learned && codeMode === "learned";
+  const learnedStory = learned && codeMode === "learned" && storyPushOn(league);
   const finalPick: "home" | "away" = learnedStory
     ? blendStoryPick(league, { home: totalHome, away: totalAway, pick: basePick }, storyFor(full, v, game, league, year, month, day, true)).pick
     : basePick;
@@ -508,7 +460,7 @@ function bestLegs(legs: { pct: number; allow: number | null; open: boolean }[]) 
   return (hot.length >= 2 ? hot : open).slice(0, 4);
 }
 
-function GameCard({ game, year, month, day, idx, league, learned, codeMode, learningRevision, refreshRevision, onReady, prices, outs, catalog }: { game: ESPNGame; year: number; month: number; day: number; idx: number; league: string; learned: boolean; codeMode: SportsMode; learningRevision: number; refreshRevision: number; onReady?: (row: BoardRow) => void; prices: Record<string, OddsBlock>; outs: Record<string, string[]>; catalog: SportsCatalogRecord[] }) {
+const GameCard = memo(function GameCard({ game, year, month, day, idx, league, learned, codeMode, learningRevision, refreshRevision, onReady, prices, outs, catalog }: { game: ESPNGame; year: number; month: number; day: number; idx: number; league: string; learned: boolean; codeMode: SportsMode; learningRevision: number; refreshRevision: number; onReady?: (row: BoardRow) => void; prices: Record<string, OddsBlock>; outs: Record<string, string[]>; catalog: SportsCatalogRecord[] }) {
   const autoKey = `${league}:${game.id}:${codeMode}`;
   const isFight = league === "UFC";
   const isInternationalSoccer = INTERNATIONAL_SOCCER_LEAGUES.some((item) => item.key === league);
@@ -702,10 +654,10 @@ function GameCard({ game, year, month, day, idx, league, learned, codeMode, lear
   const rawHome = v.home + full.home, rawAway = v.away + full.away;
   const totalHome = learned ? v.home : rawHome, totalAway = learned ? v.away : rawAway;
   const recalculatedPick: "home" | "away" = totalHome === totalAway ? v.pick : totalHome > totalAway ? "home" : "away";
-  const story = useMemo(() => storyFor(full, v, game, league, year, month, day, learned && codeMode === "learned"),
+  // The reading method quietly pushes Learned Code only in sports where it raised saved-game hits; nothing about it is shown.
+  const story = useMemo(() => learned && codeMode === "learned" && storyPushOn(league) ? storyFor(full, v, game, league, year, month, day, true) : null,
     [full, v, game, league, year, month, day, learned, codeMode]);
-  // Story Reading pushes the Learned Code pick by each sport's fitted strength.
-  const blended = blendStoryPick(league, { home: totalHome, away: totalAway, pick: recalculatedPick }, learned && codeMode === "learned" ? story : null);
+  const blended = blendStoryPick(league, { home: totalHome, away: totalAway, pick: recalculatedPick }, story);
   const finalPick: "home" | "away" = codeMode === "learned" ? blended.pick : savedLearnedPrediction?.pick ?? recalculatedPick;
   const pickName = finalPick === "home" ? game.homeTeam : game.awayTeam;
   const brief = useMemo(() => {
@@ -728,8 +680,6 @@ function GameCard({ game, year, month, day, idx, league, learned, codeMode, lear
   const isFinal = game.status === "post";
   const outcome = isFinal ? outcomeFromScore(Number(game.homeScore), Number(game.awayScore)) : null;
   const hit = outcome && outcome !== "draw" ? outcome === finalPick : null;
-  const storyHit = outcome && outcome !== "draw" ? outcome === story.selected : null;
-  const storyResult: BoardRow["storyResult"] = !isFinal ? "open" : !outcome || outcome === "draw" ? "push" : outcome === story.selected ? "hit" : "miss";
   const cardPickName = pickName;
   const verdict = codeMode === "backup"
     ? `DECODE PICK ${pickName}. Vote share only — not a win-probability estimate. ${game.awayTeam} ${awayPct}% · ${game.homeTeam} ${homePct}%.`
@@ -771,10 +721,8 @@ function GameCard({ game, year, month, day, idx, league, learned, codeMode, lear
       time: when,
       record: `${game.awayAbbr} ${game.awayRecord || "—"} · ${game.homeAbbr} ${game.homeRecord || "—"}`,
       result: !isFinal ? "open" : !outcome || outcome === "draw" ? "push" : outcome === finalPick ? "hit" : "miss",
-      storyPick: story.selectedName,
-      storyResult,
     });
-  }, [autoLoading, league, game.id, pickName, pickPct, allow, game.status, outcome, finalPick, venueName, when, onReady, story.selectedName, storyResult]);
+  }, [autoLoading, league, game.id, pickName, pickPct, allow, game.status, outcome, finalPick, venueName, when, onReady]);
 
   const result = isFinal ? learnedResultLabel : null;
   const qualified = isBest(pickPct, allow);
@@ -869,70 +817,70 @@ function GameCard({ game, year, month, day, idx, league, learned, codeMode, lear
   const fullPart=(part)=> <FullDecode part={part} title={`${game.awayTeam} @ ${game.homeTeam} · ${month}/${day}/${year}`} data={full} homeName={game.homeTeam} awayName={game.awayTeam} verdict={verdict} editable={!learned} headToHead={{allTime:auto?.allTimeSeries,season:auto?.seasonSeries}} partThreeTitle={isFight ? "FIGHTERS & COACHES" : undefined} />;
 
   return (
-    <div className="rounded-2xl overflow-hidden" style={{ background: "#000", border: qualified ? "1px solid #FF6A00" : "1px solid rgba(255,106,0,0.28)" }}>
+    <div className="rounded-2xl overflow-hidden" style={{ background: "hsl(var(--background))", border: qualified ? "1px solid hsl(var(--primary))" : "1px solid hsl(var(--primary) / 0.28)" }}>
       <div className="p-4">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
-            <p className="text-[15px] font-black text-white leading-tight">{game.awayTeam} <span className="font-medium text-white/35">vs</span> {game.homeTeam}</p>
-            <p className="text-[11px] mt-1 text-white/45">{venueName}{when ? ` · ${when}` : ""}</p>
+            <p className="text-[15px] font-black text-foreground leading-tight">{game.awayTeam} <span className="font-medium text-muted-foreground">vs</span> {game.homeTeam}</p>
+            <p className="text-[11px] mt-1 text-muted-foreground">{venueName}{when ? ` · ${when}` : ""}</p>
           </div>
           <div className="text-right shrink-0">
             <p className="text-3xl font-black leading-none" style={{ color: YELLOW }}>{pickPct}%</p>
-            <p className="text-[9px] mt-1 tracking-widest text-white/35">{codeMode === "backup" ? "LEGACY SCORE · NOT ODDS" : isFinal ? "LEARNED CODE" : confidenceBand(Math.round(pickPct)).toUpperCase()}</p>
+            <p className="text-[9px] mt-1 tracking-widest text-muted-foreground">{codeMode === "backup" ? "LEGACY SCORE · NOT ODDS" : isFinal ? "LEARNED CODE" : confidenceBand(Math.round(pickPct)).toUpperCase()}</p>
           </div>
         </div>
         <div className="mt-3 flex items-end justify-between gap-3">
           <div>
-            <p className="text-[9px] uppercase tracking-[0.16em] text-white/35">Record</p>
-            <p className="text-[12px] text-white/80 mt-0.5">{game.awayAbbr} {displayRecord(analysisGame.awayRecord, awayRecent)}</p>
-            <p className="text-[12px] text-white/80">{game.homeAbbr} {displayRecord(analysisGame.homeRecord, homeRecent)}</p>
+            <p className="text-[9px] uppercase tracking-[0.16em] text-muted-foreground">Record</p>
+            <p className="text-[12px] text-foreground mt-0.5">{game.awayAbbr} {displayRecord(analysisGame.awayRecord, awayRecent)}</p>
+            <p className="text-[12px] text-foreground">{game.homeAbbr} {displayRecord(analysisGame.homeRecord, homeRecent)}</p>
           </div>
           <div className="text-right">
-            <p className="text-[9px] uppercase tracking-[0.16em] text-white/35">{codeMode === "backup" ? "Backup side" : isFinal ? "Learned Code pick" : "Pick"}</p>
-            <p className="text-[13px] font-black" style={{ color: YELLOW }}>{cardPickName}</p>
+            <p className="text-[9px] uppercase tracking-[0.16em] text-muted-foreground">{codeMode === "backup" ? "Backup side" : isFinal ? "Learned Code pick" : "Pick"}</p>
+            <p className="text-[13px] font-black" style={{ color: YELLOW }} data-testid="learned-pick" data-away={game.awayTeam} data-home={game.homeTeam} data-away-score={game.awayScore ?? ""} data-home-score={game.homeScore ?? ""} data-status={game.status}>{cardPickName}</p>
             {codeMode === "learned" && isFinal && savedLearnedPrediction && (
-              <p className="text-[9px] mt-1 text-white/45">
+              <p className="text-[9px] mt-1 text-muted-foreground">
                 Re-decoded with the frozen pregame inputs; original pick retained for comparison: {savedLearnedPrediction.pick === "home" ? game.homeTeam : game.awayTeam}
               </p>
             )}
             {codeMode === "backup" && (
-              <p className="text-[9px] mt-0.5 font-bold tracking-wide" style={{ color: backupDecision.label === "NO BET" ? "rgba(255,255,255,0.45)" : YELLOW }}>
+              <p className="text-[9px] mt-0.5 font-bold tracking-wide" style={{ color: backupDecision.label === "NO BET" ? "hsl(var(--muted-foreground))" : YELLOW }}>
                 {backupDecisionText}
               </p>
             )}
           {result ? (
-            <p className="text-[10px] mt-1 font-bold" style={{ color: hit === null ? "rgba(255,255,255,0.55)" : hit ? GREEN : ROSE }}>{result}</p>
+            <p className="text-[10px] mt-1 font-bold" style={{ color: hit === null ? "hsl(var(--muted-foreground))" : hit ? GREEN : ROSE }}>{result}</p>
           ) : <StatusBadge status={game.status} detail={game.statusDetail} />}
           </div>
         </div>
         {(book || game.archivedOut || awayOut.length || homeOut.length || starter) && (
-          <div className="mt-3 text-[11px] text-white/70 space-y-0.5">
+          <div className="mt-3 text-[11px] text-foreground space-y-0.5">
             {book && <p>{book.book || "Line"} {game.awayAbbr} {book.moneylineAway || "—"} {book.spreadAway || ""} · {game.homeAbbr} {book.moneylineHome || "—"} {book.spreadHome || ""}{book.overUnder ? ` · ${book.overUnder}` : ""}</p>}
             {starter && <p>{league === "NHL" ? "Goalie" : "Pitcher"} {starter}</p>}
             {(game.archivedOut || awayOut.length || homeOut.length) && <p>Out {game.archivedOut ?? `${game.awayAbbr}: ${awayOut.join(", ") || "none"} · ${game.homeAbbr}: ${homeOut.join(", ") || "none"}`}</p>}
           </div>
         )}
         {displayMarketPlay && (
-          <div className="mt-3 rounded-lg px-3 py-2.5" style={{ background: "rgba(255,106,0,0.08)", border: "1px solid rgba(255,106,0,0.25)" }}>
+          <div className="mt-3 rounded-lg px-3 py-2.5" style={{ background: "hsl(var(--primary) / 0.08)", border: "1px solid hsl(var(--primary) / 0.25)" }}>
             <p className="text-[9px] font-bold tracking-[0.14em]" style={{ color: YELLOW }}>
               {isFinal && !savedMarketPlay ? "HISTORICAL LINES UNAVAILABLE" : "BEST SYSTEM PLAY"}
             </p>
-            <p className="mt-1 text-[13px] font-black text-white">{displayMarketPlay.selection}</p>
-            <p className="mt-0.5 text-[10px] leading-relaxed text-white/65">{displayMarketPlay.detail}</p>
+            <p className="mt-1 text-[13px] font-black text-foreground">{displayMarketPlay.selection}</p>
+            <p className="mt-0.5 text-[10px] leading-relaxed text-muted-foreground">{displayMarketPlay.detail}</p>
             {savedMarketPlay && (
-              <p className="mt-1 text-[9px] font-bold tracking-[0.12em]" style={{ color: savedMarketResult?.result === "win" ? GREEN : savedMarketResult?.result === "loss" ? ROSE : "rgba(255,255,255,0.65)" }}>
+              <p className="mt-1 text-[9px] font-bold tracking-[0.12em]" style={{ color: savedMarketResult?.result === "win" ? GREEN : savedMarketResult?.result === "loss" ? ROSE : "hsl(var(--muted-foreground))" }}>
                 {savedMarketResult?.result.toUpperCase() ?? "PENDING"}
               </p>
             )}
-            {!savedMarketPlay && !isFinal && marketPlay?.isPlay && <p className="mt-1 text-[9px] font-bold text-white/55">PENDING · tracked from this recommendation</p>}
-            {!savedMarketPlay && !isFinal && marketPlay && !marketPlay.isPlay && <p className="mt-1 text-[9px] text-white/45">LEAN · NOT GRADED</p>}
+            {!savedMarketPlay && !isFinal && marketPlay?.isPlay && <p className="mt-1 text-[9px] font-bold text-muted-foreground">PENDING · tracked from this recommendation</p>}
+            {!savedMarketPlay && !isFinal && marketPlay && !marketPlay.isPlay && <p className="mt-1 text-[9px] text-muted-foreground">LEAN · NOT GRADED</p>}
             {savedMarketResult && (
-              <p className="mt-1 text-[10px] font-bold" style={{ color: savedMarketResult.result === "win" ? GREEN : savedMarketResult.result === "loss" ? ROSE : "rgba(255,255,255,0.65)" }}>
+              <p className="mt-1 text-[10px] font-bold" style={{ color: savedMarketResult.result === "win" ? GREEN : savedMarketResult.result === "loss" ? ROSE : "hsl(var(--muted-foreground))" }}>
                 {savedMarketResult.result.toUpperCase()}
               </p>
             )}
             {marketStorageError && <p className="mt-1 text-[9px] text-destructive">{marketStorageError}</p>}
-            <p className="mt-1 text-[9px] leading-relaxed text-white/40">
+            <p className="mt-1 text-[9px] leading-relaxed text-muted-foreground">
               {savedMarketPlay
                 ? "Captured before kickoff; this exact market and line are graded once from the final score."
                 : isFinal
@@ -941,79 +889,66 @@ function GameCard({ game, year, month, day, idx, league, learned, codeMode, lear
             </p>
           </div>
         )}
-        <div className="mt-3 rounded-lg px-3 py-2.5" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,106,0,0.25)" }} data-testid="story-reading-strip">
-          <div className="flex items-center justify-between gap-3">
-            <p className="text-[9px] font-bold tracking-[0.14em]" style={{ color: YELLOW }}>STORY READING</p>
-            <p className="text-[9px] font-bold tracking-[0.12em] text-white/55">CONFIDENCE {story.confidence.toUpperCase()}</p>
-          </div>
-          <div className="mt-1 flex items-center justify-between gap-3">
-            <p className="text-[13px] font-black text-white">{story.selectedName}</p>
-            {storyHit !== null && <p className="text-[10px] font-bold" style={{ color: storyHit ? GREEN : ROSE }}>{storyHit ? "HIT" : "MISS"}</p>}
-          </div>
-          <p className="mt-0.5 text-[10px] leading-relaxed text-white/55">{story.confidenceWhy}</p>
-          {blended.storyMoved && <p className="mt-1 text-[10px] font-bold" style={{ color: YELLOW }} data-testid="story-moved">Story Reading moved the Learned Code pick to {pickName}.</p>}
-        </div>
-        <button type="button" onClick={() => setOpenDecode((v) => !v)} className="mt-3 w-full rounded-lg py-2 text-[11px] font-bold tracking-[0.12em]" style={{ background: "rgba(255,255,255,0.04)", color: "rgba(255,255,255,0.75)", border: "1px solid rgba(255,255,255,0.08)" }}>
+        <button type="button" onClick={() => setOpenDecode((v) => !v)} className="mt-3 w-full rounded-lg py-2 text-[11px] font-bold tracking-[0.12em]" style={{ background: "hsl(var(--muted))", color: "hsl(var(--foreground))", border: "1px solid hsl(var(--border))" }}>
           {openDecode ? "HIDE FULL DECODE" : "SHOW FULL DECODE"}
         </button>
         {openDecode && (
           <div className="mt-3 space-y-2">
             <Fold title="Verdict" startOpen>
-              <p className="text-xs font-bold text-white mb-2">{verdict}</p>
-              <p className="text-[11px] text-white/70">{finalPick === "away" ? "PICK" : "OTHER"} {game.awayTeam} {awayPct}%</p>
-              <p className="text-[11px] text-white/70 mb-2">{finalPick === "home" ? "PICK" : "OTHER"} {game.homeTeam} {homePct}%</p>
+              <p className="text-xs font-bold text-foreground mb-2">{verdict}</p>
+              <p className="text-[11px] text-foreground">{finalPick === "away" ? "PICK" : "OTHER"} {game.awayTeam} {awayPct}%</p>
+              <p className="text-[11px] text-foreground mb-2">{finalPick === "home" ? "PICK" : "OTHER"} {game.homeTeam} {homePct}%</p>
               {v.alerts.map((a, i) => <p key={i} className="text-xs font-bold text-destructive">⚠ {a}</p>)}
               <ul className="mt-2 space-y-1">
                 {brief.doing.map((row) => (
-                  <li key={row.label} className="text-[11px] text-white/75">
-                    <span className="font-bold" style={{ color: row.edge === "Even" ? "rgba(255,255,255,0.4)" : YELLOW }}>{row.label} → {row.edge}.</span> {row.reason}
+                  <li key={row.label} className="text-[11px] text-foreground">
+                    <span className="font-bold" style={{ color: row.edge === "Even" ? "hsl(var(--muted-foreground))" : YELLOW }}>{row.label} → {row.edge}.</span> {row.reason}
                   </li>
                 ))}
               </ul>
               {isFinal && hit === false && (
                 <div className="mt-2">
                   <p className="text-[11px] font-bold" style={{ color: ROSE }}>Factors on the side that lost</p>
-                  {v.votes.filter((x) => x.side !== finalPick).map((f, i) => <p key={i} className="text-[11px] text-white/70">{f.layer}: {f.reason}</p>)}
+                  {v.votes.filter((x) => x.side !== finalPick).map((f, i) => <p key={i} className="text-[11px] text-foreground">{f.layer}: {f.reason}</p>)}
                 </div>
               )}
             </Fold>
-            <Fold title="Story Reading" startOpen><StoryReadingBlock story={story} /></Fold>
             {codeMode === "backup" && (
               <Fold title="Backup Signal Audit">
-                <p className="text-[11px] text-white/75">
+                <p className="text-[11px] text-foreground">
                   Vote share {effectiveAudit.pickedVoteShare}% · margin {effectiveAudit.margin.toFixed(2)} · {effectiveAudit.activeSignalCount}/{effectiveAudit.signalCount} active signals · {effectiveAudit.agreeingCategories}/{effectiveAudit.agreeingCategories + effectiveAudit.opposingCategories} categories support the pick.
                 </p>
-                <p className="mt-1 text-[10px] text-white/55">
+                <p className="mt-1 text-[10px] text-muted-foreground">
                   Core data {effectiveAudit.coreDataCoverage.available}/{effectiveAudit.coreDataCoverage.expected} · {effectiveAudit.usedTiebreak ? "tiebreak used" : "no tiebreak"}
                 </p>
-                <p className="mt-1 text-[10px] text-white/55">
+                <p className="mt-1 text-[10px] text-muted-foreground">
                   {effectiveAudit.missingInputs.length
                     ? `Missing decode inputs: ${effectiveAudit.missingInputs.join(" · ")}`
                     : "No missing decode inputs were flagged."}
                 </p>
-                {auto?.gaps?.length ? <p className="mt-1 text-[10px] text-white/45">Source gaps: {auto.gaps.join(" · ")}</p> : null}
+                {auto?.gaps?.length ? <p className="mt-1 text-[10px] text-muted-foreground">Source gaps: {auto.gaps.join(" · ")}</p> : null}
                 {effectiveAudit.duplicateEventGroups.length > 0 ? (
                   <div className="mt-2 space-y-1">
-                    <p className="text-[10px] font-bold text-white/65">Repeated event descriptions</p>
+                    <p className="text-[10px] font-bold text-muted-foreground">Repeated event descriptions</p>
                     {effectiveAudit.duplicateEventGroups.map((group) => (
-                      <p key={group.eventKey} className="break-words text-[10px] text-white/55">
+                      <p key={group.eventKey} className="break-words text-[10px] text-muted-foreground">
                         {group.signals.join(" · ")} — {group.eventKey}
                       </p>
                     ))}
                   </div>
-                ) : <p className="mt-2 text-[10px] text-white/45">No exact repeated event descriptions across different signals.</p>}
+                ) : <p className="mt-2 text-[10px] text-muted-foreground">No exact repeated event descriptions across different signals.</p>}
                 <div className="mt-2 max-h-72 space-y-1.5 overflow-y-auto">
                   {v.votes.map((vote, index) => (
-                    <div key={`${vote.signalId}-${vote.eventKey}-${index}`} className="rounded-md border border-white/10 px-2 py-1.5">
+                    <div key={`${vote.signalId}-${vote.eventKey}-${index}`} className="rounded-md border border-border px-2 py-1.5">
                       <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1">
-                        <span className="text-[10px] font-bold text-white">{vote.side === "home" ? game.homeTeam : game.awayTeam}</span>
-                        <span className="text-[9px] text-white/45">{vote.signalId}</span>
-                        <span className="text-[9px] text-white/60">
+                        <span className="text-[10px] font-bold text-foreground">{vote.side === "home" ? game.homeTeam : game.awayTeam}</span>
+                        <span className="text-[9px] text-muted-foreground">{vote.signalId}</span>
+                        <span className="text-[9px] text-muted-foreground">
                           {(vote.baseWeight ?? vote.weight).toFixed(2)} × {(vote.weightMultiplier ?? 1).toFixed(2)} = {(vote.appliedWeight ?? vote.weight).toFixed(2)} · {vote.weightSource ?? "unscaled"}
                         </span>
                       </div>
-                      <p className="mt-0.5 text-[10px] text-white/70">{vote.reason}</p>
-                      {vote.eventKey && <p title={vote.eventKey} className="mt-0.5 break-all text-[9px] text-white/35">Event key: {vote.eventKey}</p>}
+                      <p className="mt-0.5 text-[10px] text-foreground">{vote.reason}</p>
+                      {vote.eventKey && <p title={vote.eventKey} className="mt-0.5 break-all text-[9px] text-muted-foreground">Event key: {vote.eventKey}</p>}
                     </div>
                   ))}
                 </div>
@@ -1021,75 +956,75 @@ function GameCard({ game, year, month, day, idx, league, learned, codeMode, lear
             )}
             {codeMode === "backup" && (
               <Fold title="Conventional Game Analysis">
-                <p className="mb-2 text-[10px] text-white/45">Record, form, splits, rest, injury count, and H2H are context only; missing values stay unavailable. International-team last-five records are shown as W-D-L before kickoff.</p>
+                <p className="mb-2 text-[10px] text-muted-foreground">Record, form, splits, rest, injury count, and H2H are context only; missing values stay unavailable. International-team last-five records are shown as W-D-L before kickoff.</p>
                 <div className="overflow-x-auto">
                   <table className="w-full min-w-[360px] text-left text-[10px]">
-                    <thead className="text-white/45"><tr><th className="py-1 pr-2">Factor</th><th className="py-1 pr-2">{game.homeTeam}</th><th className="py-1">{game.awayTeam}</th></tr></thead>
+                    <thead className="text-muted-foreground"><tr><th className="py-1 pr-2">Factor</th><th className="py-1 pr-2">{game.homeTeam}</th><th className="py-1">{game.awayTeam}</th></tr></thead>
                     <tbody>{conventionalRows.map((row) => (
-                      <tr key={row.label} className="border-t border-white/5">
-                        <th className="py-1 pr-2 font-medium text-white/60">{row.label}</th>
-                        <td className="py-1 pr-2 text-white/80">{row.home}</td>
-                        <td className="py-1 text-white/80">{row.away}</td>
+                      <tr key={row.label} className="border-t border-border">
+                        <th className="py-1 pr-2 font-medium text-muted-foreground">{row.label}</th>
+                        <td className="py-1 pr-2 text-foreground">{row.home}</td>
+                        <td className="py-1 text-foreground">{row.away}</td>
                       </tr>
                     ))}</tbody>
                   </table>
                 </div>
-                <p className="mt-2 text-[9px] text-white/40">Season record: ESPN scoreboard · international last five: ESPN match history before kickoff · other unavailable fields are not inferred.</p>
+                <p className="mt-2 text-[9px] text-muted-foreground">Season record: ESPN scoreboard · international last five: ESPN match history before kickoff · other unavailable fields are not inferred.</p>
               </Fold>
             )}
             {codeMode === "backup" && (
               <Fold title="Current Market Analysis">
                 {marketRead ? (
                   <>
-                    <p className="text-[11px] text-white/75">{marketRead.source} · current snapshot</p>
-                    <p className="mt-1 text-[10px] text-white/55">
+                    <p className="text-[11px] text-foreground">{marketRead.source} · current snapshot</p>
+                    <p className="mt-1 text-[10px] text-muted-foreground">
                       {game.homeTeam}: {marketRead.homePrice ?? "unavailable"}{marketRead.homeImpliedPct == null ? "" : ` · ${marketRead.homeImpliedPct}% raw implied`}
                     </p>
-                    <p className="text-[10px] text-white/55">
+                    <p className="text-[10px] text-muted-foreground">
                       {game.awayTeam}: {marketRead.awayPrice ?? "unavailable"}{marketRead.awayImpliedPct == null ? "" : ` · ${marketRead.awayImpliedPct}% raw implied`}
                     </p>
                     {marketRead.homeNoVigPct != null && marketRead.awayNoVigPct != null && (
-                      <p className="mt-1 text-[10px] text-white/65">
+                      <p className="mt-1 text-[10px] text-muted-foreground">
                         No-vig market share: {game.homeTeam} {marketRead.homeNoVigPct}% · {game.awayTeam} {marketRead.awayNoVigPct}% · overround {marketRead.overroundPct}%
                       </p>
                     )}
-                    <p className="mt-2 text-[10px] text-white/55">
+                    <p className="mt-2 text-[10px] text-muted-foreground">
                       Spread: {book?.spreadHome || "unavailable"} / {book?.spreadAway || "unavailable"} · Total: {book?.overUnder || "unavailable"}
                     </p>
-                    <p className="mt-1 text-[9px] text-white/40">The feed did not supply a retrieval timestamp; no line movement is inferred.</p>
+                    <p className="mt-1 text-[9px] text-muted-foreground">The feed did not supply a retrieval timestamp; no line movement is inferred.</p>
                   </>
-                ) : <p className="text-[11px] text-white/55">No current moneyline prices are available for this game.</p>}
-                <p className="mt-2 text-[9px] text-white/40">Snapshot only. No line history, CLV, or market tracking is saved.</p>
+                ) : <p className="text-[11px] text-muted-foreground">No current moneyline prices are available for this game.</p>}
+                <p className="mt-2 text-[9px] text-muted-foreground">Snapshot only. No line history, CLV, or market tracking is saved.</p>
               </Fold>
             )}
             {codeMode === "backup" && (
               <Fold title="Underdog Decode">
                 {underdogRead ? (
                   <>
-                    <p className="text-[11px] text-white/80">
+                    <p className="text-[11px] text-foreground">
                       Market underdog: {underdogRead.side === "home" ? game.homeTeam : game.awayTeam} · no-vig implied {underdogRead.side === "home" ? marketRead?.homeNoVigPct : marketRead?.awayNoVigPct}%
                     </p>
-                    <p className="mt-1 text-[10px] text-white/60">
+                    <p className="mt-1 text-[10px] text-muted-foreground">
                       Symbolic vote share: {underdogRead.voteSharePct}% · {underdogRead.supportingSignals} supporting signals · {underdogRead.supportingCategories} categories
                     </p>
-                    <p className="mt-1 text-[10px] text-white/50">
+                    <p className="mt-1 text-[10px] text-muted-foreground">
                       Opposing signals: {underdogRead.opposingSignals}. This is a decode comparison, not an upset probability or bet recommendation.
                     </p>
                   </>
-                ) : <p className="text-[11px] text-white/55">No two-sided market price is available to identify a clear underdog.</p>}
+                ) : <p className="text-[11px] text-muted-foreground">No two-sided market price is available to identify a clear underdog.</p>}
               </Fold>
             )}
             {codeMode === "backup" && (
               <Fold title="Backup Betting Decision">
-                <p className="text-xs font-black tracking-wide text-white">
+                <p className="text-xs font-black tracking-wide text-foreground">
                   {backupDecision.label === "PICK" || backupDecision.label === "LEAN"
                     ? `SYSTEM ${backupDecision.label} · ${pickName}`
                     : "NO BET"}
                 </p>
-                <p className="mt-1 text-[10px] text-white/60">Model win probability: unavailable · no-vig market: {marketRead?.homeNoVigPct == null ? "unavailable" : `${game.homeTeam} ${marketRead.homeNoVigPct}%`} / {marketRead?.awayNoVigPct == null ? "unavailable" : `${game.awayTeam} ${marketRead.awayNoVigPct}%`} · probability advantage: unavailable</p>
-                <p className="mt-1 text-[11px] text-white/65">{backupDecision.reason}</p>
-                <p className="mt-1 text-[9px] text-white/40">System pick/lean uses the existing decode threshold, not a calibrated win probability or proven betting edge.</p>
-                {isFinal && <p className="mt-1 text-[9px] text-white/40">Completed-game decode; no original pregame pick was saved.</p>}
+                <p className="mt-1 text-[10px] text-muted-foreground">Model win probability: unavailable · no-vig market: {marketRead?.homeNoVigPct == null ? "unavailable" : `${game.homeTeam} ${marketRead.homeNoVigPct}%`} / {marketRead?.awayNoVigPct == null ? "unavailable" : `${game.awayTeam} ${marketRead.awayNoVigPct}%`} · probability advantage: unavailable</p>
+                <p className="mt-1 text-[11px] text-muted-foreground">{backupDecision.reason}</p>
+                <p className="mt-1 text-[9px] text-muted-foreground">System pick/lean uses the existing decode threshold, not a calibrated win probability or proven betting edge.</p>
+                {isFinal && <p className="mt-1 text-[9px] text-muted-foreground">Completed-game decode; no original pregame pick was saved.</p>}
               </Fold>
             )}
             <Fold title="Game Energies">{fullPart("game")}</Fold>
@@ -1116,7 +1051,7 @@ function GameCard({ game, year, month, day, idx, league, learned, codeMode, lear
                   normalizeSportsName(predictionInput[side].name) === "green bay packers",
                 );
                 return missing.length ? (
-                  <div className="mt-2 space-y-1 text-[10px] text-amber-200/80">
+                  <div className="mt-2 space-y-1 text-[10px] text-primary/80">
                     <p>Missing verified Part 3 birth dates in the pregame snapshot: {missing.join(" · ")}. No postgame lineup or result was substituted.</p>
                     {communityOwnedPackers && <p>Green Bay has community ownership, not one individual owner, so no owner birth-date layer applies.</p>}
                   </div>
@@ -1138,7 +1073,7 @@ function GameCard({ game, year, month, day, idx, league, learned, codeMode, lear
       </div>
     </div>
   );
-}
+});
 
 function ForwardAccuracy({ mode, games }: { mode: SportsMode; games: ESPNGame[] }) {
   const [report, setReport] = useState<ReturnType<typeof evaluateForward> | null>(null);
@@ -1238,7 +1173,7 @@ function HitRatePanel() {
 function Mini({ label, value, accent = "white" }: { label: string; value: React.ReactNode; accent?: string }) {
   return (
     <div>
-      <p className="text-[8px] uppercase tracking-widest font-bold mb-0.5" style={{ color: "rgba(96,165,250,0.7)" }}>{label}</p>
+      <p className="text-[8px] uppercase tracking-widest font-bold mb-0.5" style={{ color: "hsl(var(--foreground) / 0.7)" }}>{label}</p>
       <p className="text-[13px] font-bold" style={{ color: accent }}>{value}</p>
     </div>
   );
@@ -1246,10 +1181,10 @@ function Mini({ label, value, accent = "white" }: { label: string; value: React.
 function NumInput({ label, value, set, min, max, w = "w-14", readOnly }: { label: string; value: number; set: (n: number) => void; min: number; max: number; w?: string; readOnly?: boolean }) {
   return (
     <div>
-      <p className="text-[7px] uppercase tracking-widest mb-1 text-center text-white/30">{label}</p>
+      <p className="text-[7px] uppercase tracking-widest mb-1 text-center text-muted-foreground">{label}</p>
       <input type="number" min={min} max={max} value={value} readOnly={readOnly} onChange={e => set(+e.target.value)}
         className={`${w} text-center rounded-lg px-1.5 py-1.5 text-xs font-bold`}
-        style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "white", outline: "none" }} />
+        style={{ background: "hsl(var(--muted))", border: "1px solid hsl(var(--border))", color: "white", outline: "none" }} />
     </div>
   );
 }
@@ -1258,8 +1193,8 @@ function AthletePersonalDayCard({ month, day, year }: { month: number; day: numb
   const [bd, setBd] = useState(1);
   const pd = useMemo(() => calcAthletePersonalDay(bm, bd, month, day, year), [bm, bd, month, day, year]);
   return (
-    <div className="rounded-2xl p-4" style={{ background: "#10141c", border: "1px solid rgba(255,255,255,0.08)" }}>
-      <p className="text-[10px] font-bold tracking-[0.16em] text-white/40 mb-2">ATHLETE PERSONAL DAY</p>
+    <div className="rounded-2xl p-4" style={{ background: "hsl(var(--background))", border: "1px solid hsl(var(--primary) / 0.45)" }}>
+      <p className="text-[10px] font-bold tracking-[0.16em] text-muted-foreground mb-2">ATHLETE PERSONAL DAY</p>
       <div className="flex gap-2 mb-2">
         <NumInput label="M" value={bm} set={setBm} min={1} max={12} />
         <NumInput label="D" value={bd} set={setBd} min={1} max={31} />
@@ -1438,7 +1373,7 @@ export default function SportsPredictionPage() {
     setBoard((prev) => {
       const rows = prev.context === boardContext ? prev.rows : {};
       const old = rows[row.id];
-      return old?.pct === row.pct && old?.pick === row.pick && old?.allow === row.allow && old?.result === row.result && old?.storyPick === row.storyPick && old?.storyResult === row.storyResult
+      return old?.pct === row.pct && old?.pick === row.pick && old?.allow === row.allow && old?.result === row.result
         ? prev : { context: boardContext, rows: { ...rows, [row.id]: row } };
     });
   }, [boardContext]);
@@ -1448,19 +1383,29 @@ export default function SportsPredictionPage() {
     setRefreshRevision((revision) => revision + 1);
     void fetchAll();
   }, [fetchAll]);
+  // Heavy decode runs once per slate and only for the open sport; card updates
+  // merge in cheaply below instead of re-decoding every game in every sport.
+  const baseBooks = useMemo(() => {
+    const by: Record<string, ReturnType<typeof slateLeg>[]> = {};
+    if (!activeSportGroup) return by;
+    for (const lg of activeSportGroup.leagues) {
+      const list = allGames[lg];
+      if (list) by[lg] = list.map((g) => slateLeg(g, year, month, day, lg, ov, true, catalog, code));
+    }
+    return by;
+  }, [allGames, year, month, day, code, ov, learningRevision, catalog, activeSportGroup]);
   const books = useMemo(() => {
     const by: Record<string, ReturnType<typeof slateLeg>[]> = {};
-    for (const [lg, list] of Object.entries(allGames)) {
-      by[lg] = list.map((g) => {
-        const base = slateLeg(g, year, month, day, lg, ov, true, catalog, code);
-        // Re-decode final games from the frozen pregame input when one exists;
-        // keep the original captured pick untouched as the audit record.
-        const card = g.status === "post" ? undefined : board[`${lg}-${g.id}`];
+    for (const [lg, legs] of Object.entries(baseBooks)) {
+      // Re-decode final games from the frozen pregame input when one exists;
+      // keep the original captured pick untouched as the audit record.
+      by[lg] = legs.map((base) => {
+        const card = base.open ? board[base.id] : undefined;
         return card ? {...base, pick:card.pick, pct:card.pct, allow:card.allow, result:card.result, open:card.open} : base;
       });
     }
     return by;
-  }, [allGames, year, month, day, code, ov, learningRevision, catalog, board, league]);
+  }, [baseBooks, board]);
   const sportParlays = reportLeagues.map((lg) => ({ lg, legs: bestLegs(books[lg] ?? []) })).filter((x) => x.legs.length > 0);
   const dayReport = (() => {
     const legs = reportLeagues.flatMap((lg) => books[lg] ?? []);
@@ -1617,72 +1562,72 @@ export default function SportsPredictionPage() {
         <button
           type="button"
           onClick={showSportPicker}
-          className="inline-flex min-h-9 items-center gap-2 rounded-lg border border-white/10 bg-white/[0.03] px-3 text-[11px] font-semibold text-white/65 transition hover:border-white/20 hover:text-white"
+          className="inline-flex min-h-9 items-center gap-2 rounded-lg border border-border bg-muted px-3 text-[11px] font-semibold text-muted-foreground transition hover:border-primary/60 hover:text-foreground"
           data-testid="button-back-to-sports"
         >
           <ArrowLeft size={13} aria-hidden="true" />
           All sports
         </button>
-        <div className="flex rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.1)" }}>
+        <div className="flex rounded-xl overflow-hidden" style={{ border: "1px solid hsl(var(--border))" }}>
           {(["learned", "backup"] as const).map((m) => (
             <button key={m} onClick={() => { setSportsMode(m); setCode(m); }}
               className="px-3 py-2 text-[11px] tracking-wide"
               style={code === m
-                ? { background: YELLOW, color: "#000", fontWeight: 800 }
-                : { background: "#000", color: YELLOW, fontWeight: 600 }}>
+                ? { background: YELLOW, color: "hsl(var(--primary-foreground))", fontWeight: 800 }
+                : { background: "hsl(var(--background))", color: YELLOW, fontWeight: 600 }}>
               {m === "learned" ? "Learned Code" : "Backup SportsCode"}
             </button>
           ))}
         </div>
-        <p className="text-[11px] text-white/40" data-testid="active-league-slate-count">
+        <p className="text-[11px] text-muted-foreground" data-testid="active-league-slate-count">
           {month}/{day}/{year} · {leagueInfo.label} · {leagueCounts[league] ?? 0} games
         </p>
       </div>
 
       {code === "backup" && (
-        <div className="rounded-xl p-3" style={{ background: "#000", border: "1px solid #FF6A00" }}>
+        <div className="rounded-xl p-3" style={{ background: "hsl(var(--background))", border: "1px solid hsl(var(--primary))" }}>
           <p title="Past results are replayed using Backup SportsCode on the selected date; these are recalculated, not originally saved forecasts." className="text-[10px] font-bold tracking-[0.18em]" style={{ color: YELLOW }}>
             DAY ACCURACY · {activeSportGroup.label} · {month}/{day}/{year}
           </p>
-          <p className="mt-1 text-[10px] font-bold tracking-wide text-white/65">BACKUP SPORTSCODE · PICK / LEAN / NO BET TOTAL</p>
-          <p className="mt-2 text-[10px] text-white/65">
+          <p className="mt-1 text-[10px] font-bold tracking-wide text-muted-foreground">BACKUP SPORTSCODE · PICK / LEAN / NO BET TOTAL</p>
+          <p className="mt-2 text-[10px] text-muted-foreground">
             SYSTEM PICK {backupDayReport.outcome.PICK.hits}/{backupDayReport.outcome.PICK.done}
             {backupDayReport.outcome.PICK.open ? ` · ${backupDayReport.outcome.PICK.open} open` : ""}
             {" · "}LEAN {backupDayReport.outcome.LEAN.hits}/{backupDayReport.outcome.LEAN.done}
             {backupDayReport.outcome.LEAN.open ? ` · ${backupDayReport.outcome.LEAN.open} open` : ""}
             {" · "}NO BET {backupDayReport.noBet}
           </p>
-          <p className="mt-1 text-2xl font-black text-white">
+          <p className="mt-1 text-2xl font-black text-foreground">
             {backupDayReport.totalHits}/{backupDayReport.totalDone}
             <span className="ml-2 text-[14px]" style={{ color: YELLOW }}>
               {backupDayReport.totalDone ? `${backupDayReport.totalPct}% total` : "no settled picks yet"}
             </span>
           </p>
-          <p className="text-[10px] text-white/40">
+          <p className="text-[10px] text-muted-foreground">
             Total includes settled PICK + LEAN results; NO BET and pushes are excluded. {backupDayReport.pushes ? `${backupDayReport.pushes} pushes excluded.` : ""}
           </p>
         </div>
       )}
 
       <div className="flex flex-wrap items-end gap-3">
-        <label htmlFor="sports-game-date" className="text-[10px] font-semibold text-white/55">
+        <label htmlFor="sports-game-date" className="text-[10px] font-semibold text-muted-foreground">
           Game date
           <input id="sports-game-date" type="date" value={selectedDate} onChange={(event) => updateRoute({ date: event.target.value })}
-            className="mt-1 block h-10 rounded-lg border border-white/10 bg-[#10100f] px-3 text-sm font-semibold text-white outline-none [color-scheme:dark] focus:border-[#ff6a00]/60" />
+            className="mt-1 block h-10 rounded-lg border border-border bg-background px-3 text-sm font-semibold text-foreground outline-none [color-scheme:dark] focus:border-primary/60" />
         </label>
-        <button aria-label="Refresh games" onClick={refreshSlate} className="mb-0.5 p-2 rounded-lg text-white/50" style={{ border: "1px solid rgba(255,255,255,0.08)" }}>
+        <button aria-label="Refresh games" onClick={refreshSlate} className="mb-0.5 p-2 rounded-lg text-muted-foreground" style={{ border: "1px solid hsl(var(--border))" }}>
           <RefreshCw size={14} className={slateLoading ? "animate-spin" : ""} />
         </button>
       </div>
 
       {activeSportGroup.leagues.length > 1 && (
-        <section className="rounded-xl border border-white/10 bg-[#0c0c0b] p-3" aria-label={`${activeSportGroup.label} competitions`}>
+        <section className="rounded-xl border border-border bg-background p-3" aria-label={`${activeSportGroup.label} competitions`}>
           <div className="mb-2 flex items-center justify-between gap-3">
             <div>
-              <h2 className="text-xs font-bold text-white">{activeSportGroup.label} schedules</h2>
-              <p className="mt-0.5 text-[10px] text-white/40">Choose a competition for this date.</p>
+              <h2 className="text-xs font-bold text-foreground">{activeSportGroup.label} schedules</h2>
+              <p className="mt-0.5 text-[10px] text-muted-foreground">Choose a competition for this date.</p>
             </div>
-            <span className="text-[10px] text-white/45">{sportLiveLeagues.length} available</span>
+            <span className="text-[10px] text-muted-foreground">{sportLiveLeagues.length} available</span>
           </div>
           {sportLiveLeagues.length > 0 ? (
             <div className="flex flex-wrap gap-1.5">
@@ -1697,8 +1642,8 @@ export default function SportsPredictionPage() {
                     aria-label={`${item} ${leagueCounts[item] ?? 0}`}
                     className="rounded-lg px-2.5 py-1.5 text-[11px] font-semibold transition-colors"
                     style={active
-                      ? { background: YELLOW, color: "#000" }
-                      : { background: "rgba(255,255,255,0.035)", color: "rgba(255,255,255,0.75)", border: "1px solid rgba(255,255,255,0.09)" }}
+                      ? { background: YELLOW, color: "hsl(var(--primary-foreground))" }
+                      : { background: "hsl(var(--muted))", color: "hsl(var(--foreground))", border: "1px solid hsl(var(--border))" }}
                     data-testid={`button-select-league-${item.replace(/[^a-z0-9]+/gi, "-").toLowerCase()}`}
                   >
                     {item}<span className="ml-1.5 text-[10px] opacity-60">{leagueCounts[item] ?? 0}</span>
@@ -1707,7 +1652,7 @@ export default function SportsPredictionPage() {
               })}
             </div>
           ) : (
-            <p className="text-[11px] text-white/40">{currentSlateLoading ? "Checking schedules…" : "No competitions have games on this date."}</p>
+            <p className="text-[11px] text-muted-foreground">{currentSlateLoading ? "Checking schedules…" : "No competitions have games on this date."}</p>
           )}
         </section>
       )}
@@ -1715,46 +1660,34 @@ export default function SportsPredictionPage() {
       {currentSlateLoading && sportLiveLeagues.length === 0 ? (
         <p className="text-[11px]" style={{ color: YELLOW }}>Checking {activeSportGroup.label} schedules.</p>
       ) : sportLiveLeagues.length === 0 && sportFailedFeeds.length === sportLeagues.length && sportFailedFeeds.length > 0 ? (
-        <p className="text-[12px] text-rose-300" role="status">{activeSportGroup.label} feeds didn’t respond. Use Refresh games to retry.</p>
+        <p className="text-[12px] text-destructive" role="status">{activeSportGroup.label} feeds didn’t respond. Use Refresh games to retry.</p>
       ) : sportLiveLeagues.length === 0 ? (
-        <p className="text-[12px] text-white/50">No {activeSportGroup.label} games on {month}/{day}/{year}.</p>
+        <p className="text-[12px] text-muted-foreground">No {activeSportGroup.label} games on {month}/{day}/{year}.</p>
       ) : (
         <div className="space-y-2">
-          {currentSlateLoading && <p className="text-[11px] text-white/45" role="status">More {activeSportGroup.label} schedules are loading.</p>}
+          {currentSlateLoading && <p className="text-[11px] text-muted-foreground" role="status">More {activeSportGroup.label} schedules are loading.</p>}
           {!currentSlateLoading && sportFailedFeeds.length > 0 && (
-            <p className="text-[11px] text-amber-200/80" role="status">
+            <p className="text-[11px] text-primary/80" role="status">
               Some schedules did not respond ({sportFailedFeeds.join(", ")}). The games shown may be incomplete; use Refresh games to retry.
             </p>
           )}
         </div>
       )}
 
-      {code === "learned" && <div className="rounded-xl p-3" style={{ background: "#000", border: "1px solid #FF6A00" }}>
+      {code === "learned" && <div className="rounded-xl p-3" style={{ background: "hsl(var(--background))", border: "1px solid hsl(var(--primary))" }}>
           {dayReport.done + dayReport.open > 0 && <>
           <p title="Completed Learned Code picks graded against their final results." className="text-[10px] font-bold tracking-[0.18em]" style={{ color: YELLOW }}>LEARNED CODE ACCURACY · {activeSportGroup.label} · {month}/{day}/{year}</p>
-          <p aria-label={`Learned Code day accuracy: ${dayReport.hits} of ${dayReport.done}, ${dayReport.pct} percent`} className="text-2xl font-black text-white mt-1"><span className="text-[10px] font-bold tracking-[0.14em] text-white/55">LEARNED CODE</span> {dayReport.done ? `${dayReport.hits}/${dayReport.done}` : "—"} <span className="text-[14px]" style={{ color: YELLOW }}>{dayReport.done ? `${dayReport.pct}%` : "no finals yet"}</span></p>
-          <p className="text-[11px] text-white/45 mt-1">{dayReport.leagues.map(([lg, r]) => `${lg} ${r.hits}/${r.done}`).join(" · ") || "Waiting on games."}{dayReport.open ? ` · ${dayReport.open} still open` : ""}</p>
+          <p aria-label={`Learned Code day accuracy: ${dayReport.hits} of ${dayReport.done}, ${dayReport.pct} percent`} className="text-2xl font-black text-foreground mt-1"><span className="text-[10px] font-bold tracking-[0.14em] text-muted-foreground">LEARNED CODE</span> {dayReport.done ? `${dayReport.hits}/${dayReport.done}` : "—"} <span className="text-[14px]" style={{ color: YELLOW }}>{dayReport.done ? `${dayReport.pct}%` : "no finals yet"}</span></p>
+          <p className="text-[11px] text-muted-foreground mt-1">{dayReport.leagues.map(([lg, r]) => `${lg} ${r.hits}/${r.done}`).join(" · ") || "Waiting on games."}{dayReport.open ? ` · ${dayReport.open} still open` : ""}</p>
           </>}
-          {(() => {
-            const told = rows.filter((r) => r.storyResult === "hit" || r.storyResult === "miss");
-            const sHits = told.filter((r) => r.storyResult === "hit").length;
-            const sOpen = rows.filter((r) => r.storyResult === "open").length;
-            return rows.length > 0 ? (
-              <p className="text-[11px] text-white/70 mt-2" data-testid="story-reading-tally">
-                <span className="text-[10px] font-bold tracking-[0.14em]" style={{ color: YELLOW }}>STORY READING · {league}</span>{" "}
-                <span className="font-black text-white">{told.length ? `${sHits}/${told.length}` : "—"}</span>
-                {sOpen ? <span className="text-white/45"> · {sOpen} still open</span> : null}
-              </p>
-            ) : null;
-          })()}
           <ForwardAccuracy mode={code} games={Object.entries(allGames).filter(([item]) => reportLeagues.includes(item)).flatMap(([, list]) => list)} />
       </div>}
       {code === "learned" && allLegs.length > 0 && (
-        <div className="rounded-xl p-3" style={{ background: "#000", border: "1px solid #FF6A00" }}>
+        <div className="rounded-xl p-3" style={{ background: "hsl(var(--background))", border: "1px solid hsl(var(--primary))" }}>
           <p className="text-[10px] font-bold tracking-[0.18em] mb-2" style={{ color: YELLOW }}>{activeSportGroup.label.toUpperCase()} PARLAY · {month}/{day}/{year}</p>
           <ol className="space-y-1">
             {allLegs.map((r, i) => (
-              <li key={r.id} className="flex justify-between gap-3 text-[12px] text-white">
+              <li key={r.id} className="flex justify-between gap-3 text-[12px] text-foreground">
                 <span>{i + 1}. {r.league} · {r.pick}</span>
                 <span className="font-bold" style={{ color: r.result === "hit" ? GREEN : r.result === "miss" ? ROSE : YELLOW }}>{r.allow != null && r.allow >= 75 ? Math.round(r.allow) : r.pct}%{r.result === "hit" ? " · HIT" : r.result === "miss" ? " · MISS" : ""}</span>
               </li>
@@ -1767,12 +1700,12 @@ export default function SportsPredictionPage() {
         <div className="space-y-2">
           <p className="text-[10px] font-bold tracking-[0.18em]" style={{ color: YELLOW }}>BEST {activeSportGroup.label.toUpperCase()} PLAYS</p>
           {sportParlays.map(({ lg, legs }) => (
-            <div key={lg} className="rounded-xl p-3" style={{ background: "#000", border: "1px solid rgba(255,106,0,0.45)" }}>
+            <div key={lg} className="rounded-xl p-3" style={{ background: "hsl(var(--background))", border: "1px solid hsl(var(--primary) / 0.45)" }}>
               <p className="text-[11px] font-black mb-1" style={{ color: YELLOW }}>{lg}</p>
               <ol className="space-y-1">
                 {legs.map((r, i) => (
-                  <li key={r.id} className="flex justify-between gap-3 text-[12px] text-white">
-                    <span>{i + 1}. {r.pick} <span className="text-white/40">· {r.matchup}</span></span>
+                  <li key={r.id} className="flex justify-between gap-3 text-[12px] text-foreground">
+                    <span>{i + 1}. {r.pick} <span className="text-muted-foreground">· {r.matchup}</span></span>
                     <span className="font-bold shrink-0" style={{ color: r.result === "hit" ? GREEN : r.result === "miss" ? ROSE : YELLOW }}>{r.allow != null && r.allow >= 75 ? Math.round(r.allow) : r.pct}%{r.result === "hit" ? " · HIT" : r.result === "miss" ? " · MISS" : ""}</span>
                   </li>
                 ))}
@@ -1786,10 +1719,10 @@ export default function SportsPredictionPage() {
         <div className="space-y-2">
           <p className="text-[10px] font-bold tracking-[0.18em]" style={{ color: YELLOW }}>BEST PLAYS · {league}</p>
           {best.map((r) => (
-            <div key={r.id} className="rounded-xl px-3 py-2.5 flex items-center justify-between" style={{ background: "#000", border: "1px solid #FF6A00" }}>
+            <div key={r.id} className="rounded-xl px-3 py-2.5 flex items-center justify-between" style={{ background: "hsl(var(--background))", border: "1px solid hsl(var(--primary))" }}>
               <div>
-                <p className="text-[13px] font-bold text-white">{r.matchup}</p>
-                <p className="text-[10px] text-white/40">{r.venue}{r.time ? ` · ${r.time}` : ""} · {r.record}</p>
+                <p className="text-[13px] font-bold text-foreground">{r.matchup}</p>
+                <p className="text-[10px] text-muted-foreground">{r.venue}{r.time ? ` · ${r.time}` : ""} · {r.record}</p>
                 <p className="text-[12px] font-bold mt-0.5" style={{ color: YELLOW }}>PICK: {r.pick}</p>
               </div>
               <p className="text-2xl font-black" style={{ color: YELLOW }}>{r.allow != null && r.allow >= 75 ? Math.round(r.allow) : r.pct}%</p>
@@ -1799,9 +1732,9 @@ export default function SportsPredictionPage() {
       )}
 
       {sportLiveLeagues.length > 0 && (games.length === 0 && currentSlateLoading ? (
-        <div className="rounded-2xl p-10 text-center"><Loader2 size={22} className="animate-spin mx-auto mb-2" style={{ color: YELLOW }} /><p className="text-sm text-white/60">Loading {leagueInfo.label}</p></div>
+        <div className="rounded-2xl p-10 text-center"><Loader2 size={22} className="animate-spin mx-auto mb-2" style={{ color: YELLOW }} /><p className="text-sm text-muted-foreground">Loading {leagueInfo.label}</p></div>
       ) : games.length === 0 ? (
-        <div className="rounded-2xl p-8 text-center"><AlertCircle size={20} className="mx-auto mb-2" style={{ color: ROSE }} /><p className="text-sm text-white">{failedFeeds.includes(league) ? `Could not load ${leagueInfo.label} games. Use Refresh games to retry.` : `No games loaded for ${leagueInfo.label} on ${month}/${day}/${year}.`}</p></div>
+        <div className="rounded-2xl p-8 text-center"><AlertCircle size={20} className="mx-auto mb-2" style={{ color: ROSE }} /><p className="text-sm text-foreground">{failedFeeds.includes(league) ? `Could not load ${leagueInfo.label} games. Use Refresh games to retry.` : `No games loaded for ${leagueInfo.label} on ${month}/${day}/${year}.`}</p></div>
       ) : (
         <div className="space-y-3">
           {games.map((g, i) => <GameCard key={`${code}-${currentSlateScope}-${league}-${weightVersion}-${refreshRevision}-${g.id}`} game={g} year={year} month={month} day={day} idx={i} league={league} learned={true} codeMode={code} learningRevision={learningRevision} refreshRevision={refreshRevision} onReady={code === "learned" ? onReady : undefined} prices={prices} outs={outs} catalog={catalog} />)}

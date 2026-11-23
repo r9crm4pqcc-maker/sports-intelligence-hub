@@ -25,15 +25,15 @@ export function LearnTheCode({
   const [open, setOpen] = useState(false);
 
   const confColor =
-    confidenceTag === "High" ? "#4ade80" :
+    confidenceTag === "High" ? "hsl(var(--primary))" :
     confidenceTag === "Medium" ? "#facc15" : "#f87171";
 
   return (
-    <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(96,165,250,0.18)", background: "rgba(10,20,40,0.7)" }}>
+    <div className="rounded-xl overflow-hidden" style={{ border: "1px solid hsl(var(--foreground) / 0.18)", background: "rgba(10,20,40,0.7)" }}>
       <button
         onClick={() => setOpen(o => !o)}
         className="w-full flex items-center gap-2 px-4 py-3 text-left"
-        style={{ background: "rgba(96,165,250,0.06)" }}
+        style={{ background: "hsl(var(--foreground) / 0.06)" }}
       >
         <BookOpen size={13} style={{ color: "#60a5fa", flexShrink: 0 }} />
         <span className="flex-1 text-xs font-semibold" style={{ color: "#60a5fa" }}>
@@ -45,13 +45,13 @@ export function LearnTheCode({
         >
           {confidenceTag} Confidence
         </span>
-        <span className="text-[9px] shrink-0" style={{ color: "rgba(255,255,255,0.3)" }}>
+        <span className="text-[9px] shrink-0" style={{ color: "hsl(var(--muted-foreground))" }}>
           {sourceLabel}
         </span>
         {open ? (
-          <ChevronDown size={12} style={{ color: "rgba(255,255,255,0.3)", flexShrink: 0 }} />
+          <ChevronDown size={12} style={{ color: "hsl(var(--muted-foreground))", flexShrink: 0 }} />
         ) : (
-          <ChevronRight size={12} style={{ color: "rgba(255,255,255,0.3)", flexShrink: 0 }} />
+          <ChevronRight size={12} style={{ color: "hsl(var(--muted-foreground))", flexShrink: 0 }} />
         )}
       </button>
 
@@ -61,22 +61,22 @@ export function LearnTheCode({
             <div key={i} className="flex gap-3">
               <div
                 className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5"
-                style={{ background: "rgba(96,165,250,0.12)", color: "#60a5fa" }}
+                style={{ background: "hsl(var(--foreground) / 0.12)", color: "#60a5fa" }}
               >
                 {i + 1}
               </div>
               <div className="flex-1">
-                <p className="text-xs font-semibold" style={{ color: "rgba(255,255,255,0.8)" }}>
+                <p className="text-xs font-semibold" style={{ color: "hsl(var(--foreground))" }}>
                   {s.step}
                 </p>
                 <p
                   className="text-[10px] mt-0.5 font-mono px-2 py-1 rounded"
-                  style={{ background: "rgba(255,255,255,0.04)", color: "#facc15" }}
+                  style={{ background: "hsl(var(--muted))", color: "#facc15" }}
                 >
                   {s.formula}
                 </p>
                 {s.example && (
-                  <p className="text-[10px] mt-0.5" style={{ color: "rgba(255,255,255,0.4)" }}>
+                  <p className="text-[10px] mt-0.5" style={{ color: "hsl(var(--muted-foreground))" }}>
                     {s.example}
                   </p>
                 )}
@@ -84,12 +84,12 @@ export function LearnTheCode({
             </div>
           ))}
           {extraNotes && (
-            <p className="text-[10px] leading-relaxed pt-1" style={{ color: "rgba(255,255,255,0.4)", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+            <p className="text-[10px] leading-relaxed pt-1" style={{ color: "hsl(var(--muted-foreground))", borderTop: "1px solid hsl(var(--border))" }}>
               {extraNotes}
             </p>
           )}
-          <div className="flex items-center gap-2 pt-1" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
-            <span className="text-[9px] px-2 py-0.5 rounded" style={{ background: "rgba(96,165,250,0.1)", color: "#60a5fa" }}>
+          <div className="flex items-center gap-2 pt-1" style={{ borderTop: "1px solid hsl(var(--border))" }}>
+            <span className="text-[9px] px-2 py-0.5 rounded" style={{ background: "hsl(var(--foreground) / 0.1)", color: "#60a5fa" }}>
               {sourceLabel}
             </span>
             <span className="text-[9px] px-2 py-0.5 rounded" style={{ background: `${confColor}15`, color: confColor }}>
@@ -112,12 +112,12 @@ interface OutputTagsProps {
 
 export function OutputTags({ calculated, interpretive, confidence = "High", source = "Per GG33 Academy" }: OutputTagsProps) {
   const confColor =
-    confidence === "High" ? "#4ade80" :
+    confidence === "High" ? "hsl(var(--primary))" :
     confidence === "Medium" ? "#facc15" : "#f87171";
 
   return (
     <div className="flex flex-wrap gap-2 text-[9px] mt-2">
-      <span className="px-2 py-0.5 rounded" style={{ background: "rgba(96,165,250,0.1)", color: "#60a5fa" }}>
+      <span className="px-2 py-0.5 rounded" style={{ background: "hsl(var(--foreground) / 0.1)", color: "#60a5fa" }}>
         CALC: {calculated}
       </span>
       <span className="px-2 py-0.5 rounded" style={{ background: "rgba(168,85,247,0.1)", color: "#a855f7" }}>
@@ -126,7 +126,7 @@ export function OutputTags({ calculated, interpretive, confidence = "High", sour
       <span className="px-2 py-0.5 rounded" style={{ background: `${confColor}15`, color: confColor }}>
         {confidence}
       </span>
-      <span className="px-2 py-0.5 rounded" style={{ background: "rgba(255,255,255,0.04)", color: "rgba(255,255,255,0.4)" }}>
+      <span className="px-2 py-0.5 rounded" style={{ background: "hsl(var(--muted))", color: "hsl(var(--muted-foreground))" }}>
         {source}
       </span>
     </div>

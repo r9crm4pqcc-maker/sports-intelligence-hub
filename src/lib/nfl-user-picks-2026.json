@@ -1,0 +1,16 @@
+{
+  "note": "User's own NFL moneyline picks, 2026 season, weeks 1-11. The user reports every one of these won.",
+  "weeks": [
+    { "week": 1, "from": "2026-09-09", "to": "2026-09-14", "picks": ["Seahawks", "49ers", "Steelers", "Bills", "Bears", "Bengals", "Jaguars", "Ravens", "Lions", "Jets", "Cardinals", "Vikings", "Raiders", "Eagles", "Giants", "Chiefs"] },
+    { "week": 2, "from": "2026-09-17", "to": "2026-09-21", "picks": ["Bills", "Panthers", "Vikings", "Bengals", "Browns", "Packers", "Saints", "Patriots", "Eagles", "Broncos", "Raiders", "Seahawks", "Cowboys", "49ers", "Chiefs", "Rams"] },
+    { "week": 3, "from": "2026-09-24", "to": "2026-09-28", "picks": ["Falcons", "Bills", "Browns", "Steelers", "Colts", "Lions", "Jaguars", "Chiefs", "Giants", "Commanders", "49ers", "Vikings", "Ravens", "Raiders", "Broncos", "Bears"] },
+    { "week": 4, "from": "2026-10-01", "to": "2026-10-05", "picks": ["Browns", "Colts", "Patriots", "Bears", "Jaguars", "Giants", "Cowboys", "Packers", "Ravens", "Rams", "Vikings", "49ers", "Chiefs", "Seahawks", "Panthers", "Falcons"] },
+    { "week": 5, "from": "2026-10-08", "to": "2026-10-12", "picks": ["Buccaneers", "Jaguars", "Packers", "Bengals", "Jets", "Steelers", "Texans", "Vikings", "Patriots", "Broncos", "Lions", "49ers", "Ravens", "Bills"], "ties": [["Commanders", "Giants"]] },
+    { "week": 6, "from": "2026-10-15", "to": "2026-10-19", "picks": ["Broncos", "Texans", "Panthers", "Bears", "Browns", "Titans", "Saints", "Patriots", "Steelers", "Cardinals", "Chiefs", "Bills", "Packers", "49ers"] },
+    { "week": 7, "from": "2026-10-22", "to": "2026-10-26", "picks": ["Bears", "Steelers", "Buccaneers", "Bengals", "Dolphins", "Falcons", "Browns", "Vikings", "Giants", "Broncos", "Lions", "Rams", "Seahawks", "Cowboys"] },
+    { "week": 8, "from": "2026-10-29", "to": "2026-11-02", "picks": ["Packers", "Bills", "Bengals", "Lions", "Buccaneers", "Steelers", "Jaguars", "Cardinals", "Raiders", "Rams", "Patriots", "Broncos", "Commanders", "Bears"] },
+    { "week": 9, "from": "2026-11-05", "to": "2026-11-09", "picks": ["Jaguars", "Bengals", "Broncos", "Lions", "Chiefs", "Giants", "Saints", "Cowboys", "Rams", "Texans", "Seahawks", "Packers", "49ers", "Bears", "Bills"] },
+    { "week": 10, "from": "2026-11-12", "to": "2026-11-16", "picks": ["Commanders", "Lions", "Bills", "Panthers", "Jaguars", "Chiefs", "Browns", "Colts", "Vikings", "Rams", "Seahawks", "49ers", "Bengals", "Chargers"] },
+    { "week": 11, "from": "2026-11-19", "to": "2026-11-22", "picks": ["Texans", "Bears", "Lions", "Panthers", "Bills", "Cowboys", "Chiefs", "Eagles", "Jets", "Broncos", "Giants", "49ers"], "undecoded": ["Bengals vs Commanders, Monday Nov 23"] }
+  ]
+}
