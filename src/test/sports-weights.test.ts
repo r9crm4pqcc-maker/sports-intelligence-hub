@@ -72,3 +72,14 @@ describe("Learned Code replay, Nov. 7–20", () => {
   it("NBA hits at least 82", () => { expect(hits("NBA")).toBeGreaterThanOrEqual(82); });
   it("NHL hits at least 72", () => { expect(hits("NHL")).toBeGreaterThanOrEqual(72); });
 });
+
+import season from "@/lib/nfl-season-2026.json";
+// User's own NFL picks, weeks 1–11 of 2026 (all winners): Learned Code must not drop below 118 of 161.
+describe("Learned Code vs the user's NFL season picks", () => {
+  const games = (season as any).games.filter((g: any) => g.userPick);
+  it("has all 161 decided games", () => { expect(games.length).toBe(161); });
+  it("matches at least 118 of the user's picks", () => {
+    const hits = games.filter((g: any) => runVotes({ ...g.input, league: "NFL", codeMode: "learned", gameStartTime: g.input.gameStartTime ?? g.game.startTime } as any).pick === g.userPick).length;
+    expect(hits).toBeGreaterThanOrEqual(118);
+  });
+});

@@ -36,6 +36,7 @@ use the editor.
 - ESPN/FanDuel and RotoWire feeds go through server routes under src/routes/api/sports-data. Why: browser cannot call those hosts directly (CORS).
 - tsconfig strict extras (noUncheckedIndexedAccess, exactOptionalPropertyTypes, etc.) are off. Why: imported code was written without them.
 - Learned Code weights: sports-weight-profile.json `leagues` holds a per-sport best-replay fit, with `global` as fallback. Why: each sport scores best with its own weights.
-- Story Reading (src/lib/sports-story-reading.ts) is a pure function fed by computeFullDecode reads; src/lib/sports-story-blend.ts adds its lean to the Learned Code margin with a per-sport strength (0 = off) fitted on saved games, and it keeps its own hit tally. Why: the reading method changes picks only where saved games show it helps.
+- Story Reading (src/lib/sports-story-reading.ts) is a pure function fed by computeFullDecode reads; src/lib/sports-story-blend.ts adds its lean to the Learned Code margin with a per-sport strength (0 = off) fitted on saved games; it is never rendered in Sports AI. Why: the reading method changes picks only where saved games show it helps.
 - Uploaded knowledge documents are applied as app logic, not stored as article pages. Why: the user wants the knowledge active, not a reading library.
 - Planet transits come from astronomy-engine in src/lib/transits.ts (sidereal = tropical − Lahiri ayanamsa) and are display-only in Game Energies and the Western/Vedic "sky right now" cards. Why: adds the requested transits without moving scored picks.
+- src/lib/nfl-season-2026.json holds exact app-captured NFL inputs with the user's own picks as labels; NFL weights are fitted against it. Why: the user's picks are the ground truth for NFL reading.
