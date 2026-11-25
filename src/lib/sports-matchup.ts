@@ -5,6 +5,7 @@ import type { ESPNGame } from "./espn";
 import type { AutoMatchup } from "./espn-auto";
 import type { VoteInput, VotePerson, VoteTeam } from "./vote-decode";
 import { keyPersonRoleForLeague, preferredKeyPlayerForTeam } from "./sports-method-candidate";
+import { getNflTeamPeople, withNflTeamPeople } from "./nfl-team-people";
 
 function tuple(date?: string | readonly number[] | null): [number, number, number] | undefined {
   if (!date) return undefined;
@@ -486,7 +487,7 @@ export function withHistoricalNflStarters(input: VoteInput, game: ESPNGame): Vot
     };
     changed = true;
   }
-  return changed ? next : input;
+  return withNflTeamPeople(changed ? next : input);
 }
 
 function readableVenueRegion(region?: string): string | undefined {
@@ -599,6 +600,15 @@ export function buildSportsInput(game: ESPNGame, year: number, month: number, da
       for(const person of feed?.keyPlayers || [])add({name:person.common,role:person.common===feed?.starter?.common ? starterRole : "player",dob:person.dob,jersey:person.jersey});
     }
     if(feed?.owner && !(candidateMethod && league === "UFC"))add({name:feed.owner.common,role:"owner",dob:feed.owner.dob});
+    if (league === "NFL") {
+      const defaults = getNflTeamPeople(name);
+      if (defaults) {
+        const hasRole = (role: VotePerson["role"]) => [...people.values()].some((p) => p.role === role);
+        if (!hasRole("quarterback")) add({ name: defaults.qb, role: "quarterback", dob: defaults.qbDob, jersey: defaults.qbJersey });
+        if (!hasRole("coach")) add({ name: defaults.coach, role: "coach", dob: defaults.coachDob });
+        if (!hasRole("owner")) add({ name: defaults.owner, role: "owner", dob: defaults.ownerDob });
+      }
+    }
     for (const p of getLearnedPeopleForTeam(name, catalog)) {
       if (candidateMethod && league === "UFC") break;
       const role = p.roles.find(r => ["pitcher","quarterback","goalie","manager","coach","player","owner","staff"].includes(r)) as VotePerson["role"] | undefined;
