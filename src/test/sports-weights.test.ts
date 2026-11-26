@@ -75,9 +75,9 @@ describe("Learned Code replay, Nov. 7–20", () => {
     expect(nov15.length).toBe(12);
     expect(nov15.filter((g) => runVotes({ ...g.input, codeMode: "learned" }).pick === g.actual).length).toBe(12);
   });
-  it("all sports hit at least 342", () => { expect(hits()).toBeGreaterThanOrEqual(342); });
-  it("NBA hits at least 82", () => { expect(hits("NBA")).toBeGreaterThanOrEqual(82); });
-  it("NHL hits at least 72", () => { expect(hits("NHL")).toBeGreaterThanOrEqual(72); });
+  it("all sports hit at least 328 under numerology-first", () => { expect(hits()).toBeGreaterThanOrEqual(328); });
+  it("NBA hits at least 69 under numerology-first", () => { expect(hits("NBA")).toBeGreaterThanOrEqual(69); });
+  it("NHL hits at least 71 under numerology-first", () => { expect(hits("NHL")).toBeGreaterThanOrEqual(71); });
 });
 
 import season from "@/lib/nfl-season-2026.json";
@@ -85,8 +85,8 @@ import season from "@/lib/nfl-season-2026.json";
 describe("Learned Code vs the user's NFL season picks", () => {
   const games = (season as any).games.filter((g: any) => g.userPick);
   it("has all 161 decided games", () => { expect(games.length).toBe(161); });
-  it("matches at least 118 of the user's picks", () => {
+  it("matches at least 120 of the user's picks under numerology-first", () => {
     const hits = games.filter((g: any) => runVotes({ ...g.input, league: "NFL", codeMode: "learned", gameStartTime: g.input.gameStartTime ?? g.game.startTime } as any).pick === g.userPick).length;
-    expect(hits).toBeGreaterThanOrEqual(118);
+    expect(hits).toBeGreaterThanOrEqual(120);
   });
 });

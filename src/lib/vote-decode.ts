@@ -26,7 +26,7 @@ import {
   sevenEnergyInjuryCaution,
 } from "./sports-prediction-rules";
 
-export let NUMEROLOGY_FIRST = false;
+export let NUMEROLOGY_FIRST = true;
 export function setNumerologyFirst(v: boolean) { NUMEROLOGY_FIRST = v; }
 export type Side = "home" | "away";
 export type Step = "Game-day energy" | "Team core" | "Number pairs" | "Chinese zodiac" | "Stars & venue" | "Colors" | "Records";
@@ -664,6 +664,46 @@ export function capAstrologyAgainstNumerology(
     vote.reason += ` — limited because numerology favors ${side}`;
   }
   return { side, scaled: opposingAstrology.length };
+}
+
+/** Numerology supersedes records/stats: when numerology leads, opposing Records cannot flip the pick. */
+export function capRecordsAgainstNumerology(
+  votes: Vote[],
+  mode: "learned" | "backup" = "learned",
+): { side: Side; scaled: number } | null {
+  if (mode === "backup") return null;
+
+  const numeric = { home: 0, away: 0 };
+  for (const vote of votes) {
+    if (isNumerologySignal(vote)) numeric[vote.side] += Math.max(0, vote.weight);
+  }
+  if (numeric.home === numeric.away) return null;
+
+  const side: Side = numeric.home > numeric.away ? "home" : "away";
+  const opposition: Side = side === "home" ? "away" : "home";
+  const numericEdge = Math.abs(numeric.home - numeric.away);
+  if (numericEdge < 3) return null;
+  const supportingOther = votes
+    .filter(vote => vote.side === side && !isNumerologySignal(vote) && vote.layer !== "Colors")
+    .reduce((sum, vote) => sum + Math.max(0, vote.weight), 0);
+  const opposingAstrology = votes
+    .filter(vote => vote.side === opposition && isAstrologySignal(vote) && vote.weight > 0)
+    .reduce((sum, vote) => sum + vote.weight, 0);
+  const opposingRecords = votes.filter(
+    vote => vote.side === opposition && vote.layer === "Records" && vote.weight > 0,
+  );
+  const recordsTotal = opposingRecords.reduce((sum, vote) => sum + vote.weight, 0);
+  const allowedRecords = Math.max(0, numericEdge + supportingOther - opposingAstrology - 0.01);
+  if (!recordsTotal || recordsTotal <= allowedRecords) return null;
+
+  const factor = allowedRecords / recordsTotal;
+  for (const vote of opposingRecords) {
+    vote.weight *= factor;
+    vote.appliedWeight = vote.weight;
+    vote.weightMultiplier = (vote.weightMultiplier ?? 1) * factor;
+    vote.reason += ` — limited because numerology supersedes records (${side})`;
+  }
+  return { side, scaled: opposingRecords.length };
 }
 
 /** Colors can support a stronger side but cannot create or reverse the primary edge. */

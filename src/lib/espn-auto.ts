@@ -415,6 +415,21 @@ async function hydrateKeyPlayers(path:string,teamId:string,summary:any,league:st
   }));
 }
 
+async function fetchDepthChartQb(path: string, teamId: string): Promise<{ id?: string; name?: string } | undefined> {
+  const data = await j<any>(`${SITE}/${path}/teams/${teamId}/depthcharts`);
+  const groups = data?.depthchart || data?.items || [];
+  for (const group of groups) {
+    const positions = group?.positions || {};
+    for (const [key, pos] of Object.entries<any>(positions)) {
+      if (!/^qb$/i.test(key)) continue;
+      const qb1 = pos?.athletes?.[0];
+      if (qb1?.displayName || qb1?.id) {
+        return { id: qb1.id ? String(qb1.id) : undefined, name: qb1.displayName || qb1.fullName };
+      }
+    }
+  }
+  return undefined;
+}
 export function resolveArchiveEvent(events:any[], away:string, home:string):string | undefined {
   const matches=(competitor:any,name:string)=>[competitor?.team?.displayName,competitor?.team?.shortDisplayName,competitor?.team?.name].some(n=>n && normalizeSportsName(n)===normalizeSportsName(name));
   const matching=events.filter(event=>{
@@ -501,14 +516,23 @@ export async function fetchAutoMatchup(
       const logoColors = [c.team?.color || details?.color, c.team?.alternateColor || details?.alternateColor];
       side.colors = logoColors.filter(Boolean).map((hex: string) => logoColorName(hex)).filter((name: string | null): name is string => !!name);
       const prob = c.probables?.[0];
-      const [starter, manager, keyPlayers] = await Promise.all([
+      const isFootball = league === "NFL" || league === "College Football";
+      const [starter, manager, keyPlayers, depthQb] = await Promise.all([
         prob ? buildStarter(path, prob, season) : Promise.resolve(undefined),
         teamId ? buildManager(path, teamId, season) : Promise.resolve(undefined),
         teamId ? hydrateKeyPlayers(path,teamId,s,league,includeListedPlayer) : Promise.resolve([]),
+        isFootball && teamId && !prob ? fetchDepthChartQb(path, teamId) : Promise.resolve(undefined),
       ]);
       side.keyPlayers=keyPlayers;
-      side.starter = starter || (league==="NFL" || league==="College Football"
-        ? keyPlayers.find(p=>p.position==="QB") : league==="MLB" ? keyPlayers.find(p=>["P","SP"].includes(p.position || "")) : keyPlayers[0]);
+      const footballQb = isFootball
+        ? keyPlayers.find(p => p.position === "QB" && p.confirmedStarter)
+          || (depthQb?.name
+            ? keyPlayers.find(p => p.position === "QB" && p.common.toLowerCase() === depthQb.name!.toLowerCase())
+            : undefined)
+          || keyPlayers.find(p => p.position === "QB")
+        : undefined;
+      side.starter = starter || (isFootball
+        ? footballQb : league==="MLB" ? keyPlayers.find(p=>["P","SP"].includes(p.position || "")) : keyPlayers[0]);
       side.manager = manager;
       const owner=details?.owner || details?.owners?.[0] || details?.franchise?.owner || details?.franchise?.owners?.[0];
       if (typeof owner === "string" && owner.trim())
