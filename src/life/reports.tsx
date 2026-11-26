@@ -22,7 +22,7 @@ export default function ReportsPage() {
   }, []);
   const day = readDay(profile, today.y, today.m, today.d);
   useDailyPing(day.headline, day.iso);
-  const rituals = calendarRitualsFor(today.y, today.m, today.d, day.tones.includes("wealth") || day.tones.includes("twenty-eight"));
+  const rituals = calendarRitualsFor(today.y, today.m, today.d);
   const chart = buildChart(profile, today);
   const own = isPath28(chart.lifePath.compound) && profile.month === 9 && profile.day === 8;
 

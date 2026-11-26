@@ -32,7 +32,7 @@ function fmtDate(y: number, m: number, d: number): string {
   });
 }
 
-export function universalDayOf(y: number, m: number, d: number): number {
+function universalDayOf(y: number, m: number, d: number): number {
   const digits = `${y}${String(m).padStart(2, "0")}${String(d).padStart(2, "0")}`
     .split("")
     .reduce((sum, ch) => sum + Number(ch), 0);

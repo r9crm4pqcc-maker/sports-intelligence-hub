@@ -14,7 +14,6 @@ describe("Sports editing", () => {
   it("research fills only missing birthdays and never replaces a verified starter", () => { expect(missingSportsFacts(input).some(t => t.id === "home:dob:0")).toBe(false); const next = applyResearchedFacts(input, [{ id: "away:dob:0", value: "2001-11-18", sourceUrl: "https://www.chicagobears.com/team/players-roster/caleb-williams/", quote: "Born November 18, 2001" }, { id: "home:dob:0", value: "2000-01-01", sourceUrl: "https://www.espn.com", quote: "not a requested fact" }]); expect(next.away.people?.[0]?.dob).toBe("2001-11-18"); expect(next.home.people?.[0]?.dob).toBe("1994-10-14"); });
 });
 describe("Calendar ritual restrictions", () => {
-  it("keeps the wealth shower ritual on a wealth-marked day", () => { expect(calendarRitualsFor(2026, 11, 7, true).allowed.some(r => r.title === "The Shower Ritual")).toBe(true); });
-  it("skips the wealth shower ritual on a non-wealth 7th and blocks grooming", () => { const read = calendarRitualsFor(2026, 11, 7); expect(read.allowed.some(r => r.title === "The Shower Ritual")).toBe(false); expect(read.allowed.some(r => /grooming|haircut/i.test(r.title))).toBe(false); });
+  it("keeps the shower ritual on a 7th; grooming bans are not blanket ritual bans", () => { const read = calendarRitualsFor(2026, 11, 7); expect(read.allowed.some(r => r.title === "The Shower Ritual")).toBe(true); expect(read.allowed.some(r => /grooming|haircut/i.test(r.title))).toBe(false); });
   it("blocks wealth grooming when a universal 7 conflicts with the 28th", () => { const read = calendarRitualsFor(2026, 5, 28); expect(read.blocked.some(r => r.title === "Wealth Haircut Maxing")).toBe(true); expect(read.allowed.some(r => r.title === "The Shower Ritual")).toBe(true); });
 });
