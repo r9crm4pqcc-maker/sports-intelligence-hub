@@ -25,11 +25,11 @@ const KIND_LABELS: Record<SportsCatalogKind, string> = {
 };
 
 const buttonBase =
-  "inline-flex min-h-9 items-center justify-center rounded-lg border px-3 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 disabled:cursor-not-allowed disabled:opacity-40";
+  "inline-flex min-h-9 items-center justify-center rounded-lg border px-3 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-40";
 const fieldBase =
-  "mt-1.5 w-full rounded-lg border border-orange-950 bg-[#10100f] px-3 py-2.5 text-sm text-stone-100 outline-none transition-colors placeholder:text-stone-600 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20";
-const subtleButton = `${buttonBase} border-orange-950 bg-[#10100f] text-stone-300 hover:border-orange-700 hover:text-orange-300`;
-const accentButton = `${buttonBase} border-orange-500 bg-orange-500 text-black hover:bg-orange-400`;
+  "mt-1.5 w-full rounded-lg border border-border bg-muted/60 px-3 py-2.5 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20";
+const subtleButton = `${buttonBase} border-border bg-card text-muted-foreground hover:border-primary/50 hover:text-primary`;
+const accentButton = `${buttonBase} border-primary bg-primary text-primary-foreground hover:bg-primary/90`;
 
 function splitList(value: string): string[] {
   return value.split(/[\n,]/).map((item) => item.trim()).filter(Boolean);
@@ -48,7 +48,7 @@ function LabelField({ label, hint, children }: { label: string; hint?: string; c
 function RecordMark({ kind }: { kind: SportsCatalogKind }) {
   const marks: Record<SportsCatalogKind, string> = { team: "TM", person: "PE", city: "CT", stadium: "ST" };
   return (
-    <span aria-hidden="true" className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-orange-900/70 bg-orange-500/10 font-mono text-[10px] font-bold tracking-wide text-orange-300">
+    <span aria-hidden="true" className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-primary/35 bg-primary/10 font-mono text-[10px] font-bold tracking-wide text-primary">
       {marks[kind]}
     </span>
   );
@@ -198,7 +198,7 @@ export default function SportsCatalogPage({ eyebrow = "Sports AI · Reference wo
   }
 
   return (
-    <div className="min-h-full bg-[#080807] py-1 text-stone-100">
+    <div className="min-h-full bg-background py-1 text-foreground">
       <div className="mx-auto max-w-7xl">
         <SportsPageHeader eyebrow={eyebrow} title={title} description={subtitle} actions={
           <div className="flex flex-wrap items-center gap-2" data-testid="catalog-create-actions">
@@ -215,11 +215,11 @@ export default function SportsCatalogPage({ eyebrow = "Sports AI · Reference wo
         } />
         {founding && <p className="mb-4 mt-2 font-mono text-[11px] text-stone-500" data-testid="founding-summary">{records.filter((r) => r.date).length} dated · {records.filter((r) => !r.date).length} missing a verified date · {records.filter((r) => getCatalogDateConflict(r)).length} conflicts</p>}
 
-        <section aria-label="Catalog summary" className="mb-5 grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-orange-950/80 bg-orange-950/70 sm:grid-cols-4" data-testid="catalog-summary">
+        <section aria-label="Catalog summary" className="mb-5 grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-border bg-border sm:grid-cols-4" data-testid="catalog-summary">
           {KINDS.map((kind) => (
             <button type="button" key={kind} onClick={() => setKindFilter(kindFilter === kind ? "all" : kind)}
               aria-pressed={kindFilter === kind}
-              className={`flex items-center justify-between bg-[#0d0d0c] px-4 py-3 text-left transition-colors hover:bg-[#14120f] ${kindFilter === kind ? "bg-orange-950/30" : ""}`}
+              className={`flex items-center justify-between bg-card px-4 py-3 text-left transition-colors hover:bg-muted/70 ${kindFilter === kind ? "bg-primary/10" : ""}`}
               data-testid={`summary-${kind}`}>
               <span className="text-xs text-stone-500">{KIND_LABELS[kind]}</span>
               <span className="font-mono text-lg font-semibold text-stone-200">{counts[kind]}</span>
@@ -227,11 +227,11 @@ export default function SportsCatalogPage({ eyebrow = "Sports AI · Reference wo
           ))}
         </section>
 
-        {notice && <div role="status" className="mb-4 rounded-lg border border-orange-900/60 bg-orange-950/20 px-4 py-3 text-sm text-orange-200" data-testid="catalog-notice">{notice}</div>}
+        {notice && <div role="status" className="mb-4 rounded-lg border border-primary/40 bg-primary/10 px-4 py-3 text-sm text-primary" data-testid="catalog-notice">{notice}</div>}
 
         <div className="grid min-w-0 gap-4 lg:grid-cols-[minmax(280px,0.78fr)_minmax(0,1.55fr)]">
-          <section aria-label="Catalog records" className="min-w-0 overflow-hidden rounded-xl border border-orange-950/80 bg-[#0c0c0b]">
-            <div className="border-b border-orange-950/70 p-4">
+          <section aria-label="Catalog records" className="glass-card min-w-0 overflow-hidden rounded-xl">
+            <div className="border-b border-border p-4">
               <div className="flex items-center justify-between">
                 <h2 className="font-display text-sm font-semibold text-stone-200">Reference records</h2>
                 <span className="font-mono text-[10px] text-stone-600" data-testid="filtered-count">{filtered.length} / {records.length}</span>
@@ -279,13 +279,13 @@ export default function SportsCatalogPage({ eyebrow = "Sports AI · Reference wo
               </div>
               <label className="mt-3 flex cursor-pointer items-center gap-2 text-xs text-stone-400">
                 <input type="checkbox" checked={conflictsOnly} onChange={(event) => setConflictsOnly(event.target.checked)}
-                  className="accent-orange-500" data-testid="conflicts-filter" />
+                  className="accent-primary" data-testid="conflicts-filter" />
                 Show unresolved source dates
               </label>
               <div className="mt-2 flex gap-1" role="group" aria-label="Date status">
                 {(["all", "dated", "missing"] as const).map((value) => (
                   <button key={value} type="button" onClick={() => setDateFilter(value)} aria-pressed={dateFilter === value}
-                    className={`${buttonBase} min-h-7 flex-1 px-2 text-[11px] ${dateFilter === value ? "border-orange-500 bg-orange-500/15 text-orange-300" : "border-orange-950 text-stone-500"}`}
+                    className={`${buttonBase} min-h-7 flex-1 px-2 text-[11px] ${dateFilter === value ? "border-primary bg-primary/15 text-primary" : "border-border text-muted-foreground"}`}
                     data-testid={`date-filter-${value}`}>{value === "all" ? "All dates" : value === "dated" ? "Has date" : "Missing date"}</button>
                 ))}
               </div>
@@ -307,13 +307,13 @@ export default function SportsCatalogPage({ eyebrow = "Sports AI · Reference wo
                         return (
                           <li key={record.id}>
                             <button type="button" onClick={() => beginEdit(record)}
-                              className={`flex w-full min-w-0 items-center gap-3 rounded-lg border px-2.5 py-2.5 text-left transition-colors ${active ? "border-orange-700/70 bg-orange-950/25" : "border-transparent hover:border-orange-950 hover:bg-[#11110f]"}`}
+                              className={`flex w-full min-w-0 items-center gap-3 rounded-lg border px-2.5 py-2.5 text-left transition-colors ${active ? "border-primary/50 bg-primary/10" : "border-transparent hover:border-border hover:bg-muted/50"}`}
                               data-testid={`record-row-${record.id}`} aria-current={active ? "true" : undefined}>
                               <RecordMark kind={record.kind} />
                               <span className="min-w-0 flex-1">
                                 <span className="block truncate text-sm font-medium text-stone-200">{record.name}</span>
                                 <span className="mt-0.5 block truncate text-[10px] text-stone-600">
-                                  {founding && <span className={record.date ? "font-mono text-orange-300" : "text-red-300/70"}>{record.date ?? "No date"} · </span>}
+                                  {founding && <span className={record.date ? "font-mono text-primary" : "text-destructive/80"}>{record.date ?? "No date"} · </span>}
                                    {[record.sport, record.competition].filter(Boolean).join(" · ") || (record.kind === "person" ? record.roles.join(", ") : record.kind)}
                                   {record.source === "built-in" ? " · Built-in" : " · User"}
                                 </span>
@@ -337,10 +337,10 @@ export default function SportsCatalogPage({ eyebrow = "Sports AI · Reference wo
             </div>
           </section>
 
-          <section aria-label={isCreating ? "Create record" : "Record editor"} className="min-w-0 rounded-xl border border-orange-950/80 bg-[#0c0c0b]">
+          <section aria-label={isCreating ? "Create record" : "Record editor"} className="glass-card min-w-0 rounded-xl">
             {selected ? (
               <form onSubmit={handleSave} className="p-4 sm:p-6" data-testid="catalog-record-form">
-                <div className="mb-5 flex flex-wrap items-start justify-between gap-3 border-b border-orange-950/70 pb-4">
+                <div className="mb-5 flex flex-wrap items-start justify-between gap-3 border-b border-border pb-4">
                   <div className="flex min-w-0 items-center gap-3">
                     <RecordMark kind={selected.kind} />
                     <div className="min-w-0">
@@ -348,7 +348,7 @@ export default function SportsCatalogPage({ eyebrow = "Sports AI · Reference wo
                         <h2 className="font-display truncate text-xl font-semibold text-stone-100" data-testid="editor-heading">
                           {isCreating ? `New ${selected.kind}` : selected.name || "Untitled record"}
                         </h2>
-                        <span className="rounded border border-orange-950 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-wider text-stone-500" data-testid="record-source">
+                        <span className="rounded border border-border px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-wider text-muted-foreground" data-testid="record-source">
                           {isCreating ? "User record" : selected.source === "built-in" ? (selected.edited ? "Built-in · edited" : "Built-in") : "User record"}
                         </span>
                       </div>
@@ -461,14 +461,14 @@ export default function SportsCatalogPage({ eyebrow = "Sports AI · Reference wo
 
                   {selected.kind === "person" && (
                     <>
-                      <fieldset className="min-w-0 rounded-lg border border-orange-950/80 p-3 sm:col-span-2">
+                      <fieldset className="min-w-0 rounded-lg border border-border p-3 sm:col-span-2">
                         <legend className="px-1 text-xs font-medium text-stone-400">Person roles</legend>
                         <div className="flex flex-wrap gap-x-4 gap-y-2">
                           {ROLES.map((role) => (
                             <label key={role} className="flex cursor-pointer items-center gap-2 text-xs capitalize text-stone-400">
                               <input type="checkbox" checked={selected.roles.includes(role)}
                                 onChange={(event) => updateDraft({ roles: event.target.checked ? [...selected.roles, role] : selected.roles.filter((item) => item !== role) })}
-                                className="accent-orange-500" data-testid={`person-role-${role}`} />
+                                className="accent-primary" data-testid={`person-role-${role}`} />
                               {role}
                             </label>
                           ))}
@@ -478,14 +478,14 @@ export default function SportsCatalogPage({ eyebrow = "Sports AI · Reference wo
                         <input value={selected.jersey} onChange={(event) => updateDraft({ jersey: event.target.value })}
                           className={fieldBase} placeholder="Number or identifier" data-testid="record-jersey-input" />
                       </LabelField>
-                      <fieldset className="min-w-0 rounded-lg border border-orange-950/80 p-3">
+                      <fieldset className="min-w-0 rounded-lg border border-border p-3">
                         <legend className="px-1 text-xs font-medium text-stone-400">Teams</legend>
                         <div className="max-h-40 space-y-2 overflow-y-auto">
                           {teams.map((team) => (
                             <label key={team.id} className="flex cursor-pointer items-center gap-2 text-xs text-stone-400">
                               <input type="checkbox" checked={selected.teamIds.includes(team.id)}
                                 onChange={(event) => updateDraft({ teamIds: event.target.checked ? [...selected.teamIds, team.id] : selected.teamIds.filter((id) => id !== team.id) })}
-                                className="accent-orange-500" data-testid={`person-team-${team.id}`} />
+                                className="accent-primary" data-testid={`person-team-${team.id}`} />
                               <span className="truncate">{team.name}</span>
                             </label>
                           ))}
@@ -496,7 +496,7 @@ export default function SportsCatalogPage({ eyebrow = "Sports AI · Reference wo
                   )}
                 </div>
 
-                <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-orange-950/70 pt-4">
+                <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
                   <p className="text-[11px] text-stone-600" data-testid="editor-source-note">
                     {selected.source === "built-in" ? "Edits override the built-in reference. You can restore the original at any time." : "User-created records are protected while other records reference them."}
                   </p>
@@ -507,7 +507,7 @@ export default function SportsCatalogPage({ eyebrow = "Sports AI · Reference wo
               </form>
             ) : (
               <div className="flex min-h-[360px] flex-col items-center justify-center px-6 py-12 text-center" data-testid="catalog-editor-empty">
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl border border-orange-900/60 bg-orange-950/20 font-mono text-sm text-orange-300">REF</div>
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl border border-primary/40 bg-primary/10 font-mono text-sm text-primary">REF</div>
                 <h2 className="font-display text-lg font-semibold text-stone-200">Choose a record to inspect</h2>
                 <p className="mt-2 max-w-sm text-sm leading-relaxed text-stone-600">Search the canonical catalog, resolve a source-date conflict, or create a new team, person, city, or stadium.</p>
                 <button type="button" className={`${accentButton} mt-5`} onClick={() => beginCreate("team")} data-testid="empty-create-team-button">Add a team</button>

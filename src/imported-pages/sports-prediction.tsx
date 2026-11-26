@@ -20,6 +20,14 @@ import { decodeLearnedGematria } from "@/lib/learned-screenshot-signals";
 import { venueLocalHour, venueTimeZone } from "@/lib/sports-cycles";
 import { archivedOuts, buildSportsInput, withHistoricalNflStarters } from "@/lib/sports-matchup";
 import type { VoteInput } from "@/lib/vote-decode";
+import { GamePeopleEditor } from "@/components/game-people-editor";
+import {
+  applyPeopleOverrides,
+  getGamePeopleOverride,
+  saveGamePeopleOverride,
+  seedOverridesFromInput,
+  type GamePeopleOverride,
+} from "@/lib/sports-people-overrides";
 import { captureForwardPick, downloadForwardArchive, evaluateForward, findSavedForwardPrediction, FORWARD_UPDATED_EVENT, readForwardArchive, settleForwardGames } from "@/lib/sports-forward";
 import { sportsWeightSnapshot } from "@/lib/sports-weights";
 import { backupBetDecision, conventionalComparisons, decodeMarketUnderdog, readCurrentMarket } from "@/lib/backup-analysis";
@@ -478,6 +486,9 @@ const GameCard = memo(function GameCard({ game, year, month, day, idx, league, l
   const useMatchupFeed = !isFight && game.status !== "post";
   const [auto, setAuto] = useState<AutoMatchup | null>(() => useMatchupFeed ? autoMatchupCache.get(autoKey) ?? null : null);
   const [autoLoading, setAutoLoading] = useState(() => useMatchupFeed && !autoMatchupCache.has(autoKey));
+  const overrideKey = `${league}:${year}-${month}-${day}:${game.awayTeam}@${game.homeTeam}`;
+  const [peopleOverride, setPeopleOverride] = useState<GamePeopleOverride | null>(() => getGamePeopleOverride(overrideKey));
+  const [openPeopleEditor, setOpenPeopleEditor] = useState(false);
   const [historicalRecent, setHistoricalRecent] = useState<InternationalRecentRecords | null>(
     () => isInternationalSoccer && game.status === "post"
       ? internationalRecentRecordsCache.get(autoKey) ?? null
@@ -548,7 +559,7 @@ const GameCard = memo(function GameCard({ game, year, month, day, idx, league, l
         : "player";
   const kickoff = useMemo(() => venueLocalHour(game.startTime, venueMeta.city || auto?.venueCity, venueMeta.stadium || game.venue), [game.startTime, venueMeta.city, venueMeta.stadium, auto?.venueCity, game.venue]);
   const kickoffZone = useMemo(() => venueTimeZone(venueMeta.city || auto?.venueCity, venueMeta.stadium || game.venue), [venueMeta.city, venueMeta.stadium, auto?.venueCity, game.venue]);
-  const predictionInput = useMemo<VoteInput>(() => {
+  const basePredictionInput = useMemo<VoteInput>(() => {
     if (learned) return savedLearnedPrediction?.input
       ? withHistoricalNflStarters(savedLearnedPrediction.input, game)
       : withHistoricalNflStarters(
@@ -594,6 +605,25 @@ const GameCard = memo(function GameCard({ game, year, month, day, idx, league, l
       stadium: venueMeta.stadium, city: venueMeta.city,
     };
   }, [analysisGame, game, year, month, day, auto, outs, league, dobs, kickoff, learned, codeMode, scoringCatalog, learningRevision, savedLearnedPrediction]);
+  const predictionInput = useMemo<VoteInput>(
+    () => applyPeopleOverrides(basePredictionInput, peopleOverride),
+    [basePredictionInput, peopleOverride],
+  );
+  const editorPeopleValue = useMemo<GamePeopleOverride>(
+    () => peopleOverride ?? {
+      away: seedOverridesFromInput(basePredictionInput.away.people),
+      home: seedOverridesFromInput(basePredictionInput.home.people),
+    },
+    [peopleOverride, basePredictionInput],
+  );
+  const handlePeopleOverrideChange = (next: GamePeopleOverride) => {
+    setPeopleOverride(next);
+    saveGamePeopleOverride(overrideKey, next);
+  };
+  const handlePeopleOverrideReset = () => {
+    setPeopleOverride(null);
+    saveGamePeopleOverride(overrideKey, null);
+  };
   const recalculatedVotes = useMemo(() => runVotes(predictionInput), [predictionInput]);
   // Dev-only: expose replay inputs so weight tuning can use the exact app inputs.
   if (import.meta.env.DEV && typeof window !== "undefined" && game.status === "post") {
@@ -889,9 +919,24 @@ const GameCard = memo(function GameCard({ game, year, month, day, idx, league, l
             </p>
           </div>
         )}
-        <button type="button" onClick={() => setOpenDecode((v) => !v)} className="mt-3 w-full rounded-lg py-2 text-[11px] font-bold tracking-[0.12em]" style={{ background: "hsl(var(--muted))", color: "hsl(var(--foreground))", border: "1px solid hsl(var(--border))" }}>
-          {openDecode ? "HIDE FULL DECODE" : "SHOW FULL DECODE"}
-        </button>
+        <div className="mt-3 grid grid-cols-2 gap-2">
+          <button type="button" onClick={() => setOpenDecode((v) => !v)} className="rounded-lg py-2 text-[11px] font-bold tracking-[0.12em] bg-muted text-foreground border border-border hover:border-primary/50 transition-colors">
+            {openDecode ? "HIDE FULL DECODE" : "SHOW FULL DECODE"}
+          </button>
+          <button type="button" onClick={() => setOpenPeopleEditor((v) => !v)} className={`rounded-lg py-2 text-[11px] font-bold tracking-[0.12em] border transition-colors ${openPeopleEditor || peopleOverride ? "bg-primary/15 text-primary border-primary/50" : "bg-muted text-foreground border-border hover:border-primary/50"}`}>
+            {openPeopleEditor ? "CLOSE QB / PEOPLE" : peopleOverride ? "QB / PEOPLE (EDITED)" : "EDIT QB / PEOPLE"}
+          </button>
+        </div>
+        {openPeopleEditor && (
+          <GamePeopleEditor
+            awayTeam={game.awayTeam}
+            homeTeam={game.homeTeam}
+            value={editorPeopleValue}
+            hasCustomOverride={!!peopleOverride}
+            onChange={handlePeopleOverrideChange}
+            onReset={handlePeopleOverrideReset}
+          />
+        )}
         {openDecode && (
           <div className="mt-3 space-y-2">
             <Fold title="Verdict" startOpen>
