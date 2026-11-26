@@ -39,7 +39,7 @@ export function saveGamePeopleOverride(gameKey: string, data: GamePeopleOverride
     else all[gameKey] = data;
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(all));
   } catch {
-    // ignore storage quota errors
+    throw new Error("Changes could not be saved. Browser storage is full or unavailable.");
   }
 }
 
@@ -47,7 +47,8 @@ export function parseDobString(dob: string): [number, number, number] | undefine
   const m = dob.trim().match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
   if (!m) return undefined;
   const y = Number(m[1]), mo = Number(m[2]), d = Number(m[3]);
-  if (y < 1900 || y > 2026 || mo < 1 || mo > 12 || d < 1 || d > 31) return undefined;
+  const date = new Date(Date.UTC(y, mo - 1, d));
+  if (y < 1800 || date.getUTCFullYear() !== y || date.getUTCMonth() + 1 !== mo || date.getUTCDate() !== d) return undefined;
   return [y, mo, d];
 }
 

@@ -1,4 +1,6 @@
-import { useMemo, useState, type FormEvent, type ReactNode } from "react";
+import { displayDate } from "@/lib/display-date";
+import { UsDateInput } from "@/components/us-date-input";
+import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from "react";
 import {
   createSportsCatalogId,
   deleteSportsCatalogRecord,
@@ -132,6 +134,21 @@ export default function SportsCatalogPage({ eyebrow = "Sports AI · Reference wo
     setDraft((current) => current ? { ...current, ...patch } : current);
   }
 
+  useEffect(() => {
+    if (!draft) return;
+    const timer = setTimeout(() => {
+      const candidate = { ...draft, id: isCreating ? createSportsCatalogId(draft.kind, draft.name) : draft.id, name: draft.name.trim() };
+      const result = saveSportsCatalogRecord(candidate);
+      if (!result.ok) { setErrors(result.errors); setNotice(""); return; }
+      setSelectedId(result.record.id);
+      setIsCreating(false);
+      // Keep the editor open while typing; give a new record its stable ID.
+      if (draft.id !== result.record.id) setDraft({ ...draft, id: result.record.id });
+      setErrors([]); setNotice("All changes saved.");
+    }, 450);
+    return () => clearTimeout(timer);
+  }, [draft, isCreating]);
+
   function handleSave(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!draft) return;
@@ -185,7 +202,7 @@ export default function SportsCatalogPage({ eyebrow = "Sports AI · Reference wo
       format: "sports-database",
       version: 1,
       exportedAt: new Date().toISOString(),
-      records,
+      records: records.map(record => ({ ...record, date: displayDate(record.date) || null })),
     };
     const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
@@ -313,7 +330,7 @@ export default function SportsCatalogPage({ eyebrow = "Sports AI · Reference wo
                               <span className="min-w-0 flex-1">
                                 <span className="block truncate text-sm font-medium text-stone-200">{record.name}</span>
                                 <span className="mt-0.5 block truncate text-[10px] text-stone-600">
-                                  {founding && <span className={record.date ? "font-mono text-primary" : "text-destructive/80"}>{record.date ?? "No date"} · </span>}
+                                  {<span className={record.date ? "font-mono text-primary" : "text-destructive/80"}>{displayDate(record.date) || "No date"} · </span>}
                                    {[record.sport, record.competition].filter(Boolean).join(" · ") || (record.kind === "person" ? record.roles.join(", ") : record.kind)}
                                   {record.source === "built-in" ? " · Built-in" : " · User"}
                                 </span>
@@ -364,7 +381,7 @@ export default function SportsCatalogPage({ eyebrow = "Sports AI · Reference wo
                       <button type="button" onClick={() => { setConfirmDelete(true); setErrors([]); }}
                         className={`${buttonBase} border-red-900/70 bg-red-950/20 text-red-300 hover:bg-red-950/50`} data-testid="delete-record-button">Delete</button>
                     )}
-                    <button type="button" onClick={cancelEdit} className={subtleButton} data-testid="cancel-edit-button">Cancel</button>
+                    <button type="button" onClick={cancelEdit} className={subtleButton} data-testid="cancel-edit-button">Close</button>
                   </div>
                 </div>
 
@@ -384,7 +401,7 @@ export default function SportsCatalogPage({ eyebrow = "Sports AI · Reference wo
                       <span aria-hidden="true" className="mt-0.5 font-mono text-xs font-bold text-amber-300">!</span>
                       <div>
                         <p className="text-xs font-semibold text-amber-200">Built-in sources disagree on this date</p>
-                        <p className="mt-1 text-xs leading-relaxed text-amber-100/60">{selected.sourceConflictDates?.join(" · ")}</p>
+                        <p className="mt-1 text-xs leading-relaxed text-amber-100/60">{selected.sourceConflictDates?.map(displayDate).join(" · ")}</p>
                         <p className="mt-1 text-[11px] text-amber-100/50">Enter a verified date below and save to resolve this conflict.</p>
                       </div>
                     </div>
@@ -405,10 +422,8 @@ export default function SportsCatalogPage({ eyebrow = "Sports AI · Reference wo
                     <input value={selected.name} onChange={(event) => updateDraft({ name: event.target.value })}
                       className={fieldBase} autoComplete="off" data-testid="record-name-input" />
                   </LabelField>
-                  <LabelField label="Date" hint="Use the exact verified date. Format: YYYY-MM-DD.">
-                    <input type="text" inputMode="numeric" placeholder="YYYY-MM-DD"
-                      value={selected.date ?? ""} onChange={(event) => updateDraft({ date: event.target.value || null })}
-                      className={fieldBase} aria-label="Verified date, YYYY-MM-DD" data-testid="record-date-input" />
+                  <LabelField label="Date" hint="MM/DD/YYYY">
+                    <UsDateInput value={selected.date ?? ""} onChange={date => updateDraft({ date: date || null })} className={fieldBase} label="Verified date, MM/DD/YYYY" testId="record-date-input" />
                   </LabelField>
                   <LabelField label="Aliases" hint="Separate aliases with commas or new lines.">
                     <textarea rows={2} value={selected.aliases.join(", ")}

@@ -1,3 +1,4 @@
+import { calendarRitualsFor } from "@/lib/calendar-rituals";
 import { useEffect, useState } from "react";
 import { Link } from "@/lib/wouter";
 import { useLife } from "./context";
@@ -21,6 +22,7 @@ export default function ReportsPage() {
   }, []);
   const day = readDay(profile, today.y, today.m, today.d);
   useDailyPing(day.headline, day.iso);
+  const rituals = calendarRitualsFor(today.y, today.m, today.d);
   const chart = buildChart(profile, today);
   const own = isPath28(chart.lifePath.compound) && profile.month === 9 && profile.day === 8;
 
@@ -41,31 +43,8 @@ export default function ReportsPage() {
         ))}
       </div>
 
-      {tab === "day" && (
-        <Card>
-          <h2 className="font-display text-2xl">{day.headline}</h2>
-          <p className="text-sm text-muted-foreground mt-2">{day.reading}</p>
-          <div className="flex flex-wrap gap-2 mt-3">
-            {day.flags.map((f) => <Tag key={f}>{f}</Tag>)}
-            <Tag tone={day.earth === "enemy" ? "bad" : day.earth === "friend" ? "good" : "neutral"}>Earth {day.earth}</Tag>
-            <Tag tone={day.west === "enemy" ? "bad" : day.west === "friend" ? "good" : "neutral"}>Western {day.west}</Tag>
-          </div>
-          <button onClick={enablePing} className="mt-4 rounded-lg bg-primary text-primary-foreground px-4 py-2 text-sm">Turn on the daily alert</button>
-          {ping && <p className="text-xs text-muted-foreground mt-2">{ping}</p>}
-          <DayFit profile={profile} y={day.y} m={day.m} d={day.d} />
-          {own && day.d === 7 && (
-            <div className="mt-4 space-y-2 text-sm">
-              <p className="font-display text-lg text-foreground">{DAY_28_ON_7.combo.headline}</p>
-              <p className="text-foreground/90">{DAY_28_ON_7.combo.positive}</p>
-              <p className="text-muted-foreground">{DAY_28_ON_7.combo.event}</p>
-              <p className="text-foreground">{DAY_28_ON_7.life.title}. {DAY_28_ON_7.life.body}</p>
-              <p className="text-foreground">{DAY_28_ON_7.day.title}. {DAY_28_ON_7.day.body}</p>
-              <p className="text-foreground">{DAY_28_ON_7.combo.title}. {DAY_28_ON_7.combo.body}</p>
-              <p className="text-muted-foreground">{DAY_28_ON_7.combo.negative}</p>
-            </div>
-          )}
-        </Card>
-      )}
+      <section className="border-y border-border py-4"><h2 className="font-display text-lg mb-2">Today’s Ritual · {day.iso}</h2>{rituals.allowed.map(r => <p className="text-sm mt-2" key={r.title}><span className="text-primary font-medium">{r.title}</span> · {r.detail}</p>)}{rituals.blocked.map(r => <p className="text-sm text-destructive mt-2" key={r.title}>Skip {r.title} today · grooming is prohibited.</p>)}</section>
+      {tab === "day" && <Card><h2 className="font-display text-lg">{day.iso}</h2><DayFit profile={profile} y={day.y} m={day.m} d={day.d} /><div className="mt-3 flex gap-2 flex-wrap">{day.tones.map(t => <Tag key={t}>{LIST_LABEL[t]}</Tag>)}</div></Card>}
 
       {tab === "month" && (
         <Card>
@@ -214,7 +193,6 @@ function MonthBody({ y, m, life, py, profileYear, today, own }: { y: number; m: 
       <p className="text-xs text-muted-foreground">Calendar labels show Universal Day compatibility with your Life Path. The calendar-date number and Personal Month are separate layers.</p>
       <div className="rounded-xl border border-border p-3 space-y-3">
         <DayFit profile={profile} y={y} m={m} d={sel} />
-        <p className="text-sm text-foreground">{read.headline}</p>
         <div className="flex flex-wrap gap-2">
           {read.tones.map((t) => <Tag key={t} tone={t === "fatal" || t === "challenging" ? "bad" : "good"}>{LIST_LABEL[t]}</Tag>)}
           <Tag tone={read.earth === "enemy" ? "bad" : read.earth === "friend" ? "good" : "neutral"}>Earth {read.earth}</Tag>
@@ -223,8 +201,6 @@ function MonthBody({ y, m, life, py, profileYear, today, own }: { y: number; m: 
         <p className="text-sm text-foreground/90">{read.universalLine}</p>
         <p className="text-sm text-foreground/90">{read.dayLine}</p>
         <p className="text-sm text-foreground/90">{read.combinedLine}</p>
-        <p className="text-sm text-foreground">Do: {read.dos.slice(0, 3).join(" ")}</p>
-        <p className="text-sm text-muted-foreground">Avoid: {read.avoids.slice(0, 2).join(" ")}</p>
         {own && sel === 7 && (
           <p className="text-sm text-foreground">{DAY_28_ON_7.combo.headline} {DAY_28_ON_7.combo.title}. {DAY_28_ON_7.combo.body}</p>
         )}

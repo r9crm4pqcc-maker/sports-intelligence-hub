@@ -1,46 +1,37 @@
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { Link, useLocation } from "@/lib/wouter";
-import { CalendarDays, Target, Users, Layers, TrendingUp, Trophy, Sun, ChevronDown, ChevronRight, Menu, X, Zap, Home, UserRound, Type, Coins, Orbit } from "lucide-react";
+import { CalendarDays, Target, Users, Layers, TrendingUp, Trophy, Sun, ChevronDown, ChevronRight, Menu, X, Zap, Home, UserRound, Type, Coins, Orbit, Settings } from "lucide-react";
 
 const NAV_GROUPS = [
-  {
-    title: "Personal & Timing",
-    items: [
-      { label: "Home", icon: Home, href: "/" },
-      { label: "Your Chart", icon: UserRound, href: "/chart" },
-      { label: "Goal Timing", icon: Target, href: "/timing" },
-      { label: "Calendar", icon: Sun, href: "/reports" },
-      { label: "Date Library", icon: CalendarDays, href: "/dates" },
-    ],
-  },
-  {
-    title: "Decode & Sky",
-    items: [
-      { label: "People & Lookup", icon: Users, href: "/people" },
-      { label: "Letterology", icon: Type, href: "/letterology" },
-      { label: "Western", icon: Orbit, href: "/sky" },
-      { label: "Vedic", icon: Orbit, href: "/vedic" },
-      { label: "Friendly", icon: Layers, href: "/advanced" },
-    ],
-  },
-  {
-    title: "AI Terminals",
-    items: [
-      { label: "Sports AI", icon: Trophy, children: [
-        { label: "Sports Prediction", href: "/sports-prediction" },
-        { label: "Sports Database", href: "/sports-database" },
-        { label: "Soccer AI", href: "/soccer-ai" },
-      ] },
-      { label: "Stock Market AI", icon: TrendingUp, href: "/trading-ai" },
-      { label: "Crypto Research", icon: Coins, href: "/crypto" },
-    ],
-  },
+  { title: "1 · Home", items: [{ label: "Home", icon: Home, href: "/" }] },
+  { title: "2 · Chart", items: [{ label: "Your Chart", icon: UserRound, href: "/chart" }] },
+  { title: "3 · Dates & Timing", items: [
+    { label: "Date Library", icon: CalendarDays, href: "/dates" },
+    { label: "Goal Timing", icon: Target, href: "/timing" },
+    { label: "Calendar", icon: Sun, href: "/reports" },
+    { label: "Personal Cycles", icon: Orbit, href: "/cycles" },
+  ] },
+  { title: "4 · Soccer / Sports", items: [
+    { label: "Soccer", icon: Trophy, href: "/soccer-ai" },
+    { label: "Sports Prediction", icon: Trophy, href: "/sports-prediction" },
+  ] },
+  { title: "5 · People & Lookup", items: [
+    { label: "People & Lookup", icon: Users, href: "/people" },
+    { label: "Brands & Places", icon: Layers, href: "/advanced" },
+    { label: "Sports Database", icon: Layers, href: "/sports-database" },
+  ] },
+  { title: "6 · Tools", items: [
+    { label: "Letterology", icon: Type, href: "/letterology" },
+    { label: "Crypto AI", icon: Coins, href: "/crypto" },
+    { label: "Trading AI", icon: TrendingUp, href: "/trading-ai" },
+  ] },
+  { title: "7 · Settings", items: [{ label: "Settings", icon: Settings, href: "/settings" }] },
 ];
 
 export function AppShell({ children }: { children: ReactNode }) {
   const [loc] = useLocation();
   const [open, setOpen] = useState(false);
-  const [sportsOpen, setSportsOpen] = useState(true);
+  useEffect(() => { document.documentElement.dataset["theme"] = localStorage.getItem("life-theme") || "dark"; }, []);
   const close = () => setOpen(false);
   return (
     <div className="flex h-screen overflow-hidden bg-background text-foreground sparkle-bg">
@@ -64,18 +55,10 @@ export function AppShell({ children }: { children: ReactNode }) {
               <p className="px-2.5 pb-1 text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground/70">{group.title}</p>
               {group.items.map(n => {
                 const Icon = n.icon;
-                const active = n.href ? loc === n.href : !!n.children?.some(c => loc === c.href);
+                const active = n.href ? loc === n.href : false;
                 const icon = <span className="shrink-0 w-5 flex items-center justify-center"><Icon size={15} className={active ? "text-primary" : ""} /></span>;
                 if (n.href) return <Link key={n.label} href={n.href} onClick={close} className={`nav-item ${active ? "nav-item-active" : "nav-item-inactive"}`}>{icon}<span className="flex-1 truncate">{n.label}</span></Link>;
-                return <div key={n.label}>
-                  <button onClick={() => setSportsOpen(v => !v)} aria-expanded={sportsOpen} className={`nav-item w-full text-left ${active ? "nav-item-active" : "nav-item-inactive"}`}>
-                    {icon}<span className="flex-1 truncate">{n.label}</span>{sportsOpen ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
-                  </button>
-                  {sportsOpen && <div className="ml-4 mt-1 pl-3 space-y-0.5 border-l border-border">
-                    {n.children?.map(c => <Link key={c.href} href={c.href} onClick={close}
-                      className={`flex items-center py-1.5 px-2.5 rounded-md text-xs transition-colors ${loc === c.href ? "font-semibold text-primary bg-primary/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/50"}`}>{c.label}</Link>)}
-                  </div>}
-                </div>;
+                return null;
               })}
             </div>
           ))}

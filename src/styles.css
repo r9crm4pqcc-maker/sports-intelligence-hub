@@ -120,12 +120,12 @@
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
     font-feature-settings: 'kern' 1, 'liga' 1, 'ss01' 1;
-    letter-spacing: -0.005em;
+    letter-spacing: 0;
   }
 
   h1, h2, h3, h4, h5, h6, .font-display {
     font-family: var(--app-font-display);
-    letter-spacing: -0.02em;
+    letter-spacing: 0;
   }
 
   ::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -242,7 +242,7 @@
   font-family: var(--app-font-display);
   font-size: 1.875rem;
   font-weight: 600;
-  letter-spacing: -0.03em;
+  letter-spacing: 0;
   color: hsl(var(--foreground));
   line-height: 1.1;
 }
@@ -275,7 +275,7 @@
   border: 1px solid transparent;
   width: 100%;
   text-decoration: none;
-  letter-spacing: -0.005em;
+  letter-spacing: 0;
 }
 .nav-item-active {
   background: rgba(24, 220, 104, 0.14);
@@ -376,3 +376,20 @@
 html { scroll-behavior: smooth; }
 ::selection { background: hsl(145 80% 48% / 0.35); color: hsl(145 90% 94%); }
 :focus-visible { outline: 2px solid hsl(145 80% 48% / 0.5); outline-offset: 2px; border-radius: 0.5rem; }
+
+/* Saved theme preferences retain the same green brand accent. */
+:root[data-theme="light"] {
+  --background: 0 0% 98%; --foreground: 240 8% 12%; --card: 0 0% 100%;
+  --card-foreground: 240 8% 12%; --border: 240 6% 84%; --input: 240 6% 80%;
+  --muted: 240 5% 93%; --muted-foreground: 240 5% 40%; --secondary: 240 5% 93%;
+  --secondary-foreground: 240 8% 12%; --sidebar: 240 5% 95%; --sidebar-border: 240 6% 84%;
+  --sidebar-foreground: 240 5% 35%; --popover: 0 0% 100%; --popover-foreground: 240 8% 12%;
+  --primary: 145 80% 31%; --ring: 145 80% 31%; --accent: 145 80% 31%;
+  --primary-foreground: 0 0% 100%; --accent-foreground: 0 0% 100%;
+}
+:root[data-theme="light"] .glass-card,
+:root[data-theme="light"] .feature-card { background: hsl(var(--card)); border-color: hsl(var(--border)); box-shadow: var(--shadow-elegant); }
+:root[data-theme="light"] .nav-item-inactive { color: hsl(var(--muted-foreground)); }
+:root[data-theme="light"] .nav-item-active { color: hsl(var(--primary)); }
+:root[data-theme="light"] .nav-item-inactive:hover { color: hsl(var(--foreground)); background: hsl(var(--muted)); }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }

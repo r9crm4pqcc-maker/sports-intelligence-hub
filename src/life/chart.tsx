@@ -1,3 +1,6 @@
+import { Button } from "@/components/ui/button";
+import SkyPage from "./sky";
+import VedicPage from "./vedic";
 import { useEffect, useState } from "react";
 import { Link } from "@/lib/wouter";
 import { useLife } from "./context";
@@ -20,23 +23,25 @@ export default function ChartPage() {
   const now = useNow();
   const chart = buildChart(profile, now);
   const path28 = isPath28(chart.lifePath.compound);
-  const [tab, setTab] = useState<"life" | "birthday" | "year" | "chinese" | "enemy" | "lucky" | "name" | "edit">("life");
+  const [tab, setTab] = useState<"life" | "birthday" | "western" | "vedic" | "colors" | "gems" | "chinese" | "enemy" | "lucky" | "name">("life");
   const tabs = [
     { id: "life", label: "Life Path" },
     { id: "birthday", label: "Birthday" },
-    { id: "year", label: "Personal Year" },
+    { id: "western", label: "Western Chart" },
+    { id: "vedic", label: "Vedic Chart" },
     { id: "chinese", label: "Chinese Animal" },
     { id: "enemy", label: "Enemy & Hours" },
     { id: "lucky", label: "Lucky Numbers" },
     { id: "name", label: "Name" },
-    { id: "edit", label: "Birth Data" },
+    { id: "colors", label: "Power Colors" },
+    { id: "gems", label: "Gemstones" },
   ] as const;
 
   return (
     <Page kicker="Core engine" title={chart.name || "Your chart"} lede="Everything here is calculated from one birthdate. Add a clock time for the hour pillar and a rising estimate.">
       <nav className="flex flex-wrap gap-2 pb-1 text-xs" role="tablist" aria-label="Chart categories">
         {tabs.map((t) => (
-          <button
+          <Button
             key={t.id}
             type="button"
             role="tab"
@@ -45,14 +50,9 @@ export default function ChartPage() {
             className={`shrink-0 rounded-full border px-3.5 py-1.5 font-medium transition-colors ${tab === t.id ? "bg-primary/15 border-primary text-primary" : "border-border bg-card text-muted-foreground hover:text-foreground hover:border-primary/40"}`}
           >
             {t.label}
-          </button>
+          </Button>
         ))}
       </nav>
-
-      {tab === "edit" && <Card>
-        <div id="edit"><CardTitle>Birth data</CardTitle></div>
-        <ProfileForm key={ready ? "set" : "boot"} profile={profile} onSave={setProfile} />
-      </Card>}
 
       {tab === "life" && <Card>
         <div id="life"><CardTitle>Life path</CardTitle></div>
@@ -80,10 +80,10 @@ export default function ChartPage() {
         {chart.sun === "Virgo" && <VirgoReading />}
       </Card>}
 
-      {tab === "year" && <Card>
-        <div id="year"><CardTitle>Personal year</CardTitle></div>
-        <YearCard profile={profile} cycleYear={chart.py.cycleYear} face={yearFace(chart.py.compound, chart.py.reduced)} />
-      </Card>}
+      {tab === "western" && <SkyPage />}
+      {tab === "vedic" && <VedicPage />}
+      {tab === "colors" && <Card><CardTitle>Power colors</CardTitle><p>{chart.colors.primary} · {chart.colors.secondary} · {chart.colors.accent}</p></Card>}
+      {tab === "gems" && <Card><CardTitle>Gemstones</CardTitle><p className="text-sm text-muted-foreground mb-3">Traditional numerology associations, in the existing source order.</p><ol className="list-decimal list-inside space-y-2">{(NUMBER_MEANINGS_FULL[chart.lifePath.compound] ?? chart.meaning)?.crystal?.split(",").map(gem => <li key={gem}>{gem.trim()}</li>)}</ol><p className="text-xs text-muted-foreground mt-3">Start / stop timing: not specified in the existing guidance.</p></Card>}
 
       {tab === "chinese" && <Card>
         <div id="chinese"><CardTitle>Chinese animal</CardTitle></div>
@@ -116,8 +116,7 @@ export default function ChartPage() {
 
       {tab === "lucky" && <Card>
         <div id="lucky"><CardTitle>Lucky numbers</CardTitle></div>
-        <p className="text-sm text-foreground">99, 98, 28, 8</p>
-        <p className="text-sm text-muted-foreground mt-2">Power colors: black and white, black & orange, green.</p>
+        <Stat label="Main lucky number" value={String(chart.lucky.includes(28) ? 28 : chart.lucky[0])} /><p className="mt-3 text-sm">Also use: {chart.lucky.filter(n => n !== 28).join(", ")}</p>
       </Card>}
 
       {tab === "name" && <Card>
@@ -319,10 +318,10 @@ export function YearCard({ profile, cycleYear, face }: { profile: BirthProfile; 
           const row = calcPersonalYear(profile.month, profile.day, profile.month, profile.day, y);
           const n = yearFace(row.compound, row.reduced);
           return (
-            <button key={y} type="button" onClick={() => setPick(i)} className={`rounded-xl border px-2 py-2 text-sm ${i === pick ? "border-primary text-primary" : "border-border text-muted-foreground"}`}>
+            <Button key={y} type="button" onClick={() => setPick(i)} className={`rounded-xl border px-2 py-2 text-sm ${i === pick ? "border-primary text-primary" : "border-border text-muted-foreground"}`}>
               <span className="block font-medium">{y}</span>
               <span className="text-xs">{i === 0 ? "" : i === 1 ? "Now · " : ""}Year {n}</span>
-            </button>
+            </Button>
           );
         })}
       </div>
@@ -347,7 +346,7 @@ export function YearCard({ profile, cycleYear, face }: { profile: BirthProfile; 
   );
 }
 
-function ProfileForm({ profile, onSave }: { profile: BirthProfile; onSave: (p: BirthProfile) => void }) {
+export function ProfileForm({ profile, onSave }: { profile: BirthProfile; onSave: (p: BirthProfile) => void }) {
   const [form, setForm] = useState(profile);
   const [msg, setMsg] = useState("");
   const set = (k: keyof BirthProfile, v: string) => setForm((f) => ({ ...f, [k]: v }));
@@ -371,7 +370,7 @@ function ProfileForm({ profile, onSave }: { profile: BirthProfile; onSave: (p: B
       <Field label="Day" value={String(form.day)} onChange={(v) => set("day", v)} />
       <Field label="Time (24h)" value={form.time} onChange={(v) => set("time", v)} />
       <div className="sm:col-span-2 flex items-center gap-3">
-        <button type="submit" className="rounded-lg bg-primary text-primary-foreground px-4 py-2 text-sm font-medium">Save chart</button>
+        <Button type="submit" className="rounded-lg bg-primary text-primary-foreground px-4 py-2 text-sm font-medium">Save chart</Button>
         {msg && <p className="text-xs text-muted-foreground">{msg}</p>}
       </div>
     </form>

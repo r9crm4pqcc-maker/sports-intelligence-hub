@@ -13,9 +13,11 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdvancedRouteImport } from './routes/advanced'
 import { Route as ChartRouteImport } from './routes/chart'
 import { Route as CryptoRouteImport } from './routes/crypto'
+import { Route as CyclesRouteImport } from './routes/cycles'
 import { Route as LetterologyRouteImport } from './routes/letterology'
 import { Route as PeopleRouteImport } from './routes/people'
 import { Route as ReportsRouteImport } from './routes/reports'
+import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as SkyRouteImport } from './routes/sky'
 import { Route as SoccerAiRouteImport } from './routes/soccer-ai'
 import { Route as SportsCatalogRouteImport } from './routes/sports-catalog'
@@ -50,6 +52,11 @@ const CryptoRoute = CryptoRouteImport.update({
   path: '/crypto',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CyclesRoute = CyclesRouteImport.update({
+  id: '/cycles',
+  path: '/cycles',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LetterologyRoute = LetterologyRouteImport.update({
   id: '/letterology',
   path: '/letterology',
@@ -63,6 +70,11 @@ const PeopleRoute = PeopleRouteImport.update({
 const ReportsRoute = ReportsRouteImport.update({
   id: '/reports',
   path: '/reports',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SkyRoute = SkyRouteImport.update({
@@ -137,9 +149,11 @@ export interface FileRoutesByFullPath {
   '/advanced': typeof AdvancedRoute
   '/chart': typeof ChartRoute
   '/crypto': typeof CryptoRoute
+  '/cycles': typeof CyclesRoute
   '/letterology': typeof LetterologyRoute
   '/people': typeof PeopleRoute
   '/reports': typeof ReportsRoute
+  '/settings': typeof SettingsRoute
   '/sky': typeof SkyRoute
   '/soccer-ai': typeof SoccerAiRoute
   '/sports-catalog': typeof SportsCatalogRoute
@@ -159,9 +173,11 @@ export interface FileRoutesByTo {
   '/advanced': typeof AdvancedRoute
   '/chart': typeof ChartRoute
   '/crypto': typeof CryptoRoute
+  '/cycles': typeof CyclesRoute
   '/letterology': typeof LetterologyRoute
   '/people': typeof PeopleRoute
   '/reports': typeof ReportsRoute
+  '/settings': typeof SettingsRoute
   '/sky': typeof SkyRoute
   '/soccer-ai': typeof SoccerAiRoute
   '/sports-catalog': typeof SportsCatalogRoute
@@ -182,9 +198,11 @@ export interface FileRoutesById {
   '/advanced': typeof AdvancedRoute
   '/chart': typeof ChartRoute
   '/crypto': typeof CryptoRoute
+  '/cycles': typeof CyclesRoute
   '/letterology': typeof LetterologyRoute
   '/people': typeof PeopleRoute
   '/reports': typeof ReportsRoute
+  '/settings': typeof SettingsRoute
   '/sky': typeof SkyRoute
   '/soccer-ai': typeof SoccerAiRoute
   '/sports-catalog': typeof SportsCatalogRoute
@@ -206,9 +224,11 @@ export interface FileRouteTypes {
     | '/advanced'
     | '/chart'
     | '/crypto'
+    | '/cycles'
     | '/letterology'
     | '/people'
     | '/reports'
+    | '/settings'
     | '/sky'
     | '/soccer-ai'
     | '/sports-catalog'
@@ -228,9 +248,11 @@ export interface FileRouteTypes {
     | '/advanced'
     | '/chart'
     | '/crypto'
+    | '/cycles'
     | '/letterology'
     | '/people'
     | '/reports'
+    | '/settings'
     | '/sky'
     | '/soccer-ai'
     | '/sports-catalog'
@@ -250,9 +272,11 @@ export interface FileRouteTypes {
     | '/advanced'
     | '/chart'
     | '/crypto'
+    | '/cycles'
     | '/letterology'
     | '/people'
     | '/reports'
+    | '/settings'
     | '/sky'
     | '/soccer-ai'
     | '/sports-catalog'
@@ -273,9 +297,11 @@ export interface RootRouteChildren {
   AdvancedRoute: typeof AdvancedRoute
   ChartRoute: typeof ChartRoute
   CryptoRoute: typeof CryptoRoute
+  CyclesRoute: typeof CyclesRoute
   LetterologyRoute: typeof LetterologyRoute
   PeopleRoute: typeof PeopleRoute
   ReportsRoute: typeof ReportsRoute
+  SettingsRoute: typeof SettingsRoute
   SkyRoute: typeof SkyRoute
   SoccerAiRoute: typeof SoccerAiRoute
   SportsCatalogRoute: typeof SportsCatalogRoute
@@ -321,6 +347,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CryptoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/cycles': {
+      id: '/cycles'
+      path: '/cycles'
+      fullPath: '/cycles'
+      preLoaderRoute: typeof CyclesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/letterology': {
       id: '/letterology'
       path: '/letterology'
@@ -340,6 +373,13 @@ declare module '@tanstack/react-router' {
       path: '/reports'
       fullPath: '/reports'
       preLoaderRoute: typeof ReportsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sky': {
@@ -441,9 +481,11 @@ const rootRouteChildren: RootRouteChildren = {
   AdvancedRoute: AdvancedRoute,
   ChartRoute: ChartRoute,
   CryptoRoute: CryptoRoute,
+  CyclesRoute: CyclesRoute,
   LetterologyRoute: LetterologyRoute,
   PeopleRoute: PeopleRoute,
   ReportsRoute: ReportsRoute,
+  SettingsRoute: SettingsRoute,
   SkyRoute: SkyRoute,
   SoccerAiRoute: SoccerAiRoute,
   SportsCatalogRoute: SportsCatalogRoute,

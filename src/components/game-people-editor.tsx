@@ -1,3 +1,5 @@
+import { UsDateInput } from "./us-date-input";
+import { Button } from "@/components/ui/button";
 import { Plus, RotateCcw, Trash2 } from "lucide-react";
 import { calcDateEnergy } from "@/lib/numerology";
 import {
@@ -52,13 +54,13 @@ function TeamSideEditor({
     <div className="rounded-xl bg-muted/40 border border-border p-3 space-y-2.5">
       <div className="flex items-center justify-between gap-2">
         <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary">{teamName}</p>
-        <button
+        <Button
           type="button"
           onClick={addPlayer}
           className="inline-flex items-center gap-1 rounded-md border border-border bg-card px-2 py-1 text-[10px] font-semibold text-muted-foreground hover:border-primary/50 hover:text-primary"
         >
           <Plus size={11} /> Add Player
-        </button>
+        </Button>
       </div>
       <div className="space-y-2">
         {people.map((person) => (
@@ -70,14 +72,14 @@ function TeamSideEditor({
               <div className="flex items-center gap-1.5">
                 <AutoDecodeBadge dob={person.dob} />
                 {person.role === "player" && (
-                  <button
+                  <Button
                     type="button"
                     onClick={() => remove(person.id)}
                     aria-label="Remove player"
                     className="text-muted-foreground hover:text-destructive"
                   >
                     <Trash2 size={12} />
-                  </button>
+                  </Button>
                 )}
               </div>
             </div>
@@ -89,10 +91,9 @@ function TeamSideEditor({
                 placeholder={`${ROLE_LABEL[person.role]} name`}
                 className="rounded-md border border-border bg-background px-2.5 py-1.5 text-xs text-foreground placeholder:text-muted-foreground/60 focus:border-primary focus:outline-none"
               />
-              <input
-                type="date"
+              <UsDateInput
                 value={person.dob}
-                onChange={(e) => update(person.id, { dob: e.target.value })}
+                onChange={(dob) => update(person.id, { dob })}
                 className="rounded-md border border-border bg-background px-2 py-1.5 text-xs text-foreground [color-scheme:dark] focus:border-primary focus:outline-none"
               />
               <input
@@ -132,16 +133,16 @@ export function GamePeopleEditor({
       <div className="flex items-center justify-between gap-2">
         <div>
           <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary">Edit QB, Coaches, Owners &amp; Players</p>
-          <p className="text-[10px] text-muted-foreground">Enter a name &amp; birthday — Life Path, Zodiac, and the AI pick recalculate automatically.</p>
+          <p className="text-[10px] text-muted-foreground">Birthdays · MM/DD/YYYY</p>
         </div>
         {hasCustomOverride && (
-          <button
+          <Button
             type="button"
             onClick={onReset}
             className="inline-flex items-center gap-1 rounded-md border border-border bg-card px-2 py-1 text-[10px] font-semibold text-muted-foreground hover:border-destructive/50 hover:text-destructive"
           >
             <RotateCcw size={11} /> Reset
-          </button>
+          </Button>
         )}
       </div>
       <div className="grid gap-3 md:grid-cols-2">

@@ -1,4 +1,5 @@
 // @ts-nocheck
+import { useSportsResearch } from "@/lib/use-sports-research";
 import { useState, useMemo, useEffect, useCallback, useRef, memo } from "react";
 import { ArrowLeft, ChevronDown, ChevronUp, RefreshCw, Loader2, AlertCircle, Calendar } from "lucide-react";
 import { useLocation, useSearch } from "@/lib/wouter";
@@ -605,20 +606,20 @@ const GameCard = memo(function GameCard({ game, year, month, day, idx, league, l
       stadium: venueMeta.stadium, city: venueMeta.city,
     };
   }, [analysisGame, game, year, month, day, auto, outs, league, dobs, kickoff, learned, codeMode, scoringCatalog, learningRevision, savedLearnedPrediction]);
+  const researched = useSportsResearch(basePredictionInput, !autoLoading);
   const predictionInput = useMemo<VoteInput>(
-    () => applyPeopleOverrides(basePredictionInput, peopleOverride),
-    [basePredictionInput, peopleOverride],
+    () => applyPeopleOverrides(researched.input, peopleOverride),
+    [researched.input, peopleOverride],
   );
   const editorPeopleValue = useMemo<GamePeopleOverride>(
     () => peopleOverride ?? {
-      away: seedOverridesFromInput(basePredictionInput.away.people),
-      home: seedOverridesFromInput(basePredictionInput.home.people),
+      away: seedOverridesFromInput(researched.input.away.people),
+      home: seedOverridesFromInput(researched.input.home.people),
     },
-    [peopleOverride, basePredictionInput],
+    [peopleOverride, researched.input],
   );
   const handlePeopleOverrideChange = (next: GamePeopleOverride) => {
-    setPeopleOverride(next);
-    saveGamePeopleOverride(overrideKey, next);
+    try { saveGamePeopleOverride(overrideKey, next); setPeopleOverride(next); } catch (error) { window.alert(error instanceof Error ? error.message : "Changes could not be saved."); }
   };
   const handlePeopleOverrideReset = () => {
     setPeopleOverride(null);
@@ -927,6 +928,8 @@ const GameCard = memo(function GameCard({ game, year, month, day, idx, league, l
             {openPeopleEditor ? "CLOSE QB / PEOPLE" : peopleOverride ? "QB / PEOPLE (EDITED)" : "EDIT QB / PEOPLE"}
           </button>
         </div>
+        {researched.status && <p className="text-[10px] text-muted-foreground mt-2" role="status">{researched.status}</p>}
+        {!!researched.facts.length && <details className="mt-2 text-xs"><summary className="text-primary cursor-pointer">Research sources</summary>{researched.facts.map(f => <p key={f.id} className="mt-2"><a href={f.sourceUrl} target="_blank" rel="noopener noreferrer" className="text-primary underline">{f.value}</a> · {f.quote}</p>)}</details>}
         {openPeopleEditor && (
           <GamePeopleEditor
             awayTeam={game.awayTeam}
