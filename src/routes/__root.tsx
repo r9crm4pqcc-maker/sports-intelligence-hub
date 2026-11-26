@@ -11,6 +11,7 @@ import {
 import { useEffect, type ReactNode } from "react";
 import { ClientOnly } from "@tanstack/react-router";
 import { AppShell } from "@/components/app-shell";
+import { AuthGate } from "@/components/auth-gate";
 import { LifeProvider } from "@/life/context";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
@@ -131,11 +132,13 @@ function RootComponent() {
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <TooltipProvider>
         <ClientOnly fallback={<div className="grid min-h-screen place-items-center text-sm text-muted-foreground">Loading…</div>}>
-          <LifeProvider>
-            <AppShell>
-              <Outlet />
-            </AppShell>
-          </LifeProvider>
+          <AuthGate>
+            <LifeProvider>
+              <AppShell>
+                <Outlet />
+              </AppShell>
+            </LifeProvider>
+          </AuthGate>
         </ClientOnly>
         <Toaster />
       </TooltipProvider>

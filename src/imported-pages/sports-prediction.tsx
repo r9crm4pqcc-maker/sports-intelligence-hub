@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { ResearchReview } from "@/components/research-review";
 import { useSportsResearch } from "@/lib/use-sports-research";
 import { useSportsDocument } from "@/lib/use-sports-document";
-import { SportsTrainingProvider, useSportsTrainingInput, WinnerEditor } from "@/components/sports-training";
+import { SportsTrainingProvider, useSportsTrainingInput, useSportsTrainingProfile, WinnerEditor } from "@/components/sports-training";
 import { useState, useMemo, useEffect, useCallback, useRef, memo } from "react";
 import { ArrowLeft, ChevronDown, ChevronUp, RefreshCw, Loader2, AlertCircle, Calendar, Trophy, ChevronRight, ShieldCheck, Users, ScanLine } from "lucide-react";
 import { useLocation, useSearch } from "@/lib/wouter";
@@ -370,7 +370,7 @@ function catalogDecodePeople(
     asEntity(owner, "owner", "Owner not in verified source"),
   ];
 }
-function slateLeg(game: ESPNGame, year: number, month: number, day: number, league: string, ov: ReturnType<typeof useOverrides>, learned = false, catalog: SportsCatalogRecord[] = [], codeMode: SportsMode = "learned") {
+function slateLeg(game: ESPNGame, year: number, month: number, day: number, league: string, ov: ReturnType<typeof useOverrides>, learned = false, catalog: SportsCatalogRecord[] = [], codeMode: SportsMode = "learned", weightProfileOverride?: VoteInput["weightProfileOverride"]) {
   const analysisGame = pregameGameForReplay(game, learned && codeMode === "learned");
   const scoringCatalog = learned && game.status === "post" ? getVerifiedSportsCatalogSnapshot(catalog) : catalog;
   const saved = learned ? savedLearnedReplay(league, game.id, game.status, codeMode) : null;
@@ -390,7 +390,8 @@ function slateLeg(game: ESPNGame, year: number, month: number, day: number, leag
     buildSportsInput(analysisGame, year, month, day, league, scoringCatalog, null, {}, {}, codeMode),
     game,
   );
-  const replayInput = saved?.input ? withHistoricalNflStarters(saved.input, game) : currentInput;
+  const baseReplayInput = saved?.input ? withHistoricalNflStarters(saved.input, game) : currentInput;
+  const replayInput = weightProfileOverride && codeMode !== "backup" ? { ...baseReplayInput, weightProfileOverride } : baseReplayInput;
   const v = runVotes(learned ? replayInput : {
     year, month, day, league, eventName: game.eventName, hour: kickoff,
     home: side(game.homeTeam, homeMeta, game.homeRecord),
@@ -879,7 +880,13 @@ const GameCard = memo(function GameCard({ game, year, month, day, idx, league, l
           <div className="min-w-0"><p className="text-[10px] uppercase font-bold text-muted-foreground">{codeMode === "backup" ? "Backup pick" : "Learned Code pick"}</p>
             <p className="mt-1 text-lg font-display font-bold text-primary" data-testid="learned-pick" data-away={game.awayTeam} data-home={game.homeTeam} data-away-score={game.awayScore ?? ""} data-home-score={game.homeScore ?? ""} data-status={game.status}>{cardPickName}</p>
           </div>
-          <span className="shrink-0 text-xs font-semibold text-primary">{result || confidenceBand(Math.round(pickPct))}</span>
+          <div className="shrink-0 text-right">
+            <span className="block font-display text-2xl font-black leading-none text-primary tabular-nums drop-shadow-[0_0_14px_rgba(255,94,14,0.45)]">{Math.round(pickPct)}%</span>
+            <span className="mt-1 inline-block rounded-full border border-primary/35 bg-primary/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary">{result || confidenceBand(Math.round(pickPct))}</span>
+          </div>
+        </div>
+        <div className="mt-2.5 h-1.5 w-full overflow-hidden rounded-full bg-muted">
+          <div className="h-full rounded-full bg-primary shadow-[var(--shadow-gold)] transition-all duration-300" style={{ width: `${Math.max(12, Math.min(100, Math.round(pickPct)))}%` }} />
         </div>
         <p className="mt-3 text-xs text-muted-foreground">{venueName}</p>
         {(book || game.archivedOut || awayOut.length || homeOut.length || starter) && (
@@ -1434,15 +1441,16 @@ function SportsPredictionBoard() {
   }, [fetchAll]);
   // Heavy decode runs once per slate and only for the open sport; card updates
   // merge in cheaply below instead of re-decoding every game in every sport.
+  const trainingProfile = useSportsTrainingProfile();
   const baseBooks = useMemo(() => {
     const by: Record<string, ReturnType<typeof slateLeg>[]> = {};
     if (!activeSportGroup) return by;
     for (const lg of activeSportGroup.leagues) {
       const list = allGames[lg];
-      if (list) by[lg] = list.map((g) => slateLeg(g, year, month, day, lg, ov, true, catalog, code));
+      if (list) by[lg] = list.map((g) => slateLeg(g, year, month, day, lg, ov, true, catalog, code, trainingProfile));
     }
     return by;
-  }, [allGames, year, month, day, code, ov, learningRevision, catalog, activeSportGroup]);
+  }, [allGames, year, month, day, code, ov, learningRevision, catalog, activeSportGroup, trainingProfile]);
   const books = useMemo(() => {
     const by: Record<string, ReturnType<typeof slateLeg>[]> = {};
     for (const [lg, legs] of Object.entries(baseBooks)) {

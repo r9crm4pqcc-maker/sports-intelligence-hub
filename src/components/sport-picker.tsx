@@ -23,6 +23,15 @@ export type SportPickerProps = {
 };
 
 const SPORT_ICONS = { MLB: CircleDot, Soccer: Goal, NBA: Dribbble, NFL: Volleyball, NHL: Goal, "College Sports": GraduationCap };
+const SPORT_ACCENTS: Record<string, string> = {
+  MLB: "var(--sport-mlb)",
+  Soccer: "var(--sport-soccer)",
+  NBA: "var(--sport-nba)",
+  NFL: "var(--sport-nfl)",
+  NHL: "var(--sport-nhl)",
+  "College Sports": "var(--sport-college)",
+  "More Sports": "var(--sport-more)",
+};
 
 const PRIMARY_ORDER = ["MLB", "Soccer", "NBA", "NFL", "NHL", "College Sports"];
 
@@ -123,10 +132,11 @@ export function SportPicker({
         {orderedEntries.map(entry => {
           const status = statusFor(entry);
           const Icon = SPORT_ICONS[entry.id as keyof typeof SPORT_ICONS] ?? Trophy;
-          return <Button key={entry.id} variant="outline" onClick={() => onSelect(entry.id)} className="group h-auto min-h-28 w-full justify-start gap-4 whitespace-normal rounded-lg border-border bg-card px-4 py-5 text-left hover:border-primary/50 hover:bg-muted hover:text-foreground" data-testid={`button-select-sport-${entry.id}`} aria-label={`Open ${entry.label} schedule, ${entry.count} games`}>
-            <span className="grid h-14 w-14 shrink-0 place-items-center rounded-lg border border-primary/20 bg-primary/5 text-primary"><Icon className="!size-8" strokeWidth={1.5} /></span>
-            <span className="min-w-0 flex-1"><span className="block font-display text-xl font-bold" data-testid={`text-sport-label-${entry.id}`}>{entry.label}</span><span className={`mt-1 block text-xs ${status.tone === "error" ? "text-destructive" : "text-muted-foreground"}`} role="status" data-testid={`status-sport-${entry.id}`}>{entry.loading ? "Loading schedule…" : entry.failed ? "Feed unavailable" : entry.partial ? "Partial schedule" : "Schedule ready"}</span>{entry.subCounts?.map(sub => <span key={sub.label} className="block text-[10px] text-muted-foreground">{sub.label} · {sub.count}</span>)}</span>
-            <span className="shrink-0 text-right"><span className="block text-2xl font-display font-bold text-primary tabular-nums" data-testid={`text-game-count-${entry.id}`}>{entry.loading && !entry.count ? "—" : entry.count}</span><span className="block text-[10px] text-muted-foreground">{entry.count === 1 ? "game" : "games"}</span></span><ChevronRight className="text-muted-foreground group-hover:text-primary" />
+          const accent = SPORT_ACCENTS[entry.id] ?? "var(--primary)";
+          return <Button key={entry.id} variant="outline" onClick={() => onSelect(entry.id)} className="group h-auto min-h-28 w-full justify-start gap-4 whitespace-normal rounded-xl border-border/90 bg-card px-4 py-5 text-left transition-all hover:border-primary/60 hover:bg-card/90 hover:shadow-[var(--shadow-gold)] hover:text-foreground" data-testid={`button-select-sport-${entry.id}`} aria-label={`Open ${entry.label} schedule, ${entry.count} games`}>
+            <span className="grid h-14 w-14 shrink-0 place-items-center rounded-xl border transition-transform group-hover:scale-105" style={{ color: `hsl(${accent})`, borderColor: `hsl(${accent} / 0.35)`, background: `radial-gradient(circle at 30% 30%, hsl(${accent} / 0.22), hsl(${accent} / 0.06))`, boxShadow: `0 0 22px -6px hsl(${accent} / 0.5)` }}><Icon className="!size-8" strokeWidth={1.6} /></span>
+            <span className="min-w-0 flex-1"><span className="block font-display text-xl font-bold tracking-tight" data-testid={`text-sport-label-${entry.id}`}>{entry.label}</span><span className={`mt-1 block text-xs ${status.tone === "error" ? "text-destructive" : "text-muted-foreground"}`} role="status" data-testid={`status-sport-${entry.id}`}>{entry.loading ? "Loading schedule…" : entry.failed ? "Feed unavailable" : entry.partial ? "Partial schedule" : "Schedule ready"}</span>{entry.subCounts?.map(sub => <span key={sub.label} className="block text-[10px] text-muted-foreground">{sub.label} · {sub.count}</span>)}</span>
+            <span className="shrink-0 text-right"><span className="block text-2xl font-display font-black text-primary tabular-nums" data-testid={`text-game-count-${entry.id}`}>{entry.loading && !entry.count ? "—" : entry.count}</span><span className="block text-[10px] text-muted-foreground">{entry.count === 1 ? "Game Today" : "Games Today"}</span><span className="mt-1.5 flex items-center justify-end gap-1" aria-hidden="true"><span className="h-1 w-3 rounded-full" style={{ background: `hsl(${accent})` }} /><span className="h-1 w-2.5 rounded-full" style={{ background: `hsl(${accent} / 0.8)` }} /><span className="h-1 w-1 rounded-full" style={{ background: `hsl(${accent} / 0.6)` }} /><span className="h-1 w-1 rounded-full" style={{ background: `hsl(${accent} / 0.4)` }} /></span></span><ChevronRight className="text-muted-foreground group-hover:text-primary" />
           </Button>;
         })}
       </section>

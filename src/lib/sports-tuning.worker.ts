@@ -23,10 +23,10 @@ self.onmessage = (event: MessageEvent<{ state: SportsFeedback; league: string }>
     const raw = runVotes({ ...r.input, weightMode: "raw" });
     for (const vote of raw.votes) { const f = weightFeature(vote); features.set(f, (features.get(f) ?? 0) + (vote.side === r.winner ? 1 : -1) * (vote.baseWeight ?? vote.weight)); }
   }
-  const prioritized = [...features].sort((a,b) => Math.abs(b[1])-Math.abs(a[1])).slice(0, 10);
+  const prioritized = [...features].sort((a,b) => Math.abs(b[1])-Math.abs(a[1])).slice(0, 20);
   for (const [feature, signal] of prioritized) {
     const old = best[feature] ?? snapshot.global[feature] ?? 1;
-    for (const factor of signal >= 0 ? [1.25, 1.75, 2.5] : [0.8, 0.4, 0]) {
+    for (const factor of signal >= 0 ? [1.15, 1.4, 1.8, 2.5, 4] : [0.85, 0.6, 0.3, 0]) {
       const candidate = { ...best, [feature]: Math.min(20, Math.max(0, old * factor)) };
       const next = evaluate(candidate);
       if (acceptImprovedFit(hits, next)) { best = candidate; hits = next; }

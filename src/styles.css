@@ -50,52 +50,60 @@
 
 /* ─── Obsidian Terminal: deep carbon + electric #FF7018 ───── */
 :root {
-  --background: 240 12% 3.5%;
+  --background: 225 25% 3%;
   --foreground: 0 0% 98%;
   --year-label: 0 0% 100%;
-  --border: 240 6% 15%;
-  --card: 240 10% 7%;
+  --border: 225 10% 15%;
+  --card: 225 18% 6.5%;
   --card-foreground: 0 0% 98%;
-  --card-border: 240 6% 16%;
-  --sidebar: 240 12% 4.5%;
+  --card-border: 225 10% 16%;
+  --sidebar: 225 22% 4%;
   --sidebar-foreground: 240 6% 68%;
   --sidebar-border: 240 6% 13%;
-  --sidebar-primary: 25 100% 48%;
+  --sidebar-primary: 21 100% 53%;
   --sidebar-primary-foreground: 0 0% 0%;
-  --sidebar-accent: 25 100% 48%;
-  --sidebar-accent-foreground: 25 100% 48%;
-  --sidebar-ring: 25 100% 48%;
+  --sidebar-accent: 21 100% 53%;
+  --sidebar-accent-foreground: 21 100% 53%;
+  --sidebar-ring: 21 100% 53%;
   --popover: 240 10% 8%;
   --popover-foreground: 0 0% 98%;
   --popover-border: 240 6% 18%;
-  --primary: 25 100% 55%;
+  --primary: 21 100% 54%;
   --primary-foreground: 0 0% 0%;
-  --primary-border: 25 100% 42%;
-  --primary-glow: 25 100% 48%;
+  --primary-border: 21 100% 44%;
+  --primary-glow: 21 100% 52%;
   --secondary: 240 8% 11%;
   --secondary-foreground: 0 0% 96%;
   --secondary-border: 240 6% 18%;
   --muted: 240 8% 11%;
   --muted-foreground: 240 6% 60%;
-  --accent: 25 100% 48%;
+  --accent: 21 100% 53%;
   --accent-foreground: 0 0% 0%;
   --destructive: 0 72% 58%;
   --destructive-foreground: 0 0% 100%;
   --destructive-border: 0 60% 40%;
   --input: 240 6% 17%;
-  --ring: 25 100% 48%;
-  --chart-1: 25 100% 48%;
+  --ring: 21 100% 53%;
+  --chart-1: 21 100% 53%;
   --chart-2: 0 0% 100%;
   --chart-3: 25 80% 38%;
   --chart-4: 0 0% 70%;
   --chart-5: 25 65% 28%;
 
-  --badge-outline: rgba(255, 112, 24, 0.35);
+  --sport-mlb: 14 100% 55%;
+  --sport-soccer: 142 71% 54%;
+  --sport-nba: 271 91% 65%;
+  --sport-nfl: 24 100% 54%;
+  --sport-nhl: 199 89% 56%;
+  --sport-college: 45 93% 54%;
+  --sport-more: 346 87% 58%;
+
+  --badge-outline: rgba(255, 94, 14, 0.4);
   --button-outline: rgba(255, 255, 255, 0.12);
 
-  --gradient-gold: #FF7018;
-  --gradient-noir: #08080b;
-  --shadow-gold: 0 0 24px -6px rgba(255, 112, 24, 0.35);
+  --gradient-gold: #FF5E0E;
+  --gradient-noir: #06070A;
+  --shadow-gold: 0 0 28px -6px rgba(255, 94, 14, 0.45);
   --shadow-elegant: 0 12px 32px -12px rgba(0, 0, 0, 0.65);
 
   --app-font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;

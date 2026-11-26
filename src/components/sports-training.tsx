@@ -36,6 +36,11 @@ export function useSportsTrainingInput(input: VoteInput) {
   const snapshot = useMemo(() => sportsWeightSnapshot().weights, []);
   return useMemo(() => !context || input.codeMode === "backup" || !Object.keys(context.state.leagues).length ? input : { ...input, personalTrainingThrough: context.state.corrections.map(r => r.correctedAt).sort().at(-1), personalTrainingGameIds: context.state.corrections.map(r => r.id.replace(":", "|")), weightProfileOverride: { global: snapshot.global, leagues: { ...snapshot.leagues, ...context.state.leagues } } }, [input, context?.state.leagues, context?.state.corrections, snapshot]);
 }
+export function useSportsTrainingProfile() {
+  const context = useContext(TrainingContext);
+  const snapshot = useMemo(() => sportsWeightSnapshot().weights, []);
+  return useMemo(() => !context || !Object.keys(context.state.leagues).length ? undefined : { global: snapshot.global, leagues: { ...snapshot.leagues, ...context.state.leagues } }, [context?.state.leagues, snapshot]);
+}
 export function WinnerEditor({ id, input, settled, actual, frozen }: { id: string; input: VoteInput; settled: boolean; actual: "home" | "away" | null; frozen?: VoteInput }) {
   const context = useContext(TrainingContext);
   const recorded = context?.state.corrections.some(r => r.id === id);
