@@ -1,0 +1,10 @@
+CREATE TABLE public.sports_people_edits (user_id uuid NOT NULL, game_key text NOT NULL, people jsonb NOT NULL, updated_at timestamptz NOT NULL DEFAULT now(), PRIMARY KEY (user_id, game_key));
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.sports_people_edits TO authenticated;
+GRANT ALL ON public.sports_people_edits TO service_role;
+ALTER TABLE public.sports_people_edits ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Own sports people edits" ON public.sports_people_edits FOR ALL TO authenticated USING ((select auth.uid()) = user_id) WITH CHECK ((select auth.uid()) = user_id);
+CREATE TABLE public.sports_research_approvals (user_id uuid NOT NULL, research_key text NOT NULL, approved jsonb NOT NULL DEFAULT '[]'::jsonb, updated_at timestamptz NOT NULL DEFAULT now(), PRIMARY KEY (user_id, research_key));
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.sports_research_approvals TO authenticated;
+GRANT ALL ON public.sports_research_approvals TO service_role;
+ALTER TABLE public.sports_research_approvals ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Own sports approvals" ON public.sports_research_approvals FOR ALL TO authenticated USING ((select auth.uid()) = user_id) WITH CHECK ((select auth.uid()) = user_id);

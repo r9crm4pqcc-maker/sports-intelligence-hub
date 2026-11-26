@@ -94,14 +94,16 @@ function toVotePeople(list: OverridePerson[], existing: VotePerson[] = []): Vote
     const dob = parseDobString(item.dob) ? item.dob.trim() : undefined;
     if (!name && !dob) continue;
     const jersey = item.jersey?.trim() || undefined;
+    const match = existing.find(p => p.name?.trim().toLowerCase() === name.toLowerCase());
     out.push({
       name: name || item.role.toUpperCase(),
       role: item.role,
-      dob,
-      jersey,
+      dob: dob || match?.dob,
+      jersey: jersey || match?.jersey,
     });
   }
-  return out.length ? out : existing;
+  const changedRoles = new Set(out.map(p => p.role));
+  return [...existing.filter(p => !changedRoles.has(p.role)), ...out];
 }
 
 export function applyPeopleOverrides(input: VoteInput, override: GamePeopleOverride | null): VoteInput {

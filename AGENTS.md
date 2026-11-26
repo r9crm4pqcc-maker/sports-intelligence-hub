@@ -49,3 +49,5 @@ use the editor.
 - Soccer gear activation is stored per signed-in user in Cloud; use Suspense Query reads and RLS-scoped browser mutations to prevent access to another user's entries.
 - Gemstone timing uses a pure rules module and live Lahiri transits with the documented natal rising; never infer test success or clearance from a date alone. Why: source-defined restrictions and user-recorded test progress remain explicit.
 - Date-type presentation derives from readDay tones through a shared formatter, without goal scoring. Why: the timing calendar and today's labels must use the same existing classification rules.
+- Sports people edits and approvals use authenticated Cloud documents with owner-only RLS, account-scoped local recovery and serialized debounced writes; manual edits remain higher priority than researched facts. Why: cross-device persistence must not mix users or overwrite corrections.
+- Western sign readings live in a shared browser-safe panel used by Western Chart, while life-path career stays in Life Path. Why: personal interpretations must not be duplicated in lookup categories.

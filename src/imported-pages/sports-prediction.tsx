@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { ResearchReview } from "@/components/research-review";
 import { useSportsResearch } from "@/lib/use-sports-research";
+import { useSportsDocument } from "@/lib/use-sports-document";
 import { useState, useMemo, useEffect, useCallback, useRef, memo } from "react";
 import { ArrowLeft, ChevronDown, ChevronUp, RefreshCw, Loader2, AlertCircle, Calendar } from "lucide-react";
 import { useLocation, useSearch } from "@/lib/wouter";
@@ -490,7 +491,8 @@ const GameCard = memo(function GameCard({ game, year, month, day, idx, league, l
   const [auto, setAuto] = useState<AutoMatchup | null>(() => useMatchupFeed ? autoMatchupCache.get(autoKey) ?? null : null);
   const [autoLoading, setAutoLoading] = useState(() => useMatchupFeed && !autoMatchupCache.has(autoKey));
   const overrideKey = `${league}:${year}-${month}-${day}:${game.awayTeam}@${game.homeTeam}`;
-  const [peopleOverride, setPeopleOverride] = useState<GamePeopleOverride | null>(() => getGamePeopleOverride(overrideKey));
+  const peopleDocument = useSportsDocument<GamePeopleOverride | null>("people", overrideKey, null, () => getGamePeopleOverride(overrideKey));
+  const peopleOverride = peopleDocument.value;
   const [openPeopleEditor, setOpenPeopleEditor] = useState(false);
   const [historicalRecent, setHistoricalRecent] = useState<InternationalRecentRecords | null>(
     () => isInternationalSoccer && game.status === "post"
@@ -608,7 +610,8 @@ const GameCard = memo(function GameCard({ game, year, month, day, idx, league, l
       stadium: venueMeta.stadium, city: venueMeta.city,
     };
   }, [analysisGame, game, year, month, day, auto, outs, league, dobs, kickoff, learned, codeMode, scoringCatalog, learningRevision, savedLearnedPrediction]);
-  const researched = useSportsResearch(basePredictionInput, !autoLoading);
+  const researchInput = useMemo(() => applyPeopleOverrides(basePredictionInput, peopleOverride), [basePredictionInput, peopleOverride]);
+  const researched = useSportsResearch(researchInput, !autoLoading && peopleDocument.ready);
   const predictionInput = useMemo<VoteInput>(
     () => applyPeopleOverrides(researched.input, peopleOverride),
     [researched.input, peopleOverride],
@@ -621,11 +624,10 @@ const GameCard = memo(function GameCard({ game, year, month, day, idx, league, l
     [peopleOverride, researched.input],
   );
   const handlePeopleOverrideChange = (next: GamePeopleOverride) => {
-    try { saveGamePeopleOverride(overrideKey, next); setPeopleOverride(next); } catch (error) { window.alert(error instanceof Error ? error.message : "Changes could not be saved."); }
+    peopleDocument.change(next);
   };
   const handlePeopleOverrideReset = () => {
-    setPeopleOverride(null);
-    saveGamePeopleOverride(overrideKey, null);
+    peopleDocument.change(null);
   };
   const recalculatedVotes = useMemo(() => runVotes(predictionInput), [predictionInput]);
   // Dev-only: expose replay inputs so weight tuning can use the exact app inputs.
@@ -931,16 +933,16 @@ const GameCard = memo(function GameCard({ game, year, month, day, idx, league, l
           </Button>
         </div>
         {researched.status && <p className="text-[10px] text-muted-foreground mt-2" role="status">{researched.status}</p>}
-        <ResearchReview facts={researched.facts} isVerified={researched.isVerified} onVerify={researched.verify} missingCount={researched.missingCount} />
+        <ResearchReview facts={researched.facts} isVerified={researched.isVerified} onVerify={researched.verify} missingCount={researched.missingCount} verificationStatus={researched.verificationStatus} onRetry={researched.retry} />
         {openPeopleEditor && (
-          <GamePeopleEditor
+          <><p role="status" className="mt-2 text-xs text-muted-foreground">{peopleDocument.ready ? peopleDocument.status : "Loading saved people…"}</p><fieldset disabled={!peopleDocument.ready}><GamePeopleEditor
             awayTeam={game.awayTeam}
             homeTeam={game.homeTeam}
             value={editorPeopleValue}
             hasCustomOverride={!!peopleOverride}
             onChange={handlePeopleOverrideChange}
             onReset={handlePeopleOverrideReset}
-          />
+          /></fieldset>{peopleDocument.status.includes("failed") && <Button variant="outline" onClick={() => peopleDocument.change(peopleDocument.value)}>Retry save</Button>}</>
         )}
         {openDecode && (
           <div className="mt-3 space-y-2">

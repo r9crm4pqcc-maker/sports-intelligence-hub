@@ -1,5 +1,6 @@
 import { Card, Page } from "./kit";
 import { SkyNow } from "./sky-now";
+import { VirgoReading } from "@/components/virgo-reading";
 
 const WEST = [
   { planet: "Sun", sign: "Virgo", deg: "16°08′", house: "House 11", role: "Purpose and identity", body: "Virgo notices the small thing and wants to fix it. That eye is a strength until a small flaw starts to feel huge." },
@@ -87,6 +88,7 @@ export default function SkyPage() {
           <li>Saturn is in Virgo in the 11th. Saturn is bone, teeth, knees, and skin. It is not in fall and not in detriment, so the bones are a structure, not the broken part. Virgo on Saturn is a second pass at the intestines, from Saturn, not from the sun sign.</li>
         </ul>
       </Card>
+      <section className="border-t border-border pt-4"><VirgoReading /></section>
       <SkyNow primary="tropical" />
     </Page>
   );

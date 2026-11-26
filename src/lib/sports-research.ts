@@ -1,4 +1,5 @@
 import type { VoteInput, VotePerson } from "./vote-decode";
+import { keyPersonRoleForLeague } from "./sports-method-candidate";
 export type ResearchRequest = { id: string; team: string; role: string; name: string; field: "dob" | "name" | "founded" };
 export type ResearchFact = { id: string; value: string; sourceUrl: string; quote: string };
 export function researchFactKey(fact: ResearchFact): string { return JSON.stringify([fact.id, fact.value, fact.sourceUrl, fact.quote]); }
@@ -19,14 +20,38 @@ export function missingSportsFacts(input: VoteInput): ResearchRequest[] {
     if (!team.founded) tasks.push({ id: `${side}:founded`, team: team.name, role: "team", name: team.name, field: "founded" });
     const people = team.people ?? [];
     for (const [i, p] of people.entries()) if (p.name && !p.dob) tasks.push({ id: `${side}:dob:${i}`, team: team.name, role: p.role || "player", name: p.name, field: "dob" });
-    for (const role of ["coach", "owner", ...(input.league === "NFL" || input.league === "College Football" ? ["quarterback"] : [])]) {
+    const keyRole = keyPersonRoleForLeague(input.league || "");
+    for (const role of ["coach", "owner", ...(keyRole ? [keyRole] : [])]) {
       if (!people.some(p => p.role === role && p.name)) {
         tasks.push({ id: `${side}:name:${role}`, team: team.name, role, name: "", field: "name" });
         tasks.push({ id: `${side}:dob:${role}`, team: team.name, role, name: "", field: "dob" });
       }
     }
   }
-  return tasks.slice(0, 12);
+  return tasks;
+}
+export function researchQueries(tasks: ResearchRequest[], league: string, date: string): string[] {
+  const queries = new Set<string>();
+  for (const task of tasks) {
+    const who = `${task.team} ${league}`;
+    if (task.field === "founded") queries.add(`${who} team founded full date month day year official history`);
+    else if (task.name) queries.add(`${who} "${task.name}" date of birth birthday biography`);
+    else if (task.role === "owner") queries.add(`${who} principal owner ${date} biography date of birth`);
+    else if (task.role === "coach") queries.add(`${who} head coach ${date} biography date of birth`);
+    else queries.add(`${who} ${task.role === "player" ? "key player starting lineup" : `confirmed starting ${task.role}`} ${date} game report`);
+  }
+  return [...queries];
+}
+export function hasFullDateEvidence(value: string, quote: string): boolean {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+  const d = new Date(`${value}T00:00:00Z`);
+  if (!Number.isFinite(d.getTime()) || d.toISOString().slice(0, 10) !== value) return false;
+  const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  const month = months[d.getUTCMonth()] || "";
+  const day = d.getUTCDate(), year = d.getUTCFullYear(), m = d.getUTCMonth() + 1;
+  const normalize = (s: string) => s.toLowerCase().replace(/(\d)(st|nd|rd|th)\b/g, "$1").replace(/[,\.]/g, "").replace(/\s+/g, " ");
+  const variants = [value, `${m}/${day}/${year}`, `${String(m).padStart(2,"0")}/${String(day).padStart(2,"0")}/${year}`, `${month} ${day} ${year}`, `${day} ${month} ${year}`, `${month.slice(0,3)} ${day} ${year}`, `${day} ${month.slice(0,3)} ${year}`];
+  return variants.some(v => normalize(quote).includes(normalize(v)));
 }
 export function applyResearchedFacts(input: VoteInput, facts: ResearchFact[]): VoteInput {
   const tasks = missingSportsFacts(input);

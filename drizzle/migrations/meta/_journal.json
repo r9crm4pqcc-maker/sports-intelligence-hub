@@ -15,6 +15,13 @@
       "when": 1795717209856,
       "tag": "0001_soccer_gear_tracker",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1795718671997,
+      "tag": "0002_sports_people_sync",
+      "breakpoints": true
     }
   ]
 }

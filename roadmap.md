@@ -1,5 +1,9 @@
 # Roadmap
 
+- [x] Move Virgo health/career to Western Chart and remove misplaced personal content from Friendly matches
+- [x] Save sports people edits and research approvals across devices
+- [x] Improve missing player/coach/owner research and verify signed-in research end to end
+
 - [x] Remove item-opening and lucky-number timing sections; replace goal selection with general date types and verify
 
 - [x] Rename app The Sauce; orange/black theme; Edit People label; Tools placement; white year text and lucky number 99
@@ -12,7 +16,7 @@
 - [x] Automatically research missing sports facts from cited web sources without overwriting manual corrections
 - [x] Add requested chart, soccer, settings capabilities using verified existing rules; use existing gemstone associations; do not invent unspecified start/stop dates
 - [x] Test sports autosave, dates, categories, rituals and mobile layout; 37 sports tests passed
-- [ ] Verify signed-in research and Cloud gear tracking end to end — blocked because temporary test sign-in was declined
+- [x] Verify signed-in research and Cloud gear tracking end to end — requester session; facts await confirmation and approvals/people persist in fresh contexts
 
 - [x] Import Life Code / Sports AI app from zip
 - [x] Story Reading on every game, own hit record

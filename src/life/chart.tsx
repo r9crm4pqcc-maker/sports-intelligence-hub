@@ -80,7 +80,6 @@ export default function ChartPage() {
             <p className="text-muted-foreground leading-relaxed">{PATH_28.birthday.insight}</p>
           </div>
         )}
-        {chart.sun === "Virgo" && <VirgoReading />}
       </Card>}
 
       {tab === "western" && <SkyPage />}
@@ -144,35 +143,6 @@ export default function ChartPage() {
   );
 }
 
-function VirgoReading() {
-  return (
-    <div className="mt-4 space-y-3 text-sm">
-      <p className="font-display text-lg text-foreground">{VIRGO.title}</p>
-      <p className="text-xs text-muted-foreground">{VIRGO.line}</p>
-      <p className="text-foreground/90 leading-relaxed">{VIRGO.overview}</p>
-      <p className="text-muted-foreground leading-relaxed">{VIRGO.insight}</p>
-      <p className="text-foreground/90 leading-relaxed">{VIRGO.strength}</p>
-      <p className="text-muted-foreground leading-relaxed">{VIRGO.weakness}</p>
-      <p className="font-display text-lg text-foreground">{VIRGO.love.title}</p>
-      <p className="text-muted-foreground leading-relaxed">{VIRGO.love.body}</p>
-      <p className="text-foreground">{VIRGO.opposite.sign} · {VIRGO.opposite.pct}. {VIRGO.opposite.note}.</p>
-      <p className="text-muted-foreground leading-relaxed">{VIRGO.opposite.body} {VIRGO.caution}</p>
-      <p className="text-foreground">Friendly: {VIRGO.friends.signs.map((s) => `${s.sign} ${s.pct}%`).join(" · ")}.</p>
-      <p className="text-muted-foreground leading-relaxed">{VIRGO.friends.body} {VIRGO.friends.windows}</p>
-      <p className="font-display text-lg text-foreground">{VIRGO.health.title}</p>
-      <p className="text-muted-foreground leading-relaxed">{VIRGO.health.body}</p>
-      <p className="text-foreground">Vulnerability: {VIRGO.health.vulnerability}. Remedy: {VIRGO.health.remedy}.</p>
-      <p className="text-muted-foreground">{VIRGO.health.insight}</p>
-      <p className="font-display text-lg text-foreground">Career and money</p>
-      <p className="text-muted-foreground leading-relaxed">{VIRGO.career.body}</p>
-      <p className="text-foreground">{VIRGO.career.tags.join(" · ")}</p>
-      <p className="text-muted-foreground">{VIRGO.career.paths.join(" · ")}</p>
-      <p className="text-muted-foreground leading-relaxed">{VIRGO.career.style} {VIRGO.career.watch}</p>
-      <p className="text-muted-foreground">All 12, most compatible first.</p>
-      <PctBars rows={VIRGO_MATCHES.map((m) => ({ name: m.sign, pct: m.pct }))} />
-    </div>
-  );
-}
 
 function clothingRows(profile: { year: number; month: number; day: number }, lookups: { kind: string; name: string; year: number; month: number; day: number }[]) {
   const known = new Set(FRIENDLY.clothes.map((c) => c.name.toLowerCase()));
@@ -276,7 +246,7 @@ function Path28Reading() {
         {p.weaknesses.map((s) => <p key={s.title} className="mt-1"><span className="text-foreground font-medium">{s.title}.</span> <span className="text-muted-foreground">{s.body}</span></p>)}
       </div>
       <div>
-        <p className="font-display text-lg text-foreground">Career</p>
+        <p className="font-display text-lg text-foreground">Career · 28</p>
         <p className="text-muted-foreground leading-relaxed mt-1">{p.career.body}</p>
         <p className="mt-2 text-foreground">{p.career.tags.join(" · ")}</p>
         <p className="text-muted-foreground mt-1">{p.career.paths.join(" · ")}</p>

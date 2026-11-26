@@ -38,6 +38,48 @@ export type Database = {
         }
         Relationships: []
       }
+      sports_people_edits: {
+        Row: {
+          game_key: string
+          people: Json
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          game_key: string
+          people: Json
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          game_key?: string
+          people?: Json
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      sports_research_approvals: {
+        Row: {
+          approved: Json
+          research_key: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          approved?: Json
+          research_key: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          approved?: Json
+          research_key?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       sports_research_cache: {
         Row: {
           checked_at: string
