@@ -80,12 +80,12 @@ export function SportPicker({
             <Trophy size={12} aria-hidden="true" /> Sports AI
           </p>
           <h1 className="mt-1 font-display text-3xl font-semibold text-foreground sm:text-4xl">Pick a sport</h1>
-          <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted-foreground">Open a game slate to see the Learned Code pick and Story Reading.</p>
+          <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted-foreground">Open a game slate to see the numerology-first Learned Code picks.</p>
         </div>
         <div className="flex items-end gap-2">
           <label htmlFor="sport-picker-date" className="block">
             <span className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.16em] text-primary">Game date</span>
-            <span className="flex items-center gap-2.5 rounded-xl border border-primary/45 bg-background px-3 py-2">
+            <span className="flex items-center gap-2.5 rounded-xl border border-border bg-card px-3 py-2 hover:border-primary/40 transition-colors">
               <CalendarDays size={15} className="shrink-0 text-primary" aria-hidden="true" />
               <span className="min-w-0">
                 <span className="block truncate text-sm font-semibold text-foreground" data-testid="text-selected-game-date">{dateLabel(selectedDate)}</span>

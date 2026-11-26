@@ -817,27 +817,27 @@ const GameCard = memo(function GameCard({ game, year, month, day, idx, league, l
   const fullPart=(part)=> <FullDecode part={part} title={`${game.awayTeam} @ ${game.homeTeam} · ${month}/${day}/${year}`} data={full} homeName={game.homeTeam} awayName={game.awayTeam} verdict={verdict} editable={!learned} headToHead={{allTime:auto?.allTimeSeries,season:auto?.seasonSeries}} partThreeTitle={isFight ? "FIGHTERS & COACHES" : undefined} />;
 
   return (
-    <div className="rounded-2xl overflow-hidden" style={{ background: "hsl(var(--background))", border: qualified ? "1px solid hsl(var(--primary))" : "1px solid hsl(var(--primary) / 0.28)" }}>
-      <div className="p-4">
+    <div className={`glass-card rounded-2xl overflow-hidden ${qualified ? "border-primary/60 shadow-[0_0_28px_-14px_rgba(255,106,0,0.5)]" : ""}`}>
+      <div className="p-4 sm:p-5">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
-            <p className="text-[15px] font-black text-foreground leading-tight">{game.awayTeam} <span className="font-medium text-muted-foreground">vs</span> {game.homeTeam}</p>
+            <p className="text-[16px] font-bold font-display tracking-tight text-foreground leading-snug">{game.awayTeam} <span className="font-normal text-muted-foreground mx-0.5">@</span> {game.homeTeam}</p>
             <p className="text-[11px] mt-1 text-muted-foreground">{venueName}{when ? ` · ${when}` : ""}</p>
           </div>
-          <div className="text-right shrink-0">
-            <p className="text-3xl font-black leading-none" style={{ color: YELLOW }}>{pickPct}%</p>
-            <p className="text-[9px] mt-1 tracking-widest text-muted-foreground">{codeMode === "backup" ? "LEGACY SCORE · NOT ODDS" : isFinal ? "LEARNED CODE" : confidenceBand(Math.round(pickPct)).toUpperCase()}</p>
+          <div className="text-right shrink-0 rounded-xl bg-primary/10 border border-primary/25 px-3 py-1.5">
+            <p className="text-2xl font-black font-display leading-none tabular-nums" style={{ color: YELLOW }}>{pickPct}%</p>
+            <p className="text-[8.5px] mt-1 font-semibold tracking-widest text-muted-foreground">{codeMode === "backup" ? "LEGACY SCORE · NOT ODDS" : isFinal ? "LEARNED CODE" : confidenceBand(Math.round(pickPct)).toUpperCase()}</p>
           </div>
         </div>
-        <div className="mt-3 flex items-end justify-between gap-3">
+        <div className="mt-4 pt-3 border-t border-border/80 flex items-end justify-between gap-3">
           <div>
-            <p className="text-[9px] uppercase tracking-[0.16em] text-muted-foreground">Record</p>
-            <p className="text-[12px] text-foreground mt-0.5">{game.awayAbbr} {displayRecord(analysisGame.awayRecord, awayRecent)}</p>
-            <p className="text-[12px] text-foreground">{game.homeAbbr} {displayRecord(analysisGame.homeRecord, homeRecent)}</p>
+            <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-muted-foreground">Record</p>
+            <p className="text-[12px] font-mono tabular-nums text-foreground mt-1">{game.awayAbbr} <span className="text-muted-foreground">{displayRecord(analysisGame.awayRecord, awayRecent)}</span></p>
+            <p className="text-[12px] font-mono tabular-nums text-foreground">{game.homeAbbr} <span className="text-muted-foreground">{displayRecord(analysisGame.homeRecord, homeRecent)}</span></p>
           </div>
           <div className="text-right">
-            <p className="text-[9px] uppercase tracking-[0.16em] text-muted-foreground">{codeMode === "backup" ? "Backup side" : isFinal ? "Learned Code pick" : "Pick"}</p>
-            <p className="text-[13px] font-black" style={{ color: YELLOW }} data-testid="learned-pick" data-away={game.awayTeam} data-home={game.homeTeam} data-away-score={game.awayScore ?? ""} data-home-score={game.homeScore ?? ""} data-status={game.status}>{cardPickName}</p>
+            <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-muted-foreground">{codeMode === "backup" ? "Backup side" : isFinal ? "Learned Code pick" : "AI Pick"}</p>
+            <p className="text-[14px] font-black font-display tracking-tight mt-0.5" style={{ color: YELLOW }} data-testid="learned-pick" data-away={game.awayTeam} data-home={game.homeTeam} data-away-score={game.awayScore ?? ""} data-home-score={game.homeScore ?? ""} data-status={game.status}>{cardPickName}</p>
             {codeMode === "learned" && isFinal && savedLearnedPrediction && (
               <p className="text-[9px] mt-1 text-muted-foreground">
                 Re-decoded with the frozen pregame inputs; original pick retained for comparison: {savedLearnedPrediction.pick === "home" ? game.homeTeam : game.awayTeam}
@@ -854,8 +854,8 @@ const GameCard = memo(function GameCard({ game, year, month, day, idx, league, l
           </div>
         </div>
         {(book || game.archivedOut || awayOut.length || homeOut.length || starter) && (
-          <div className="mt-3 text-[11px] text-foreground space-y-0.5">
-            {book && <p>{book.book || "Line"} {game.awayAbbr} {book.moneylineAway || "—"} {book.spreadAway || ""} · {game.homeAbbr} {book.moneylineHome || "—"} {book.spreadHome || ""}{book.overUnder ? ` · ${book.overUnder}` : ""}</p>}
+          <div className="mt-3 rounded-xl bg-muted/50 border border-border/70 px-3 py-2 text-[11px] text-foreground/90 space-y-1">
+            {book && <p className="font-mono text-[10.5px] tabular-nums">{book.book || "Line"} · {game.awayAbbr} {book.moneylineAway || "—"} {book.spreadAway || ""} · {game.homeAbbr} {book.moneylineHome || "—"} {book.spreadHome || ""}{book.overUnder ? ` · O/U ${book.overUnder}` : ""}</p>}
             {starter && <p>{league === "NHL" ? "Goalie" : "Pitcher"} {starter}</p>}
             {(game.archivedOut || awayOut.length || homeOut.length) && <p>Out {game.archivedOut ?? `${game.awayAbbr}: ${awayOut.join(", ") || "none"} · ${game.homeAbbr}: ${homeOut.join(", ") || "none"}`}</p>}
           </div>
