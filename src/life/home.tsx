@@ -49,7 +49,7 @@ export default function HomePage() {
     <div className="max-w-3xl mx-auto space-y-4">
       <header className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <p className="text-[10px] uppercase tracking-[0.18em] font-bold" style={{ color: "#FF6A00" }}>Life Code</p>
+          <p className="text-[10px] uppercase tracking-[0.18em] font-bold text-primary">Life Code</p>
           <h1 className="font-display text-3xl sm:text-4xl font-semibold text-foreground mt-1">{chart?.name ?? fullName(profile)}</h1>
           <p className="text-sm text-muted-foreground mt-1">
             {profile.month}/{profile.day}/{profile.year}

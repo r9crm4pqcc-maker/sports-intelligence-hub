@@ -11,11 +11,11 @@ import {
   type MarketCodeReading,
 } from "@/lib/trading-ai";
 
-const BLUE   = "#FF6A00";
-const YELLOW = "#FF6A00";
-const GREEN  = "#FF6A00";
+const BLUE   = "#18DC68";
+const YELLOW = "#18DC68";
+const GREEN  = "#18DC68";
 const RED    = "#f87171";
-const PURPLE = "#FF6A00";
+const PURPLE = "#18DC68";
 
 const cats = ["All", "index", "etf", "stock", "crypto"] as const;
 

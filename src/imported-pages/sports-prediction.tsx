@@ -817,7 +817,7 @@ const GameCard = memo(function GameCard({ game, year, month, day, idx, league, l
   const fullPart=(part)=> <FullDecode part={part} title={`${game.awayTeam} @ ${game.homeTeam} · ${month}/${day}/${year}`} data={full} homeName={game.homeTeam} awayName={game.awayTeam} verdict={verdict} editable={!learned} headToHead={{allTime:auto?.allTimeSeries,season:auto?.seasonSeries}} partThreeTitle={isFight ? "FIGHTERS & COACHES" : undefined} />;
 
   return (
-    <div className={`glass-card rounded-2xl overflow-hidden ${qualified ? "border-primary/60 shadow-[0_0_28px_-14px_rgba(255,106,0,0.5)]" : ""}`}>
+    <div className={`glass-card rounded-2xl overflow-hidden ${qualified ? "border-primary/60 shadow-[0_0_28px_-14px_rgba(24,220,104,0.45)]" : ""}`}>
       <div className="p-4 sm:p-5">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">

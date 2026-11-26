@@ -8,7 +8,7 @@ import { chineseMonthSign, numberRelation } from "@/lib/vote-decode";
 import { SportsPageHeader } from "@/components/sports-page-header";
 import { centralDateParts } from "@/lib/sports-pregame-record";
 
-const ORANGE = "#FF6A00";
+const ORANGE = "#18DC68";
 const ME = { year: 2009, month: 9, day: 8 };
 const POWER = ["Black", "White", "Green", "Orange"];
 const COLORS = [
@@ -184,12 +184,12 @@ export default function SoccerAIPage() {
           <label htmlFor="soccer-game-date" className="text-[10px] font-semibold text-white/55">
             Game date
             <input id="soccer-game-date" type="date" value={selectedDate} onChange={(event) => updateDate(event.target.value)}
-              className="mt-1 block h-10 rounded-lg border border-white/10 bg-[#10100f] px-3 text-sm font-semibold text-white outline-none [color-scheme:dark] focus:border-[#ff6a00]/60" />
+              className="mt-1 block h-10 rounded-lg border border-white/10 bg-[#10100f] px-3 text-sm font-semibold text-white outline-none [color-scheme:dark] focus:border-[#18dc68]/60" />
           </label>
         </div>
       } />
 
-      <div className="rounded-2xl p-4 flex items-end justify-between" style={{ background: "#000", border: "1px solid #FF6A00" }}>
+      <div className="glass-card rounded-2xl p-4 flex items-end justify-between border-primary/50">
         <div>
           <p className="text-[10px] tracking-[0.16em] text-white/40">MATCH</p>
           <p className="text-4xl font-black" style={{ color: ORANGE }}>{board.pct}%</p>

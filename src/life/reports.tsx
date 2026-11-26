@@ -139,18 +139,18 @@ function WallSheet({ y, m, yearAnimal, life, sel, onPick }: { y: number; m: numb
   const easy = days.filter((x) => x.read.tones.includes("challenging")).map((x) => x.d);
   const list = (xs: number[]) => xs.length ? xs.map((d) => `${MONTHS[m - 1].slice(0, 3)} ${d}`).join(", ") : "None this month";
   return (
-    <div className="rounded-2xl overflow-hidden" style={{ background: "#000", color: "#fff", border: "1px solid #FF6A00" }}>
-      <div className="p-4 sm:p-6" style={{ background: "#000", borderBottom: "1px solid rgba(255,106,0,0.45)" }}>
-        <p className="font-display text-4xl sm:text-5xl font-black tracking-tight" style={{ color: "#FF6A00" }}>{MONTHS[m - 1].toUpperCase()}</p>
-        <p className="text-sm sm:text-base font-bold tracking-[0.08em] mt-1" style={{ color: "#FF6A00" }}>{y} · THE MONTH OF THE {animal.toUpperCase()} · {monthRelation(yearAnimal, animal).toUpperCase()}</p>
+    <div className="glass-card rounded-2xl overflow-hidden border-primary/40">
+      <div className="p-4 sm:p-6 border-b border-border">
+        <p className="font-display text-4xl sm:text-5xl font-black tracking-tight text-primary">{MONTHS[m - 1].toUpperCase()}</p>
+        <p className="text-sm sm:text-base font-bold tracking-[0.08em] mt-1 text-primary">{y} · THE MONTH OF THE {animal.toUpperCase()} · {monthRelation(yearAnimal, animal).toUpperCase()}</p>
         <p className="text-sm mt-1 text-white/70">Life path {life} · year animal {yearAnimal}{ownLucky(profile) ? " · lucky 99, 98, 28, 8" : ""}. {turn ? `${animal} takes over on ${MONTHS[m - 1].slice(0, 3)} ${turn.d}. Before that it is ${days[0].animal}.` : `${MONTH_SPAN[animal]}.`}</p>
-        <div className="mt-4 rounded-xl p-3 text-sm sm:text-base grid sm:grid-cols-2 gap-3" style={{ background: "#000", border: "1px solid rgba(255,106,0,0.45)" }}>
+        <div className="mt-4 rounded-xl p-3 text-sm sm:text-base grid sm:grid-cols-2 gap-3 bg-muted/50 border border-border">
           <div>
-            <p className="text-xs font-bold tracking-[0.14em]" style={{ color: "#FF6A00" }}>PERSONAL MONTH</p>
-            <p className="mt-1 text-white"><span className="text-2xl font-black" style={{ color: "#FF6A00" }}>{pm.compound}/{pm.reduced}</span> How to move this month. Not the day score.</p>
+            <p className="text-xs font-bold tracking-[0.14em] text-primary">PERSONAL MONTH</p>
+            <p className="mt-1 text-foreground"><span className="text-2xl font-black text-primary">{pm.compound}/{pm.reduced}</span> How to move this month. Not the day score.</p>
           </div>
           <div>
-            <p className="text-xs font-bold tracking-[0.14em]" style={{ color: "#FF6A00" }}>YOUR BEST DAYS</p>
+            <p className="text-xs font-bold tracking-[0.14em] text-primary">YOUR BEST DAYS</p>
             <p className="mt-1 text-white/85">Money: {list(money)}</p>
             <p className="text-white/85">Power: {list(power)}</p>
             <p className="text-white/85">Soulmate: {list(soul)}</p>
@@ -160,23 +160,23 @@ function WallSheet({ y, m, yearAnimal, life, sel, onPick }: { y: number; m: numb
         </div>
       </div>
       <div className="px-1 sm:px-3 py-3" style={{ background: "#000" }}>
-        <p className="text-base font-bold mb-1 px-1" style={{ color: "#FF6A00" }}>{MONTHS[m - 1]} {y} · Month of the {animal}</p>
+        <p className="text-base font-bold mb-1 px-1 text-primary">{MONTHS[m - 1]} {y} · Month of the {animal}</p>
         <p className="text-sm mb-2 px-1 text-white/60">The number under each date is the Universal Day. Its label shows compatibility with your Life Path; the calendar-date number is a separate layer.</p>
-        <div className="grid grid-cols-7 text-[10px] sm:text-xs font-bold border-b" style={{ borderColor: "#FF6A00", color: "#FF6A00" }}>
+        <div className="grid grid-cols-7 text-[10px] sm:text-xs font-bold border-b border-primary/40 text-primary">
           {["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"].map((d) => <div key={d} className="min-w-0 truncate px-0.5 py-1">{d}</div>)}
         </div>
         <div className="grid grid-cols-7">
-          {Array.from({ length: lead }, (_, i) => <div key={`b${i}`} className="min-w-0 min-h-24 border-b border-r" style={{ borderColor: "rgba(255,106,0,0.28)" }} />)}
+          {Array.from({ length: lead }, (_, i) => <div key={`b${i}`} className="min-w-0 min-h-24 border-b border-r border-border/60" />)}
           {days.map((x) => {
             const hot = x.read.tones.includes("wealth") || x.read.tones.includes("soulmate") || x.read.tones.includes("master");
             const warn = x.read.tones.includes("fatal") || x.read.tones.includes("challenging");
             const on = x.d === sel;
             return (
-              <button key={x.d} type="button" onClick={() => onPick(x.d)} className="min-w-0 overflow-hidden min-h-24 text-left p-0.5 sm:p-1 border-b border-r" style={{ background: on ? "rgba(255,106,0,0.22)" : hot && !x.read.tones.includes("fatal") ? "rgba(255,106,0,0.1)" : "#000", borderColor: "rgba(255,106,0,0.28)", outline: on ? "1px solid #FF6A00" : "none" }}>
+              <button key={x.d} type="button" onClick={() => onPick(x.d)} className="min-w-0 overflow-hidden min-h-24 text-left p-0.5 sm:p-1 border-b border-r border-border/60" style={{ background: on ? "rgba(24,220,104,0.22)" : hot && !x.read.tones.includes("fatal") ? "rgba(24,220,104,0.1)" : "transparent", outline: on ? "1px solid #18DC68" : "none" }}>
                 <span className="block text-xs sm:text-sm font-black leading-none text-white">{x.d}{warn ? " ▲" : ""}{x.read.tones.includes("soulmate") ? " ★" : ""}</span>
-                <span className="block text-[10px] sm:text-xs font-semibold leading-none mt-0.5 truncate" style={{ color: "#FF6A00" }}>{x.read.labelU}</span>
+                <span className="block text-[10px] sm:text-xs font-semibold leading-none mt-0.5 truncate text-primary">{x.read.labelU}</span>
                 <span title={`${calendarRelationLabel(x.relation)} with your Life Path under Universal Day ${x.read.labelU}`} className="block text-[9px] sm:text-xs font-bold leading-tight mt-0.5 text-white/80 break-words">{calendarRelationLabel(x.relation)}</span>
-                {x.animal !== days[0].animal && x.d === turn?.d && <span className="block text-[10px] font-bold truncate" style={{ color: "#FF6A00" }}>{x.animal}</span>}
+                {x.animal !== days[0].animal && x.d === turn?.d && <span className="block text-[10px] font-bold truncate text-primary">{x.animal}</span>}
                 <span className="block text-[10px] leading-tight mt-0.5 text-white/70 break-words line-clamp-2">{cellLine(x.read.tones)}</span>
               </button>
             );

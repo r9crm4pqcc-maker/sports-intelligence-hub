@@ -4,18 +4,6 @@ import { CalendarDays, Target, Users, Layers, TrendingUp, Trophy, Sun, ChevronDo
 
 const NAV_GROUPS = [
   {
-    title: "AI Terminals",
-    items: [
-      { label: "Sports AI", icon: Trophy, children: [
-        { label: "Sports Prediction", href: "/sports-prediction" },
-        { label: "Sports Database", href: "/sports-database" },
-        { label: "Soccer AI", href: "/soccer-ai" },
-      ] },
-      { label: "Stock Market AI", icon: TrendingUp, href: "/trading-ai" },
-      { label: "Crypto Research", icon: Coins, href: "/crypto" },
-    ],
-  },
-  {
     title: "Personal & Timing",
     items: [
       { label: "Home", icon: Home, href: "/" },
@@ -35,6 +23,18 @@ const NAV_GROUPS = [
       { label: "Friendly", icon: Layers, href: "/advanced" },
     ],
   },
+  {
+    title: "AI Terminals",
+    items: [
+      { label: "Sports AI", icon: Trophy, children: [
+        { label: "Sports Prediction", href: "/sports-prediction" },
+        { label: "Sports Database", href: "/sports-database" },
+        { label: "Soccer AI", href: "/soccer-ai" },
+      ] },
+      { label: "Stock Market AI", icon: TrendingUp, href: "/trading-ai" },
+      { label: "Crypto Research", icon: Coins, href: "/crypto" },
+    ],
+  },
 ];
 
 export function AppShell({ children }: { children: ReactNode }) {
@@ -48,7 +48,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       <aside className={`fixed top-0 left-0 h-full w-[16rem] flex flex-col z-50 bg-sidebar border-r border-sidebar-border transition-transform duration-300 lg:translate-x-0 ${open ? "translate-x-0" : "-translate-x-full"} lg:static lg:z-auto`}>
         <div className="px-4 py-4 flex items-center justify-between shrink-0 border-b border-sidebar-border">
           <Link href="/" onClick={close} className="flex items-center gap-3 group">
-            <div className="w-9 h-9 rounded-xl bg-primary text-primary-foreground flex items-center justify-center shadow-[0_0_20px_-4px_rgba(255,106,0,0.65)] transition-transform group-hover:scale-105">
+            <div className="w-9 h-9 rounded-xl bg-primary text-primary-foreground flex items-center justify-center shadow-[0_0_20px_-4px_rgba(24,220,104,0.65)] transition-transform group-hover:scale-105">
               <Zap size={16} className="fill-current" />
             </div>
             <div>

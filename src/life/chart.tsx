@@ -20,22 +20,41 @@ export default function ChartPage() {
   const now = useNow();
   const chart = buildChart(profile, now);
   const path28 = isPath28(chart.lifePath.compound);
-  const chapters = ["edit", "life", "birthday", "year", "chinese", "western", "vedic", "enemy", "lucky", "friendly", "name"];
+  const [tab, setTab] = useState<"life" | "birthday" | "year" | "chinese" | "enemy" | "lucky" | "name" | "edit">("life");
+  const tabs = [
+    { id: "life", label: "Life Path" },
+    { id: "birthday", label: "Birthday" },
+    { id: "year", label: "Personal Year" },
+    { id: "chinese", label: "Chinese Animal" },
+    { id: "enemy", label: "Enemy & Hours" },
+    { id: "lucky", label: "Lucky Numbers" },
+    { id: "name", label: "Name" },
+    { id: "edit", label: "Birth Data" },
+  ] as const;
 
   return (
     <Page kicker="Core engine" title={chart.name || "Your chart"} lede="Everything here is calculated from one birthdate. Add a clock time for the hour pillar and a rising estimate.">
-      <nav className="flex gap-2 overflow-x-auto pb-1 text-xs">
-        {chapters.map((id) => (
-          <a key={id} href={`#${id}`} className="shrink-0 rounded-full border border-border px-3 py-1 text-muted-foreground hover:text-primary capitalize">{id}</a>
+      <nav className="flex flex-wrap gap-2 pb-1 text-xs" role="tablist" aria-label="Chart categories">
+        {tabs.map((t) => (
+          <button
+            key={t.id}
+            type="button"
+            role="tab"
+            aria-selected={tab === t.id}
+            onClick={() => setTab(t.id)}
+            className={`shrink-0 rounded-full border px-3.5 py-1.5 font-medium transition-colors ${tab === t.id ? "bg-primary/15 border-primary text-primary" : "border-border bg-card text-muted-foreground hover:text-foreground hover:border-primary/40"}`}
+          >
+            {t.label}
+          </button>
         ))}
       </nav>
 
-      <Card>
+      {tab === "edit" && <Card>
         <div id="edit"><CardTitle>Birth data</CardTitle></div>
         <ProfileForm key={ready ? "set" : "boot"} profile={profile} onSave={setProfile} />
-      </Card>
+      </Card>}
 
-      <Card>
+      {tab === "life" && <Card>
         <div id="life"><CardTitle>Life path</CardTitle></div>
         <div className="grid sm:grid-cols-3 gap-3">
           <Stat label="Life path" value={path28 ? PATH_28.label : `${chart.lifePath.compound}/${chart.lifePath.reduced}`} hint={path28 ? PATH_28.kicker : chart.meaning?.title} />
@@ -43,9 +62,9 @@ export default function ChartPage() {
           <Stat label="Planet" value={chart.core.planet} hint={chart.meaning?.keywords} />
         </div>
         {path28 ? <Path28Reading /> : <p className="text-sm text-muted-foreground mt-3 leading-relaxed">{chart.meaning?.meaning}</p>}
-      </Card>
+      </Card>}
 
-      <Card>
+      {tab === "birthday" && <Card>
         <div id="birthday"><CardTitle>Birthday number</CardTitle></div>
         <Stat label="Birthday" value={`${chart.birthday.compound}/${chart.birthday.reduced}`} hint={NUMBER_MEANINGS_FULL[chart.birthday.reduced]?.meaning} />
         {path28 && profile.day === 8 && (
@@ -59,14 +78,14 @@ export default function ChartPage() {
           </div>
         )}
         {chart.sun === "Virgo" && <VirgoReading />}
-      </Card>
+      </Card>}
 
-      <Card>
+      {tab === "year" && <Card>
         <div id="year"><CardTitle>Personal year</CardTitle></div>
         <YearCard profile={profile} cycleYear={chart.py.cycleYear} face={yearFace(chart.py.compound, chart.py.reduced)} />
-      </Card>
+      </Card>}
 
-      <Card>
+      {tab === "chinese" && <Card>
         <div id="chinese"><CardTitle>Chinese animal</CardTitle></div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
           <Stat label="Year" value={animalLabel(chart.yearAnimal)} hint={profile.year === 2009 && chart.yearAnimal === "Ox" ? OX_YEAR.line : "The year animal."} />
@@ -74,21 +93,9 @@ export default function ChartPage() {
           <Stat label="Hour" value={chart.hour ? animalLabel(chart.hour) : "Add a time"} hint={chart.hourDaylight ? `Clock ${profile.time} is daylight time. Standard time is ${chart.hourStandard}, and that is the hour.` : "Two-hour pillar from standard time."} />
         </div>
         {chart.yearAnimal === "Ox" && <OxReading />}
-      </Card>
+      </Card>}
 
-      <Card>
-        <div id="western"><CardTitle>Western chart</CardTitle></div>
-        <p className="text-sm text-muted-foreground">The tropical placements are on their own page.</p>
-        <Link href="/sky" className="inline-block mt-2 text-sm text-primary">Open the Western chart</Link>
-      </Card>
-
-      <Card>
-        <div id="vedic"><CardTitle>Vedic chart</CardTitle></div>
-        <p className="text-sm text-muted-foreground">The sidereal chart and its colors, numbers, days, months, directions, and metals are on their own page.</p>
-        <Link href="/vedic" className="inline-block mt-2 text-sm text-primary">Open the Vedic chart</Link>
-      </Card>
-
-      <Card>
+      {tab === "enemy" && <Card>
         <div id="enemy"><CardTitle>Enemy months and hours</CardTitle></div>
         <p className="text-sm text-muted-foreground mb-3">A month is an enemy when its animal clashes with your birth month, the {animalLabel(chart.birthMonthAnimal)}. An hour is an enemy when its animal clashes with your birth hour, the {chart.hour ? animalLabel(chart.hour) : "hour you add"}. That enemy hour is {chart.enemyHours.map((h) => `${animalLabel(h.sign)} ${h.label}`).join(", ") || "none"}. The fourth animal is Cat. Your sun is {chart.sun}, so the opposite sign is hard and the other signs of the same element are friendly. The personal month number is only how to move. It does not make a month a friend or an enemy.</p>
         <div className="flex flex-wrap gap-2 mb-4">
@@ -105,26 +112,15 @@ export default function ChartPage() {
             <Tag key={h.label} tone={h.enemy ? "bad" : h.rel === "friend" ? "good" : "neutral"}>{h.label} {animalLabel(h.sign)}{h.enemy ? " · enemy" : ""}</Tag>
           ))}
         </div>
-      </Card>
+      </Card>}
 
-      <Card>
+      {tab === "lucky" && <Card>
         <div id="lucky"><CardTitle>Lucky numbers</CardTitle></div>
         <p className="text-sm text-foreground">99, 98, 28, 8</p>
         <p className="text-sm text-muted-foreground mt-2">Power colors: black and white, black & orange, green.</p>
-      </Card>
+      </Card>}
 
-      {path28 && (
-        <Card>
-          <div id="friendly"><CardTitle>Friendly</CardTitle></div>
-          <p className="text-xs text-muted-foreground mb-3">Highest match first. These are the given percents, not a new calculation.</p>
-          <FriendlyList title="Countries" rows={FRIENDLY.countries} />
-          <FriendlyList title="Cities" rows={FRIENDLY.cities} />
-          <FriendlyList title="Clothing" rows={clothingRows(profile, lookups)} />
-          <FriendlyList title="Cars" rows={FRIENDLY.cars} />
-        </Card>
-      )}
-
-      <Card>
+      {tab === "name" && <Card>
         <div id="name"><CardTitle>Name</CardTitle></div>
         {(() => {
           const read = nameReading(profile);
@@ -141,7 +137,7 @@ export default function ChartPage() {
             </div>
           );
         })()}
-      </Card>
+      </Card>}
     </Page>
   );
 }
