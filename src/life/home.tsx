@@ -1,5 +1,5 @@
 import { calendarRitualsFor } from "@/lib/calendar-rituals";
-import { colorsForDay } from "@/lib/colorology";
+import { bestPowerColorFor } from "@/lib/power-colors";
 import { dailySecretsFor } from "@/lib/timing-secrets";
 import { buildCalendarDayFit } from "./day";
 import { useEffect, useState } from "react";
@@ -35,7 +35,7 @@ export default function HomePage() {
   const read = today ? readDay(profile, today.y, today.m, today.d) : null;
   const chart = today ? buildChart(profile, today) : null;
   const fit = today ? buildCalendarDayFit(profile, today.y, today.m, today.d).fit : null;
-  const colors = read ? colorsForDay(read.calendar.reduced, 3) : null;
+  const colors = read ? bestPowerColorFor(read.personal.reduced) : null;
   const secrets = today ? dailySecretsFor(today.y, today.m, today.d) : null;
   useDailyPing(read?.headline ?? "", read?.iso ?? "");
 
@@ -44,10 +44,10 @@ export default function HomePage() {
     {!read || !chart ? <p>Reading today…</p> : <>
       <section className="border-l-2 border-primary pl-5 py-2"><p className="text-xs uppercase text-primary font-bold">Today’s Command</p><h2 className="font-display text-2xl mt-2">{read.dos[0] || read.headline}</h2></section>
       <section className="border-t border-border pt-5"><h2 className="font-display text-lg mb-3">Daily Score + Compatibility</h2><p className="text-3xl text-primary font-bold mb-3">{cueDayPercent(read.y, read.m, read.d)}%</p><DayFit profile={profile} y={read.y} m={read.m} d={read.d} /></section>
-      <section className="border-t border-border pt-5"><h2 className="font-display text-lg">Power Colors to Wear Today</h2><div className="flex flex-wrap gap-2 mt-3">{colors?.best.map(c => <Tag key={c.name} tone="good">{c.name}</Tag>)}</div></section>
+      <section className="border-t border-border pt-5"><h2 className="font-display text-lg">Power Color to Wear Today</h2><div className="flex flex-wrap items-center gap-2 mt-3">{colors && <Tag tone="good">{colors.best}</Tag>}<span className="text-xs text-muted-foreground">Also yours: {colors?.rest.join(" · ")}</span></div></section>
       <section className="border-t border-border pt-5"><h2 className="font-display text-lg">Best Number to Use Today</h2><p className="text-4xl font-display font-bold text-primary mt-3">{read.personal.reduced}</p></section>
       <section className="border-t border-border pt-5"><h2 className="font-display text-lg">What to Avoid Today</h2><ul className="mt-3 space-y-2 text-sm text-muted-foreground">{[...read.avoids, ...(secrets?.avoidToday.map(s => `${s.title}: ${s.detail}`) ?? [])].map(x => <li key={x}>{x}</li>)}</ul></section>
-      {!!secrets?.doToday.length && <section className="border-t border-border pt-5"><h2 className="font-display text-lg">Today’s Rituals & Timing</h2><ul className="mt-3 space-y-2 text-sm">{calendarRitualsFor(read.y, read.m, read.d).allowed.map(s => <li key={s.title}><span className="text-primary">{s.title}</span> · {s.detail}</li>)}</ul></section>}
+      {!!calendarRitualsFor(read.y, read.m, read.d, read.tones.includes("wealth") || read.tones.includes("twenty-eight")).allowed.length && <section className="border-t border-border pt-5"><h2 className="font-display text-lg">Today’s Rituals & Timing</h2><ul className="mt-3 space-y-2 text-sm">{calendarRitualsFor(read.y, read.m, read.d, read.tones.includes("wealth") || read.tones.includes("twenty-eight")).allowed.map(s => <li key={s.title}><span className="text-primary">{s.title}</span> · {s.detail}</li>)}</ul></section>}
       <details className="border-t border-border pt-5"><summary className="cursor-pointer font-display text-lg">Everyday rules</summary><ul className="mt-3 space-y-2 text-sm text-muted-foreground">{secrets?.alwaysOn.map(s => <li key={s.title}>{s.title} · {s.detail}</li>)}</ul></details>
     </>}
   </div>;
