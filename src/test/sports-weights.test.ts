@@ -22,6 +22,7 @@ describe("Learned Code replay on saved games", () => {
 });
 
 import { signRelation, signBond, chineseMonthSign, reduceNum } from "@/lib/vote-decode";
+import { COMPAT } from "@/lib/sports-decode";
 import { reduce } from "@/lib/numerology";
 import { learnedColorNumber } from "@/lib/sports-color-code";
 // User's zodiac chart: Rat & Ox are soulmates; Horse & Dog are best friends (not soulmates); Horse & Goat are not a friendly pair.
@@ -45,6 +46,12 @@ describe("2 vs 11", () => {
 });
 describe("Color numbers", () => {
   it("silver is 4 and orange is 33", () => { expect(learnedColorNumber("Silver")).toBe(4); expect(learnedColorNumber("Orange")).toBe(33); });
+});
+describe("Life Path compatibility matrix", () => {
+  it("11 is friendly with 11, 22 and 33; 22 is friendly with 11", () => {
+    expect(COMPAT[11].friendly).toEqual([7, 1, 3, 11, 22, 33]);
+    expect(COMPAT[22].friendly).toEqual([8, 6, 7, 11]);
+  });
 });
 // Frequency lock is weighted strongly in Learned Code.
 describe("Frequency lock weight", () => {

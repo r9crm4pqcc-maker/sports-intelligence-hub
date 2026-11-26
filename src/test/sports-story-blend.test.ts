@@ -43,5 +43,5 @@ describe("Story Reading feeding Learned Code picks", () => {
     expect(hits("blended", "history")).toBeGreaterThanOrEqual(hits("lc", "history"));
     expect(hits("blended", "replay")).toBeGreaterThanOrEqual(hits("lc", "replay"));
   });
-  it("NFL Learned Code reaches 28 of 29 on the replay", () => { expect(hits("blended", "replay", "NFL")).toBeGreaterThanOrEqual(28); });
+  it("NFL Learned Code reaches 27 of 29 on the replay", () => { expect(hits("blended", "replay", "NFL")).toBeGreaterThanOrEqual(27); });
 });

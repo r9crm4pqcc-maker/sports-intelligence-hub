@@ -5,7 +5,7 @@ import { ruleId } from "./sports-rules";
 import type { Vote } from "./vote-decode";
 
 // Include rule-engine changes in this revision, not only numeric weight changes.
-export const SPORTS_ENGINE_VERSION = "sports-engine-2026-11-23-pure2-silver4-story-blend-v6";
+export const SPORTS_ENGINE_VERSION = "sports-engine-2026-11-26-compat-matrix-weights-v7";
 export type SportsCodeProfile = "learned" | "backup";
 function profileFor(mode: SportsCodeProfile) {
   const selected = (mode === "backup" ? backupProfile : profile) as {

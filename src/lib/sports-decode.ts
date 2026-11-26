@@ -325,9 +325,9 @@ export const COMPAT: Record<number, CompatRow> = {
   7:  { friendly: [11, 28, 1, 5, 4, 22],             neutral: [7, 33, 2],                        enemy: [9, 6, 8] },
   8:  { friendly: [1, 28, 2, 6, 5, 22, 4, 3, 33, 8], neutral: [11, 9],                           enemy: [7] },
   9:  { friendly: [4, 5, 6],                         neutral: [3, 8],                            enemy: [9, 7, 22, 11, 28, 33, 1, 2] },
-  11: { friendly: [7, 1, 3],                         neutral: [33, 5, 11, 22, 28, 2, 4, 6, 8],   enemy: [9] },
-  22: { friendly: [8, 6, 7],                         neutral: [22, 28, 11, 33, 1, 2, 3, 4],      enemy: [5, 9] },
-  28: { friendly: [1, 8, 7, 28, 2, 3],               neutral: [4, 6, 22, 33, 5, 11],             enemy: [9] },
+  11: { friendly: [7, 1, 3, 11, 22, 33],             neutral: [5, 28, 2, 4, 6, 8],               enemy: [9] },
+  22: { friendly: [8, 6, 7, 11],                     neutral: [22, 28, 11, 33, 1, 2, 3, 4],      enemy: [5, 9] },
+  28: { friendly: [1, 8, 7, 28, 2, 3],               neutral: [4, 5, 6, 11, 22, 33],             enemy: [9] },
   33: { friendly: [8, 5, 3],                         neutral: [4, 6, 11, 33, 28, 22, 1, 2, 7],   enemy: [9] },
 };
 
