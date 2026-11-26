@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { useEffect, useState, type ReactNode } from "react";
 import { Link, useLocation } from "@/lib/wouter";
 import { CalendarDays, Target, Users, Layers, TrendingUp, Trophy, Sun, ChevronDown, ChevronRight, Menu, X, Zap, Home, UserRound, Type, Coins, Orbit, Settings } from "lucide-react";
@@ -33,22 +34,22 @@ export function AppShell({ children }: { children: ReactNode }) {
   return (
     <div className="flex h-screen overflow-hidden bg-background text-foreground sparkle-bg">
       {open && <div className="fixed inset-0 bg-background/80 backdrop-blur-md z-40 lg:hidden" onClick={close} />}
-      <aside className={`fixed top-0 left-0 h-full w-[16rem] flex flex-col z-50 bg-sidebar border-r border-sidebar-border transition-transform duration-300 lg:translate-x-0 ${open ? "translate-x-0" : "-translate-x-full"} lg:static lg:z-auto`}>
+      <aside className={`fixed top-0 left-0 h-full w-[18rem] flex flex-col z-50 bg-sidebar border-r border-sidebar-border transition-transform duration-300 lg:translate-x-0 ${open ? "translate-x-0" : "-translate-x-full"} lg:static lg:z-auto`}>
         <div className="px-4 py-4 flex items-center justify-between shrink-0 border-b border-sidebar-border">
           <Link href="/" onClick={close} className="flex items-center gap-3 group">
-            <div className="w-9 h-9 rounded-xl bg-primary text-primary-foreground flex items-center justify-center shadow-[var(--shadow-gold)] transition-transform group-hover:scale-105">
+            <div className="w-10 h-10 rounded-lg bg-primary text-primary-foreground flex items-center justify-center shadow-[var(--shadow-gold)] transition-transform group-hover:scale-105">
               <Zap size={16} className="fill-current" />
             </div>
             <div>
-              <h1 className="text-sm font-bold tracking-[0.14em] font-display text-foreground">THE SAUCE</h1>
+              <h1 className="text-xl font-bold font-display text-foreground">THE SAUCE</h1>
             </div>
           </Link>
-          <button onClick={close} aria-label="Close menu" className="lg:hidden text-muted-foreground hover:text-foreground"><X size={17} /></button>
+          <Button variant="ghost" size="icon" onClick={close} aria-label="Close menu" className="lg:hidden text-muted-foreground"><X size={17} /></Button>
         </div>
-        <nav className="flex-1 overflow-y-auto px-3 py-3 space-y-5">
+        <nav className="flex-1 overflow-y-auto px-3 py-3 space-y-4">
           {NAV_GROUPS.map(group => (
             <div key={group.title} className="space-y-1">
-              <p className="px-2.5 pb-1 text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground/70">{group.title}</p>
+              <p className="px-2.5 pb-1 text-xs font-bold uppercase text-foreground"><span className="text-primary mr-2">{group.title.split(" · ")[0]} ·</span>{group.title.split(" · ")[1]}</p>
               {group.items.map(n => {
                 const Icon = n.icon;
                 const active = n.href ? loc === n.href : false;
@@ -60,7 +61,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           ))}
         </nav>
         <div className="p-3 shrink-0 border-t border-sidebar-border">
-          <div className="rounded-xl bg-card/80 border border-border p-3">
+          <div className="px-2 py-1">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2"><div className="status-dot-active" /><span className="text-[11px] font-medium text-foreground">Live Engine</span></div>
               <span className="text-[10px] font-mono text-muted-foreground">{new Date().toLocaleDateString("en-US", { month: "short", day: "numeric" })}</span>
@@ -72,10 +73,10 @@ export function AppShell({ children }: { children: ReactNode }) {
         </div>
       </aside>
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden relative z-10">
-        <header className="lg:hidden flex items-center justify-between px-4 py-3 shrink-0 bg-sidebar/90 backdrop-blur-md border-b border-sidebar-border">
+        <header className="lg:hidden flex items-center justify-between px-3 py-2 shrink-0 bg-sidebar/90 backdrop-blur-md border-b border-sidebar-border">
           <div className="flex items-center gap-3">
-            <button onClick={() => setOpen(true)} aria-label="Open menu" className="text-muted-foreground hover:text-foreground"><Menu size={20} /></button>
-            <span className="text-sm font-bold tracking-[0.14em] font-display text-foreground">THE <span className="text-primary">SAUCE</span></span>
+            <Button variant="ghost" size="icon" onClick={() => setOpen(true)} aria-label="Open menu" className="text-muted-foreground"><Menu size={20} /></Button>
+            <span className="text-xl font-bold font-display text-foreground">THE <span className="text-primary">SAUCE</span></span>
           </div>
           <div className="status-dot-active" />
         </header>

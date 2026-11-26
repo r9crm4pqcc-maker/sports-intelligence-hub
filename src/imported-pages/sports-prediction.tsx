@@ -5,7 +5,7 @@ import { useSportsResearch } from "@/lib/use-sports-research";
 import { useSportsDocument } from "@/lib/use-sports-document";
 import { SportsTrainingProvider, useSportsTrainingInput, WinnerEditor } from "@/components/sports-training";
 import { useState, useMemo, useEffect, useCallback, useRef, memo } from "react";
-import { ArrowLeft, ChevronDown, ChevronUp, RefreshCw, Loader2, AlertCircle, Calendar } from "lucide-react";
+import { ArrowLeft, ChevronDown, ChevronUp, RefreshCw, Loader2, AlertCircle, Calendar, Trophy, ChevronRight, ShieldCheck, Users, ScanLine } from "lucide-react";
 import { useLocation, useSearch } from "@/lib/wouter";
 import { clearESPNGamesCache, fetchESPNGames, fetchFanDuelBoard, fetchOuts, getLeagueInfo, fetchFighterDob, type ESPNGame, type OddsBlock } from "@/lib/espn";
 import { getTeamMeta } from "@/lib/sports-data";
@@ -854,51 +854,46 @@ const GameCard = memo(function GameCard({ game, year, month, day, idx, league, l
   const fullPart=(part)=> <FullDecode part={part} title={`${game.awayTeam} @ ${game.homeTeam} · ${month}/${day}/${year}`} data={full} homeName={game.homeTeam} awayName={game.awayTeam} verdict={verdict} editable={!learned} headToHead={{allTime:auto?.allTimeSeries,season:auto?.seasonSeries}} partThreeTitle={isFight ? "FIGHTERS & COACHES" : undefined} />;
 
   return (
-    <div className={`glass-card rounded-2xl overflow-hidden ${qualified ? "border-primary/60 shadow-[var(--shadow-gold)]" : ""}`}>
+    <article className="rounded-lg border border-border bg-card overflow-hidden" data-testid="match-card">
       <div className="p-4 sm:p-5">
-        <div className="flex items-start justify-between gap-3">
-          <div className="min-w-0">
-            <p className="text-[16px] font-bold font-display tracking-tight text-foreground leading-snug">{game.awayTeam} <span className="font-normal text-muted-foreground mx-0.5">@</span> {game.homeTeam}</p>
-            <p className="text-[11px] mt-1 text-muted-foreground">{venueName}{when ? ` · ${when}` : ""}</p>
-          </div>
-          <div className="text-right shrink-0 rounded-xl bg-primary/10 border border-primary/25 px-3 py-1.5">
-            <p className="text-2xl font-black font-display leading-none tabular-nums" style={{ color: YELLOW }}>{pickPct}%</p>
-            <p className="text-[8.5px] mt-1 font-semibold tracking-widest text-muted-foreground">{codeMode === "backup" ? "LEGACY SCORE · NOT ODDS" : isFinal ? "LEARNED CODE" : confidenceBand(Math.round(pickPct)).toUpperCase()}</p>
-          </div>
+        <div className="flex items-center justify-between gap-3 border-b border-border pb-3">
+          <span className="text-xs text-muted-foreground">{league} · {when || "Time pending"}</span>
+          <StatusBadge status={game.status} detail={game.statusDetail} />
         </div>
-        <div className="mt-4 pt-3 border-t border-border/80 flex items-end justify-between gap-3">
-          <div>
-            <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-muted-foreground">Record</p>
-            <p className="text-[12px] font-mono tabular-nums text-foreground mt-1">{game.awayAbbr} <span className="text-muted-foreground">{displayRecord(analysisGame.awayRecord, awayRecent)}</span></p>
-            <p className="text-[12px] font-mono tabular-nums text-foreground">{game.homeAbbr} <span className="text-muted-foreground">{displayRecord(analysisGame.homeRecord, homeRecent)}</span></p>
-          </div>
-          <div className="text-right">
-            <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-muted-foreground">{codeMode === "backup" ? "Backup side" : isFinal ? "Learned Code pick" : "AI Pick"}</p>
-            <p className="text-[14px] font-black font-display tracking-tight mt-0.5" style={{ color: YELLOW }} data-testid="learned-pick" data-away={game.awayTeam} data-home={game.homeTeam} data-away-score={game.awayScore ?? ""} data-home-score={game.homeScore ?? ""} data-status={game.status}>{cardPickName}</p>
-            {codeMode === "learned" && isFinal && savedLearnedPrediction && (
-              <p className="text-[9px] mt-1 text-muted-foreground">
-                Re-decoded with the frozen pregame inputs; original pick retained for comparison: {savedLearnedPrediction.pick === "home" ? game.homeTeam : game.awayTeam}
-              </p>
-            )}
-            {codeMode === "backup" && (
-              <p className="text-[9px] mt-0.5 font-bold tracking-wide" style={{ color: backupDecision.label === "NO BET" ? "hsl(var(--muted-foreground))" : YELLOW }}>
-                {backupDecisionText}
-              </p>
-            )}
-          {result ? (
-            <p className="text-[10px] mt-1 font-bold" style={{ color: hit === null ? "hsl(var(--muted-foreground))" : hit ? GREEN : ROSE }}>{result}</p>
-          ) : <StatusBadge status={game.status} detail={game.statusDetail} />}
-          </div>
+        <div className="space-y-3 py-4">
+          {(["away", "home"] as const).map(side => {
+            const name = side === "away" ? game.awayTeam : game.homeTeam;
+            const abbr = side === "away" ? game.awayAbbr : game.homeAbbr;
+            const logo = side === "away" ? game.awayLogo : game.homeLogo;
+            const record = side === "away" ? displayRecord(analysisGame.awayRecord, awayRecent) : displayRecord(analysisGame.homeRecord, homeRecent);
+            return <div key={side} className="flex items-center gap-3">
+              <div className="grid h-11 w-11 shrink-0 place-items-center rounded-md bg-muted">
+                {logo ? <img src={logo} alt="" loading="lazy" className="h-9 w-9 object-contain" onError={event => { event.currentTarget.style.display = "none"; }} /> : <span className="text-xs font-bold text-primary">{abbr}</span>}
+              </div>
+              <div className="min-w-0 flex-1"><h2 className="font-display text-base font-bold leading-snug">{name}</h2><p className="text-xs text-muted-foreground">{record || "Record unavailable"} · {side === "away" ? "Away" : "Home"}</p></div>
+              {isFinal && <span className="font-display text-xl font-bold tabular-nums">{side === "away" ? game.awayScore : game.homeScore}</span>}
+            </div>;
+          })}
         </div>
+        <div className="flex items-center justify-between gap-3 border-y border-primary/25 bg-primary/5 -mx-4 px-4 py-3 sm:-mx-5 sm:px-5">
+          <div className="min-w-0"><p className="text-[10px] uppercase font-bold text-muted-foreground">{codeMode === "backup" ? "Backup pick" : "Learned Code pick"}</p>
+            <p className="mt-1 text-lg font-display font-bold text-primary" data-testid="learned-pick" data-away={game.awayTeam} data-home={game.homeTeam} data-away-score={game.awayScore ?? ""} data-home-score={game.homeScore ?? ""} data-status={game.status}>{cardPickName}</p>
+          </div>
+          <span className="shrink-0 text-xs font-semibold text-primary">{result || confidenceBand(Math.round(pickPct))}</span>
+        </div>
+        <p className="mt-3 text-xs text-muted-foreground">{venueName}</p>
         {(book || game.archivedOut || awayOut.length || homeOut.length || starter) && (
-          <div className="mt-3 rounded-xl bg-muted/50 border border-border/70 px-3 py-2 text-[11px] text-foreground/90 space-y-1">
-            {book && <p className="font-mono text-[10.5px] tabular-nums">{book.book || "Line"} · {game.awayAbbr} {book.moneylineAway || "—"} {book.spreadAway || ""} · {game.homeAbbr} {book.moneylineHome || "—"} {book.spreadHome || ""}{book.overUnder ? ` · O/U ${book.overUnder}` : ""}</p>}
-            {starter && <p>{league === "NHL" ? "Goalie" : "Pitcher"} {starter}</p>}
-            {(game.archivedOut || awayOut.length || homeOut.length) && <p>Out {game.archivedOut ?? `${game.awayAbbr}: ${awayOut.join(", ") || "none"} · ${game.homeAbbr}: ${homeOut.join(", ") || "none"}`}</p>}
-          </div>
+          <details className="mt-3 border-t border-border pt-3 text-xs">
+            <summary className="cursor-pointer text-muted-foreground">Lines & team news</summary>
+            <div className="mt-3 space-y-3">
+              {book && <><p className="text-muted-foreground">{book.book || "Game feed"} · Moneyline</p><div className="grid grid-cols-2 gap-3"><p>{game.awayAbbr} <b className="ml-2 text-primary">{book.moneylineAway || "—"}</b></p><p>{game.homeAbbr} <b className="ml-2 text-primary">{book.moneylineHome || "—"}</b></p></div><p className="text-muted-foreground">Spread {game.awayAbbr} {book.spreadAway || "—"} / {game.homeAbbr} {book.spreadHome || "—"} · Total {book.overUnder || "—"}</p></>}
+              {starter && <p>{league === "NHL" ? "Goalie" : "Pitcher"}: {starter}</p>}
+              {(game.archivedOut || awayOut.length || homeOut.length) && <p className="leading-relaxed text-muted-foreground">Out: {game.archivedOut ?? `${game.awayAbbr}: ${awayOut.join(", ") || "none"} · ${game.homeAbbr}: ${homeOut.join(", ") || "none"}`}</p>}
+            </div>
+          </details>
         )}
         {displayMarketPlay && (
-          <div className="mt-3 rounded-lg px-3 py-2.5" style={{ background: "hsl(var(--primary) / 0.08)", border: "1px solid hsl(var(--primary) / 0.25)" }}>
+          <details className="mt-3 border-t border-border pt-3"><summary className="cursor-pointer text-xs text-muted-foreground">Market recommendation</summary><div className="mt-3 space-y-1">
             <p className="text-[9px] font-bold tracking-[0.14em]" style={{ color: YELLOW }}>
               {isFinal && !savedMarketPlay ? "HISTORICAL LINES UNAVAILABLE" : "BEST SYSTEM PLAY"}
             </p>
@@ -924,14 +919,12 @@ const GameCard = memo(function GameCard({ game, year, month, day, idx, league, l
                 ? "Original spread and total lines were not saved, so alternate-market results cannot be checked."
                 : marketPlay?.note}
             </p>
-          </div>
+          </div></details>
         )}
         <div className="mt-3 grid grid-cols-2 gap-2">
-          <button type="button" onClick={() => setOpenDecode((v) => !v)} className="rounded-lg py-2 text-[11px] font-bold tracking-[0.12em] bg-muted text-foreground border border-border hover:border-primary/50 transition-colors">
-            {openDecode ? "HIDE FULL DECODE" : "SHOW FULL DECODE"}
-          </button>
+          <Button variant="outline" aria-expanded={openDecode} onClick={() => setOpenDecode(v => !v)} className="text-xs border-primary/40 text-primary hover:bg-primary/10 hover:text-primary"><ScanLine />{openDecode ? "Hide Full Decode" : "Full Decode"}</Button>
           <Button type="button" onClick={() => setOpenPeopleEditor((v) => !v)} className={`rounded-lg py-2 text-[11px] font-bold tracking-[0.12em] border transition-colors ${openPeopleEditor || peopleOverride ? "bg-primary/15 text-primary border-primary/50" : "bg-muted text-foreground border-border hover:border-primary/50"}`}>
-            {openPeopleEditor ? "Close People" : "Edit People"}
+            <Users />{openPeopleEditor ? "Close People" : "Edit People"}
           </Button>
         </div>
         {researched.status && <p className="text-[10px] text-muted-foreground mt-2" role="status">{researched.status}</p>}
@@ -1126,7 +1119,7 @@ const GameCard = memo(function GameCard({ game, year, month, day, idx, league, l
           </div>
         )}
       </div>
-    </div>
+    </article>
   );
 });
 
@@ -1608,14 +1601,14 @@ function SportsPredictionBoard() {
   const best = rows.filter((r) => r.open && isBest(r.pct, r.allow)).sort((a, b) => (b.allow ?? b.pct) - (a.allow ?? a.pct));
 
   return (
-    <div className="max-w-7xl space-y-5">
+    <div className="mx-auto max-w-6xl space-y-5">
       <SportsPageHeader
         eyebrow="Sports AI"
         title={`${activeSportGroup.label} · Game Day`}
-        description="Open a matchup to see this sport’s pick and full decode."
+        description=""
       />
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <button
+        <Button variant="outline"
           type="button"
           onClick={showSportPicker}
           className="inline-flex min-h-9 items-center gap-2 rounded-lg border border-border bg-muted px-3 text-[11px] font-semibold text-muted-foreground transition hover:border-primary/60 hover:text-foreground"
@@ -1623,16 +1616,13 @@ function SportsPredictionBoard() {
         >
           <ArrowLeft size={13} aria-hidden="true" />
           All sports
-        </button>
-        <div className="flex rounded-xl overflow-hidden" style={{ border: "1px solid hsl(var(--border))" }}>
+        </Button>
+        <div className="flex rounded-lg overflow-hidden border border-border" role="group" aria-label="Prediction method">
           {(["learned", "backup"] as const).map((m) => (
-            <button key={m} onClick={() => { setSportsMode(m); setCode(m); }}
-              className="px-3 py-2 text-[11px] tracking-wide"
-              style={code === m
-                ? { background: YELLOW, color: "hsl(var(--primary-foreground))", fontWeight: 800 }
-                : { background: "hsl(var(--background))", color: YELLOW, fontWeight: 600 }}>
+            <Button key={m} variant="ghost" aria-pressed={code === m} onClick={() => { setSportsMode(m); setCode(m); }}
+              className={`rounded-none px-3 text-[11px] ${code === m ? "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground" : "text-muted-foreground"}`}>
               {m === "learned" ? "Learned Code" : "Backup SportsCode"}
-            </button>
+            </Button>
           ))}
         </div>
         <p className="text-[11px] text-muted-foreground" data-testid="active-league-slate-count">
@@ -1671,9 +1661,9 @@ function SportsPredictionBoard() {
           <input id="sports-game-date" type="date" value={selectedDate} onChange={(event) => updateRoute({ date: event.target.value })}
             className="mt-1 block h-10 rounded-lg border border-border bg-background px-3 text-sm font-semibold text-foreground outline-none [color-scheme:dark] focus:border-primary/60" />
         </label>
-        <button aria-label="Refresh games" onClick={refreshSlate} className="mb-0.5 p-2 rounded-lg text-muted-foreground" style={{ border: "1px solid hsl(var(--border))" }}>
+        <Button variant="outline" size="icon" aria-label="Refresh games" onClick={refreshSlate} className="text-muted-foreground">
           <RefreshCw size={14} className={slateLoading ? "animate-spin" : ""} />
-        </button>
+        </Button>
       </div>
 
       {activeSportGroup.leagues.length > 1 && (
@@ -1690,20 +1680,17 @@ function SportsPredictionBoard() {
               {sportLiveLeagues.map((item) => {
                 const active = league === item;
                 return (
-                  <button
+                  <Button variant={active ? "default" : "outline"}
                     key={item}
                     type="button"
                     onClick={() => chooseLeague(item)}
                     aria-pressed={active}
                     aria-label={`${item} ${leagueCounts[item] ?? 0}`}
                     className="rounded-lg px-2.5 py-1.5 text-[11px] font-semibold transition-colors"
-                    style={active
-                      ? { background: YELLOW, color: "hsl(var(--primary-foreground))" }
-                      : { background: "hsl(var(--muted))", color: "hsl(var(--foreground))", border: "1px solid hsl(var(--border))" }}
                     data-testid={`button-select-league-${item.replace(/[^a-z0-9]+/gi, "-").toLowerCase()}`}
                   >
                     {item}<span className="ml-1.5 text-[10px] opacity-60">{leagueCounts[item] ?? 0}</span>
-                  </button>
+                  </Button>
                 );
               })}
             </div>
@@ -1730,69 +1717,23 @@ function SportsPredictionBoard() {
         </div>
       )}
 
-      {code === "learned" && <div className="rounded-xl p-3" style={{ background: "hsl(var(--background))", border: "1px solid hsl(var(--primary))" }}>
-          {dayReport.done + dayReport.open > 0 && <>
-          <p title="Completed Learned Code picks graded against their final results." className="text-[10px] font-bold tracking-[0.18em]" style={{ color: YELLOW }}>LEARNED CODE ACCURACY · {activeSportGroup.label} · {month}/{day}/{year}</p>
-          <p aria-label={`Learned Code day accuracy: ${dayReport.hits} of ${dayReport.done}, ${dayReport.pct} percent`} className="text-2xl font-black text-foreground mt-1"><span className="text-[10px] font-bold tracking-[0.14em] text-muted-foreground">LEARNED CODE</span> {dayReport.done ? `${dayReport.hits}/${dayReport.done}` : "—"} <span className="text-[14px]" style={{ color: YELLOW }}>{dayReport.done ? `${dayReport.pct}%` : "no finals yet"}</span></p>
-          <p className="text-[11px] text-muted-foreground mt-1">{dayReport.leagues.map(([lg, r]) => `${lg} ${r.hits}/${r.done}`).join(" · ") || "Waiting on games."}{dayReport.open ? ` · ${dayReport.open} still open` : ""}</p>
-          </>}
-          <ForwardAccuracy mode={code} games={Object.entries(allGames).filter(([item]) => reportLeagues.includes(item)).flatMap(([, list]) => list)} />
-      </div>}
-      {code === "learned" && allLegs.length > 0 && (
-        <div className="rounded-xl p-3" style={{ background: "hsl(var(--background))", border: "1px solid hsl(var(--primary))" }}>
-          <p className="text-[10px] font-bold tracking-[0.18em] mb-2" style={{ color: YELLOW }}>{activeSportGroup.label.toUpperCase()} PARLAY · {month}/{day}/{year}</p>
-          <ol className="space-y-1">
-            {allLegs.map((r, i) => (
-              <li key={r.id} className="flex justify-between gap-3 text-[12px] text-foreground">
-                <span>{i + 1}. {r.league} · {r.pick}</span>
-                <span className="font-bold" style={{ color: r.result === "hit" ? GREEN : r.result === "miss" ? ROSE : YELLOW }}>{r.allow != null && r.allow >= 75 ? Math.round(r.allow) : r.pct}%{r.result === "hit" ? " · HIT" : r.result === "miss" ? " · MISS" : ""}</span>
-              </li>
-            ))}
+      {code === "learned" && <>
+        <ForwardAccuracy mode={code} games={Object.entries(allGames).filter(([item]) => reportLeagues.includes(item)).flatMap(([, list]) => list)} />
+        {dayReport.done > 0 && <div className="flex flex-wrap items-center justify-between gap-2 border-y border-border py-3 text-xs"><span className="text-muted-foreground">Today’s replay · {dayReport.hits}/{dayReport.done} correct</span><span className="font-bold text-primary">{dayReport.pct}%</span></div>}
+        {rows.length > 0 && <section aria-label="Top ranked picks" className="space-y-3">
+          <div className="flex items-center justify-between"><h2 className="flex items-center gap-2 text-sm font-bold font-display uppercase"><Trophy size={16} className="text-primary" />Top ranked picks</h2><span className="text-[10px] text-muted-foreground">Moneyline · Learned Code</span></div>
+          <ol className="divide-y divide-border rounded-lg border border-border bg-card">
+            {[...rows].sort((a,b) => b.pct - a.pct).slice(0,3).map((row,i) => <li key={row.id} className="flex items-center gap-3 px-4 py-3"><span className="w-5 shrink-0 text-xl font-display font-bold text-primary">{i+1}</span><div className="min-w-0 flex-1"><p className="text-sm font-bold">{row.pick}</p><p className="text-[11px] text-muted-foreground">{row.matchup}</p></div><span className="text-xs text-primary shrink-0">{confidenceBand(row.pct)}</span></li>)}
           </ol>
-        </div>
-      )}
-
-      {code === "learned" && sportParlays.length > 0 && (
-        <div className="space-y-2">
-          <p className="text-[10px] font-bold tracking-[0.18em]" style={{ color: YELLOW }}>BEST {activeSportGroup.label.toUpperCase()} PLAYS</p>
-          {sportParlays.map(({ lg, legs }) => (
-            <div key={lg} className="rounded-xl p-3" style={{ background: "hsl(var(--background))", border: "1px solid hsl(var(--primary) / 0.45)" }}>
-              <p className="text-[11px] font-black mb-1" style={{ color: YELLOW }}>{lg}</p>
-              <ol className="space-y-1">
-                {legs.map((r, i) => (
-                  <li key={r.id} className="flex justify-between gap-3 text-[12px] text-foreground">
-                    <span>{i + 1}. {r.pick} <span className="text-muted-foreground">· {r.matchup}</span></span>
-                    <span className="font-bold shrink-0" style={{ color: r.result === "hit" ? GREEN : r.result === "miss" ? ROSE : YELLOW }}>{r.allow != null && r.allow >= 75 ? Math.round(r.allow) : r.pct}%{r.result === "hit" ? " · HIT" : r.result === "miss" ? " · MISS" : ""}</span>
-                  </li>
-                ))}
-              </ol>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {code === "learned" && best.length > 0 && (
-        <div className="space-y-2">
-          <p className="text-[10px] font-bold tracking-[0.18em]" style={{ color: YELLOW }}>BEST PLAYS · {league}</p>
-          {best.map((r) => (
-            <div key={r.id} className="rounded-xl px-3 py-2.5 flex items-center justify-between" style={{ background: "hsl(var(--background))", border: "1px solid hsl(var(--primary))" }}>
-              <div>
-                <p className="text-[13px] font-bold text-foreground">{r.matchup}</p>
-                <p className="text-[10px] text-muted-foreground">{r.venue}{r.time ? ` · ${r.time}` : ""} · {r.record}</p>
-                <p className="text-[12px] font-bold mt-0.5" style={{ color: YELLOW }}>PICK: {r.pick}</p>
-              </div>
-              <p className="text-2xl font-black" style={{ color: YELLOW }}>{r.allow != null && r.allow >= 75 ? Math.round(r.allow) : r.pct}%</p>
-            </div>
-          ))}
-        </div>
-      )}
-
+        </section>}
+      </>}
+      <div className="flex items-center justify-between border-t border-border pt-4"><h2 className="font-display text-sm font-bold uppercase">Matchups</h2><span className="text-xs text-muted-foreground">{games.length} games</span></div>
       {sportLiveLeagues.length > 0 && (games.length === 0 && currentSlateLoading ? (
         <div className="rounded-2xl p-10 text-center"><Loader2 size={22} className="animate-spin mx-auto mb-2" style={{ color: YELLOW }} /><p className="text-sm text-muted-foreground">Loading {leagueInfo.label}</p></div>
       ) : games.length === 0 ? (
         <div className="rounded-2xl p-8 text-center"><AlertCircle size={20} className="mx-auto mb-2" style={{ color: ROSE }} /><p className="text-sm text-foreground">{failedFeeds.includes(league) ? `Could not load ${leagueInfo.label} games. Use Refresh games to retry.` : `No games loaded for ${leagueInfo.label} on ${month}/${day}/${year}.`}</p></div>
       ) : (
-        <div className="space-y-3">
+        <div className="grid items-start gap-4 xl:grid-cols-2">
           {games.map((g, i) => <GameCard key={`${code}-${currentSlateScope}-${league}-${weightVersion}-${refreshRevision}-${g.id}`} game={g} year={year} month={month} day={day} idx={i} league={league} learned={true} codeMode={code} learningRevision={learningRevision} refreshRevision={refreshRevision} onReady={code === "learned" ? onReady : undefined} prices={prices} outs={outs} catalog={catalog} />)}
         </div>
       ))}

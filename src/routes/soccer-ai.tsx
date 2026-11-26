@@ -5,9 +5,9 @@ export const Route = createFileRoute("/soccer-ai")({
   head: () => ({
     meta: [
       { title: "Soccer AI — The Sauce" },
-      { name: "description", content: "Soccer match decoding and predictions." },
+      { name: "description", content: "Your soccer match-day protocol, jersey compatibility, gear activation and competition timing in The Sauce." },
       { property: "og:title", content: "Soccer AI — The Sauce" },
-      { property: "og:description", content: "Soccer match decoding and predictions." },
+      { property: "og:description", content: "Your soccer match-day protocol, jersey compatibility, gear activation and competition timing in The Sauce." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],

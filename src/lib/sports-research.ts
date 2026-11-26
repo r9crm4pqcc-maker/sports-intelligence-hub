@@ -3,6 +3,13 @@ import { keyPersonRoleForLeague } from "./sports-method-candidate";
 export type ResearchRequest = { id: string; team: string; role: string; name: string; field: "dob" | "name" | "founded" };
 export type ResearchFact = { id: string; value: string; sourceUrl: string; quote: string };
 export function researchFactKey(fact: ResearchFact): string { return JSON.stringify([fact.id, fact.value, fact.sourceUrl, fact.quote]); }
+export function resolvedResearchTasks(tasks: ResearchRequest[], facts: ResearchFact[]): ResearchRequest[] {
+  return tasks.map(task => {
+    if (task.field !== "dob" || task.name) return task;
+    const name = facts.find(f => f.id === task.id.replace(":dob:", ":name:"))?.value;
+    return name ? { ...task, name } : task;
+  });
+}
 export function approvedResearchFacts(facts: ResearchFact[], approved: string[]): ResearchFact[] { return facts.filter(f => approved.includes(researchFactKey(f))); }
 export function sourceCredibility(url: string): "Official / primary" | "Established sports reference" | "Unverified source" {
   let host: string;

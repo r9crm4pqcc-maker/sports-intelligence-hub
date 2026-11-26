@@ -1,5 +1,9 @@
 # Roadmap
 
+- [x] Clean up app navigation and sports screens using the supplied black/orange references without changing decode scoring
+- [x] Run signed-in missing player/coach/owner research; sourced owner identities saved pending approval, unsupported full birthdays and starters remain blank; full-date evidence and approval gating tested
+- [x] Verify phone/desktop sports, full decode including gematria, people editor, Tools placement, and removed branding
+
 - [x] Restore CUE daily compatibility; remove Decode Suite and Crypto navigation
 - [x] Add saved sports winner corrections and background tuning
 - [x] Add market-performance learning to Trading AI using shared CUE compatibility

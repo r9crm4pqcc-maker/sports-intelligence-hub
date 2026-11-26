@@ -102,7 +102,7 @@
   --app-font-display: 'Space Grotesk', 'DM Sans', system-ui, sans-serif;
   --app-font-serif: Georgia, serif;
   --app-font-mono: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
-  --radius: 0.875rem;
+  --radius: 0.5rem;
 }
 
 @layer base {
@@ -143,7 +143,7 @@
 /* ─── Ambient grain + glow background ─────────────────── */
 .sparkle-bg {
   position: relative;
-  background-image: radial-gradient(ellipse 65% 45% at 50% -10%, rgba(255, 112, 24, 0.08), transparent 70%);
+  background-image: none;
 }
 .sparkle-bg::before,
 .sparkle-bg::after { display: none; }
@@ -157,7 +157,7 @@
 .glass-card {
   background: linear-gradient(180deg, hsl(240 10% 8.5%) 0%, hsl(240 10% 6.5%) 100%);
   border: 1px solid hsl(240 6% 16%);
-  border-radius: 0.875rem;
+  border-radius: 0.5rem;
   position: relative;
   overflow: hidden;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 8px 24px -12px rgba(0, 0, 0, 0.65);
@@ -208,7 +208,7 @@
 .feature-card {
   background: linear-gradient(180deg, hsl(240 10% 8.5%) 0%, hsl(240 10% 6.5%) 100%);
   border: 1px solid hsl(240 6% 16%);
-  border-radius: 0.875rem;
+  border-radius: 0.5rem;
   padding: 1.125rem;
   display: flex;
   flex-direction: column;
@@ -267,8 +267,8 @@
   display: flex;
   align-items: center;
   gap: 0.625rem;
-  padding: 0.5rem 0.75rem;
-  border-radius: 0.625rem;
+  padding: 0.625rem 0.75rem;
+  border-radius: 0.5rem;
   font-size: 0.8125rem;
   font-weight: 500;
   transition: all 0.15s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -280,9 +280,9 @@
   letter-spacing: 0;
 }
 .nav-item-active {
-  background: rgba(255, 112, 24, 0.14);
-  color: #FF8538;
-  border-color: rgba(255, 112, 24, 0.35);
+  background: hsl(var(--muted));
+  color: hsl(var(--foreground));
+  border-color: hsl(var(--border));
   font-weight: 700;
   box-shadow: inset 3px 0 0 #FF7018;
 }
@@ -331,7 +331,7 @@
 /* ─── Input ───────────────────────────────────────── */
 .input-field {
   width: 100%;
-  border-radius: 0.625rem;
+  border-radius: 0.5rem;
   border: 1px solid hsl(var(--input));
   background: hsl(0 0% 7%);
   padding: 0.5rem 0.875rem;
@@ -353,7 +353,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border-radius: 0.625rem;
+  border-radius: 0.5rem;
   font-size: 0.8125rem;
   font-weight: 500;
   cursor: pointer;
