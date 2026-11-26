@@ -171,6 +171,7 @@ const WINDOWS: Record<number, { entry: string; exit: string; cautions: string[] 
 
 // ─── Main reading ───────────────────────────────────────────────────────────
 export interface MarketCodeReading {
+  compatibilityParts: { day: number; month: number; sky: number };
   date: string;                 // YYYY-MM-DD
   entity: TradingEntity;
 
@@ -230,6 +231,7 @@ export interface MarketCodeReading {
 export function calcMarketCode(
   entity: TradingEntity,
   month: number, day: number, year: number,
+  weights: { day: number; month: number; sky: number } = { day: 1, month: 1, sky: 1 },
 ): MarketCodeReading {
   const dateISO = `${year}-${String(month).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
   const dateStr = dateISO;
@@ -342,7 +344,9 @@ export function calcMarketCode(
   });
   const dayLayer = fit.numbers.find((n) => n.name === "Day");
   const layer = (pct: number | null, rel?: string) => pct ?? (rel === "enemy" ? 10 : rel === "friend" ? 80 : 60);
-  const callPct = Math.round((layer(dayLayer?.pct ?? null, dayLayer?.rel) + fit.month + fit.sky) / 3);
+  const compatibilityParts = { day: layer(dayLayer?.pct ?? null, dayLayer?.rel), month: fit.month ?? 60, sky: fit.sky ?? 60 };
+  const totalWeight = weights.day + weights.month + weights.sky;
+  const callPct = Math.round((compatibilityParts.day * weights.day + compatibilityParts.month * weights.month + compatibilityParts.sky * weights.sky) / (totalWeight || 3));
   const weak = dayLayer?.rel === "enemy" || fit.month <= 10 || fit.sky <= 10;
   const call: MarketCodeReading["call"] = weak || callPct <= 40 ? "DOWN" : callPct >= 63 ? "UP" : "FLAT";
   const callNote = `${entity.symbol} ${face} vs day ${dayLayer?.other ?? "—"} ${dayLayer?.rel ?? "neutral"}. ${chineseSign(ay)} with ${chineseMonthSign(month, day)} month ${fit.month}%, sun ${fit.sky}%.`;
@@ -385,18 +389,18 @@ export function calcMarketCode(
     chinesePillars: pillars,
     entityElement, dayElement, elementSupport,
     mercuryRetro, eclipseWindow,
-    candidateDirection, checks, score, cuePercent, cueBand, callPct, call, callNote, vetoes, action,
+    compatibilityParts, candidateDirection, checks, score, cuePercent, cueBand, callPct, call, callNote, vetoes, action,
     entryWindow: win.entry, exitWindow: win.exit, cautionZones: win.cautions,
     breakdown,
   };
 }
 
 // ─── Weekly ─────────────────────────────────────────────────────────────────
-export function calcWeek(entity: TradingEntity, startDate: Date): MarketCodeReading[] {
+export function calcWeek(entity: TradingEntity, startDate: Date, weights = { day: 1, month: 1, sky: 1 }): MarketCodeReading[] {
   return Array.from({ length: 7 }, (_, i) => {
     const d = new Date(startDate);
     d.setDate(d.getDate() + i);
-    return calcMarketCode(entity, d.getMonth()+1, d.getDate(), d.getFullYear());
+    return calcMarketCode(entity, d.getMonth()+1, d.getDate(), d.getFullYear(), weights);
   });
 }
 

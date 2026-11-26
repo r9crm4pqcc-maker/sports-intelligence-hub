@@ -14,6 +14,27 @@ export type Database = {
   }
   public: {
     Tables: {
+      prediction_training: {
+        Row: {
+          data: Json
+          kind: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          data?: Json
+          kind: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          data?: Json
+          kind?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       soccer_gear: {
         Row: {
           activation_date: string

@@ -8,6 +8,7 @@ import { useLife } from "./context";
 import { Card, Tag } from "./kit";
 import { buildChart, fullName, readDay, upcoming, LIST_LABEL, type ListKind } from "@/lib/life-studio";
 import { DayFit } from "./day";
+import { cueDayPercent } from "@/lib/path28";
 
 function useToday() {
   const [today, setToday] = useState<{ y: number; m: number; d: number } | null>(null);
@@ -42,7 +43,7 @@ export default function HomePage() {
     <header className="border-b border-border pb-5"><p className="text-xs text-primary">Home</p><h1 className="font-display text-3xl font-bold mt-2">{chart?.name || fullName(profile)}</h1><p className="text-sm text-muted-foreground mt-2">{read?.weekday} · {read?.iso}</p></header>
     {!read || !chart ? <p>Reading today…</p> : <>
       <section className="border-l-2 border-primary pl-5 py-2"><p className="text-xs uppercase text-primary font-bold">Today’s Command</p><h2 className="font-display text-2xl mt-2">{read.dos[0] || read.headline}</h2></section>
-      <section className="border-t border-border pt-5"><h2 className="font-display text-lg mb-3">Daily Score + Compatibility</h2><p className="text-3xl text-primary font-bold mb-3">{fit?.numberPct != null ? `${fit.numberPct}%` : "Unscored"}</p><DayFit profile={profile} y={read.y} m={read.m} d={read.d} /></section>
+      <section className="border-t border-border pt-5"><h2 className="font-display text-lg mb-3">Daily Score + Compatibility</h2><p className="text-3xl text-primary font-bold mb-3">{cueDayPercent(read.y, read.m, read.d)}%</p><DayFit profile={profile} y={read.y} m={read.m} d={read.d} /></section>
       <section className="border-t border-border pt-5"><h2 className="font-display text-lg">Power Colors to Wear Today</h2><div className="flex flex-wrap gap-2 mt-3">{colors?.best.map(c => <Tag key={c.name} tone="good">{c.name}</Tag>)}</div></section>
       <section className="border-t border-border pt-5"><h2 className="font-display text-lg">Best Number to Use Today</h2><p className="text-4xl font-display font-bold text-primary mt-3">{read.personal.reduced}</p></section>
       <section className="border-t border-border pt-5"><h2 className="font-display text-lg">What to Avoid Today</h2><ul className="mt-3 space-y-2 text-sm text-muted-foreground">{[...read.avoids, ...(secrets?.avoidToday.map(s => `${s.title}: ${s.detail}`) ?? [])].map(x => <li key={x}>{x}</li>)}</ul></section>

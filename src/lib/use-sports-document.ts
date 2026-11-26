@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
 import { readSportsDocument, writeSportsDocument } from "./sports-account.functions";
-export function useSportsDocument<T>(kind: "people" | "approvals", key: string, empty: T, legacy?: () => T | null) {
+export function useSportsDocument<T>(kind: "people" | "approvals" | "training", key: string, empty: T, legacy?: () => T | null) {
   const read = useServerFn(readSportsDocument), write = useServerFn(writeSportsDocument);
   const [identity, setIdentity] = useState<string | null>(null);
   const [value, setValue] = useState<T>(empty);

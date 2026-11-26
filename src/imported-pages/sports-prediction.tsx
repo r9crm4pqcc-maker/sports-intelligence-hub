@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { ResearchReview } from "@/components/research-review";
 import { useSportsResearch } from "@/lib/use-sports-research";
 import { useSportsDocument } from "@/lib/use-sports-document";
+import { SportsTrainingProvider, useSportsTrainingInput, WinnerEditor } from "@/components/sports-training";
 import { useState, useMemo, useEffect, useCallback, useRef, memo } from "react";
 import { ArrowLeft, ChevronDown, ChevronUp, RefreshCw, Loader2, AlertCircle, Calendar } from "lucide-react";
 import { useLocation, useSearch } from "@/lib/wouter";
@@ -612,10 +613,11 @@ const GameCard = memo(function GameCard({ game, year, month, day, idx, league, l
   }, [analysisGame, game, year, month, day, auto, outs, league, dobs, kickoff, learned, codeMode, scoringCatalog, learningRevision, savedLearnedPrediction]);
   const researchInput = useMemo(() => applyPeopleOverrides(basePredictionInput, peopleOverride), [basePredictionInput, peopleOverride]);
   const researched = useSportsResearch(researchInput, !autoLoading && peopleDocument.ready);
-  const predictionInput = useMemo<VoteInput>(
+  const untunedInput = useMemo<VoteInput>(
     () => applyPeopleOverrides(researched.input, peopleOverride),
     [researched.input, peopleOverride],
   );
+  const predictionInput = useSportsTrainingInput(untunedInput);
   const editorPeopleValue = useMemo<GamePeopleOverride>(
     () => peopleOverride ?? {
       away: seedOverridesFromInput(researched.input.away.people),
@@ -934,6 +936,7 @@ const GameCard = memo(function GameCard({ game, year, month, day, idx, league, l
         </div>
         {researched.status && <p className="text-[10px] text-muted-foreground mt-2" role="status">{researched.status}</p>}
         <ResearchReview facts={researched.facts} isVerified={researched.isVerified} onVerify={researched.verify} missingCount={researched.missingCount} verificationStatus={researched.verificationStatus} onRetry={researched.retry} />
+        {codeMode === "learned" && <WinnerEditor id={`${league}:${game.id}`} input={predictionInput} settled={game.status === "post"} actual={outcome === "home" || outcome === "away" ? outcome : null} frozen={findSavedForwardPrediction(league, game.id, "learned")?.input} />}
         {openPeopleEditor && (
           <><p role="status" className="mt-2 text-xs text-muted-foreground">{peopleDocument.ready ? peopleDocument.status : "Loading saved people…"}</p><fieldset disabled={!peopleDocument.ready}><GamePeopleEditor
             awayTeam={game.awayTeam}
@@ -1256,7 +1259,8 @@ function AthletePersonalDayCard({ month, day, year }: { month: number; day: numb
   );
 }
 
-export default function SportsPredictionPage() {
+export default function SportsPredictionPage() { return <SportsTrainingProvider><SportsPredictionBoard /></SportsTrainingProvider>; }
+function SportsPredictionBoard() {
   const [location, setLocation] = useLocation();
   const search = useSearch();
   const [mounted, setMounted] = useState(false);

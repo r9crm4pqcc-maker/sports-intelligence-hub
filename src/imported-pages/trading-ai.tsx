@@ -1,5 +1,8 @@
 // @ts-nocheck
 import { useState, useMemo } from "react";
+import { Button } from "@/components/ui/button";
+import { useMarketLearning } from "@/lib/use-market-learning";
+import { evaluateMarketForecasts } from "@/lib/market-learning";
 import { TrendingUp, ChevronDown, Moon, Sparkles, AlertTriangle, Check, X, Clock } from "lucide-react";
 import {
   TRADING_ENTITIES,
@@ -64,15 +67,16 @@ export default function TradingAIPage() {
   );
 
   const entity = TRADING_ENTITIES.find(e => e.symbol === selSymbol) ?? TRADING_ENTITIES[0];
+  const learning = useMarketLearning(entity);
 
   const day = useMemo(
-    () => calcMarketCode(entity, today.getMonth() + 1, today.getDate(), today.getFullYear()),
-    [entity, selSymbol],
+    () => calcMarketCode(entity, today.getMonth() + 1, today.getDate(), today.getFullYear(), learning.weights),
+    [entity, selSymbol, learning.weights],
   );
 
   const weekStart = new Date(today);
   weekStart.setDate(today.getDate() - today.getDay()); // Sunday
-  const weekResults = useMemo(() => calcWeek(entity, weekStart), [entity, selSymbol]);
+  const weekResults = useMemo(() => calcWeek(entity, weekStart, learning.weights), [entity, selSymbol, learning.weights]);
 
   const dir = day.candidateDirection;
   const dirColor = DIR_COLOR[dir];
@@ -90,6 +94,8 @@ export default function TradingAIPage() {
         <h1 className="page-title">Trading AI</h1>
         <p className="page-subtitle">MarketCode — numerology · lunar · Chinese pillars · confluence scoring</p>
       </div>
+
+      <section className="border-y border-border py-3 space-y-2"><div className="flex justify-between gap-3 items-center"><h2 className="text-sm font-bold">Market learning</h2><Button variant="outline" size="sm" onClick={learning.refresh}>Check market</Button></div><p role="status" className="text-xs text-muted-foreground">{learning.status}</p><p className="text-xs text-muted-foreground">Completed daily open-to-close prices · replay fit, not guaranteed future accuracy.</p>{learning.saved && <><p className="text-xs text-primary">Weights · CUE number {learning.weights.day.toFixed(2)} · Chinese month {learning.weights.month.toFixed(2)} · Western {learning.weights.sky.toFixed(2)}</p><p className="text-xs text-muted-foreground">Before-open forecasts: {evaluateMarketForecasts(learning.saved.forecasts, learning.saved.bars).hits}/{evaluateMarketForecasts(learning.saved.forecasts, learning.saved.bars).total} settled</p></>}</section>
 
       {/* Category filter */}
       <div className="flex gap-1.5 flex-wrap">
@@ -123,7 +129,7 @@ export default function TradingAIPage() {
           </p>
           <div className="space-y-0.5">
             {filtered.map(e => {
-              const r = calcMarketCode(e, today.getMonth() + 1, today.getDate(), today.getFullYear());
+              const r = calcMarketCode(e, today.getMonth() + 1, today.getDate(), today.getFullYear(), e.symbol === entity.symbol ? learning.weights : undefined);
               return (
                 <button key={e.symbol} onClick={() => setSelSymbol(e.symbol)}
                   className="w-full flex items-center justify-between px-3 py-2 rounded-lg transition-all text-left"
@@ -345,7 +351,7 @@ export default function TradingAIPage() {
             const daysInMonth = new Date(y, m, 0).getDate();
             const monthDays = Array.from({ length: daysInMonth }, (_, i) => {
               const dd = i + 1;
-              const r = calcMarketCode(entity, m, dd, y);
+              const r = calcMarketCode(entity, m, dd, y, learning.weights);
               return { day: dd, ...r };
             });
             const rank = (a: MarketCodeReading) => a.callPct - (a.call === "DOWN" ? 20 : 0);

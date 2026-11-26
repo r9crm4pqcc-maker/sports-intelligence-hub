@@ -116,7 +116,7 @@ export function captureForwardPick(game: ESPNGame, mode: ForwardMode, input: Vot
   const prediction: ForwardPrediction = JSON.parse(JSON.stringify({
     id, gameId: game.id, league: game.league, mode, capturedAt: now.toISOString(),
     kickoff: game.startTime, home: game.homeTeam, away: game.awayTeam,
-    model: sportsWeightSnapshot(), input, output, fullDecode, pick,
+    model: input.weightProfileOverride ? { ...sportsWeightSnapshot(), version: `${sportsWeightSnapshot().version}-personal-${input.personalTrainingThrough || now.toISOString()}`, weights: input.weightProfileOverride, trainingThrough: input.personalTrainingThrough || now.toISOString(), trainingGameIds: [...sportsWeightSnapshot().trainingGameIds, ...(input.personalTrainingGameIds || [])] } : sportsWeightSnapshot(), input, output, fullDecode, pick,
   }));
   if (evaluateForward({ schema: 1, predictions: [prediction], outcomes: [] }).excluded) return false;
   archive.predictions.push(prediction);

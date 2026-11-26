@@ -1,5 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
-import CryptoPage from "@/life/crypto";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/crypto")({
   head: () => ({
@@ -12,5 +11,5 @@ export const Route = createFileRoute("/crypto")({
       { name: "twitter:card", content: "summary" },
     ],
   }),
-  component: () => <CryptoPage />,
+  beforeLoad: () => { throw redirect({ to: "/trading-ai" }); },
 });

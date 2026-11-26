@@ -407,6 +407,8 @@ export interface VoteTeam {
   gematriaPeople?: VotePerson[];
 }
 export interface VoteInput {
+  personalTrainingThrough?: string;
+  personalTrainingGameIds?: string[];
   /** Offline fitting may request raw rule contributions. No results enter this input. */
   weightMode?: "raw";
   /** Isolated evaluator override; production uses the active Learned/Backup profile. */

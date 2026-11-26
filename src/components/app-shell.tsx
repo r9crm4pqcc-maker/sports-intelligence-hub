@@ -11,9 +11,6 @@ const NAV_GROUPS = [
     { label: "Calendar", icon: Sun, href: "/reports" },
     { label: "Personal Cycles", icon: Orbit, href: "/cycles" },
   ] },
-  { title: "4 · Soccer", items: [
-    { label: "Soccer", icon: Trophy, href: "/soccer-ai" },
-  ] },
   { title: "5 · People & Lookup", items: [
     { label: "People & Lookup", icon: Users, href: "/people" },
     { label: "Brands & Places", icon: Layers, href: "/advanced" },
@@ -23,7 +20,6 @@ const NAV_GROUPS = [
     { label: "Sports Prediction", icon: Trophy, href: "/sports-prediction" },
     { label: "Soccer AI", icon: Trophy, href: "/soccer-ai" },
     { label: "Letterology", icon: Type, href: "/letterology" },
-    { label: "Crypto AI", icon: Coins, href: "/crypto" },
     { label: "Trading AI", icon: TrendingUp, href: "/trading-ai" },
   ] },
   { title: "7 · Settings", items: [{ label: "Settings", icon: Settings, href: "/settings" }] },
@@ -45,7 +41,6 @@ export function AppShell({ children }: { children: ReactNode }) {
             </div>
             <div>
               <h1 className="text-sm font-bold tracking-[0.14em] font-display text-foreground">THE SAUCE</h1>
-              <p className="text-[9px] tracking-[0.18em] uppercase text-primary font-semibold">Decode Suite</p>
             </div>
           </Link>
           <button onClick={close} aria-label="Close menu" className="lg:hidden text-muted-foreground hover:text-foreground"><X size={17} /></button>

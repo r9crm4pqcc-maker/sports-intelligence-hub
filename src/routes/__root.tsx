@@ -86,7 +86,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "The Sauce — Decode Suite" },
+      { title: "The Sauce" },
       { name: "description", content: "Numerology, calendar timing and sports prediction tools." },
     ],
     links: [

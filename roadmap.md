@@ -1,5 +1,10 @@
 # Roadmap
 
+- [x] Restore CUE daily compatibility; remove Decode Suite and Crypto navigation
+- [x] Add saved sports winner corrections and background tuning
+- [x] Add market-performance learning to Trading AI using shared CUE compatibility
+- [x] Verify learning flows and research missing sports data — signed-in cross-device corrections and market weights verified; source-backed owner facts pending user approval, unknown full birthdays/starters remain flagged
+
 - [x] Move Virgo health/career to Western Chart and remove misplaced personal content from Friendly matches
 - [x] Save sports people edits and research approvals across devices
 - [x] Improve missing player/coach/owner research and verify signed-in research end to end
