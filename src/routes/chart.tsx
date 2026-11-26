@@ -4,9 +4,9 @@ import ChartPage from "@/life/chart";
 export const Route = createFileRoute("/chart")({
   head: () => ({
     meta: [
-      { title: "Your Chart — Life Code" },
+      { title: "Your Chart — The Sauce" },
       { name: "description", content: "Edit your birth data and read your full numerology chart." },
-      { property: "og:title", content: "Your Chart — Life Code" },
+      { property: "og:title", content: "Your Chart — The Sauce" },
       { property: "og:description", content: "Edit your birth data and read your full numerology chart." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

@@ -4,9 +4,9 @@ import ReportsPage from "@/life/reports";
 export const Route = createFileRoute("/reports")({
   head: () => ({
     meta: [
-      { title: "Calendar — Life Code" },
+      { title: "Calendar — The Sauce" },
       { name: "description", content: "Daily, monthly and yearly calendar compatibility for your Life Path." },
-      { property: "og:title", content: "Calendar — Life Code" },
+      { property: "og:title", content: "Calendar — The Sauce" },
       { property: "og:description", content: "Daily, monthly and yearly calendar compatibility for your Life Path." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

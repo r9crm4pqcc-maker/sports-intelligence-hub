@@ -4,9 +4,9 @@ import PeoplePage from "@/life/people";
 export const Route = createFileRoute("/people")({
   head: () => ({
     meta: [
-      { title: "People & Lookup — Life Code" },
+      { title: "People & Lookup — The Sauce" },
       { name: "description", content: "Compare compatibility with family, friends and anyone by birth date." },
-      { property: "og:title", content: "People & Lookup — Life Code" },
+      { property: "og:title", content: "People & Lookup — The Sauce" },
       { property: "og:description", content: "Compare compatibility with family, friends and anyone by birth date." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

@@ -8,7 +8,12 @@ export type OverridePerson = {
   name: string;
   dob: string; // YYYY-MM-DD
   jersey?: string;
+  verified?: boolean;
 };
+export function updateOverridePerson(person: OverridePerson, patch: Partial<OverridePerson>): OverridePerson {
+  const changed = (patch.name !== undefined && patch.name !== person.name) || (patch.dob !== undefined && patch.dob !== person.dob) || (patch.jersey !== undefined && patch.jersey !== person.jersey);
+  return { ...person, ...patch, ...(changed ? { verified: false } : {}) };
+}
 
 export type GamePeopleOverride = {
   away: OverridePerson[];

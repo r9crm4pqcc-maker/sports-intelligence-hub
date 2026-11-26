@@ -11,9 +11,8 @@ const NAV_GROUPS = [
     { label: "Calendar", icon: Sun, href: "/reports" },
     { label: "Personal Cycles", icon: Orbit, href: "/cycles" },
   ] },
-  { title: "4 · Soccer / Sports", items: [
+  { title: "4 · Soccer", items: [
     { label: "Soccer", icon: Trophy, href: "/soccer-ai" },
-    { label: "Sports Prediction", icon: Trophy, href: "/sports-prediction" },
   ] },
   { title: "5 · People & Lookup", items: [
     { label: "People & Lookup", icon: Users, href: "/people" },
@@ -21,6 +20,8 @@ const NAV_GROUPS = [
     { label: "Sports Database", icon: Layers, href: "/sports-database" },
   ] },
   { title: "6 · Tools", items: [
+    { label: "Sports Prediction", icon: Trophy, href: "/sports-prediction" },
+    { label: "Soccer AI", icon: Trophy, href: "/soccer-ai" },
     { label: "Letterology", icon: Type, href: "/letterology" },
     { label: "Crypto AI", icon: Coins, href: "/crypto" },
     { label: "Trading AI", icon: TrendingUp, href: "/trading-ai" },
@@ -39,11 +40,11 @@ export function AppShell({ children }: { children: ReactNode }) {
       <aside className={`fixed top-0 left-0 h-full w-[16rem] flex flex-col z-50 bg-sidebar border-r border-sidebar-border transition-transform duration-300 lg:translate-x-0 ${open ? "translate-x-0" : "-translate-x-full"} lg:static lg:z-auto`}>
         <div className="px-4 py-4 flex items-center justify-between shrink-0 border-b border-sidebar-border">
           <Link href="/" onClick={close} className="flex items-center gap-3 group">
-            <div className="w-9 h-9 rounded-xl bg-primary text-primary-foreground flex items-center justify-center shadow-[0_0_20px_-4px_rgba(24,220,104,0.65)] transition-transform group-hover:scale-105">
+            <div className="w-9 h-9 rounded-xl bg-primary text-primary-foreground flex items-center justify-center shadow-[var(--shadow-gold)] transition-transform group-hover:scale-105">
               <Zap size={16} className="fill-current" />
             </div>
             <div>
-              <h1 className="text-sm font-bold tracking-[0.14em] font-display text-foreground">LIFE CODE</h1>
+              <h1 className="text-sm font-bold tracking-[0.14em] font-display text-foreground">THE SAUCE</h1>
               <p className="text-[9px] tracking-[0.18em] uppercase text-primary font-semibold">Decode Suite</p>
             </div>
           </Link>
@@ -70,7 +71,6 @@ export function AppShell({ children }: { children: ReactNode }) {
               <span className="text-[10px] font-mono text-muted-foreground">{new Date().toLocaleDateString("en-US", { month: "short", day: "numeric" })}</span>
             </div>
             <div className="mt-2.5 pt-2.5 border-t border-border/80">
-              <p className="text-[11px] font-bold tracking-[0.14em] font-display text-primary">THE SAUCE</p>
               <p className="text-[9.5px] tracking-[0.14em] uppercase text-muted-foreground mt-0.5" data-testid="homage">#HOMAGE GG33 &amp; CUE</p>
             </div>
           </div>
@@ -80,7 +80,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         <header className="lg:hidden flex items-center justify-between px-4 py-3 shrink-0 bg-sidebar/90 backdrop-blur-md border-b border-sidebar-border">
           <div className="flex items-center gap-3">
             <button onClick={() => setOpen(true)} aria-label="Open menu" className="text-muted-foreground hover:text-foreground"><Menu size={20} /></button>
-            <span className="text-sm font-bold tracking-[0.14em] font-display text-foreground">LIFE <span className="text-primary">CODE</span></span>
+            <span className="text-sm font-bold tracking-[0.14em] font-display text-foreground">THE <span className="text-primary">SAUCE</span></span>
           </div>
           <div className="status-dot-active" />
         </header>

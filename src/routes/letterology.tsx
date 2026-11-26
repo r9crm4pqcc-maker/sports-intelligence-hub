@@ -4,9 +4,9 @@ import LetterologyPage from "@/life/letterology";
 export const Route = createFileRoute("/letterology")({
   head: () => ({
     meta: [
-      { title: "Letterology — Life Code" },
+      { title: "Letterology — The Sauce" },
       { name: "description", content: "Decode names and words letter by letter." },
-      { property: "og:title", content: "Letterology — Life Code" },
+      { property: "og:title", content: "Letterology — The Sauce" },
       { property: "og:description", content: "Decode names and words letter by letter." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

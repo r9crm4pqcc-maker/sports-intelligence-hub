@@ -4,6 +4,7 @@ import { Plus, RotateCcw, Trash2 } from "lucide-react";
 import { calcDateEnergy } from "@/lib/numerology";
 import {
   parseDobString,
+  updateOverridePerson,
   type EditableRole,
   type GamePeopleOverride,
   type OverridePerson,
@@ -38,7 +39,7 @@ function TeamSideEditor({
   onChange: (next: OverridePerson[]) => void;
 }) {
   const update = (id: string, patch: Partial<OverridePerson>) => {
-    onChange(people.map((p) => (p.id === id ? { ...p, ...patch } : p)));
+    onChange(people.map((p) => (p.id === id ? updateOverridePerson(p, patch) : p)));
   };
   const addPlayer = () => {
     onChange([
@@ -94,6 +95,7 @@ function TeamSideEditor({
               />
               <UsDateInput
                 value={person.dob}
+                label={`${teamName} ${ROLE_LABEL[person.role]} birthday`}
                 onChange={(dob) => update(person.id, { dob })}
                 className="min-w-0 w-full rounded-md border border-border bg-background px-2 py-1.5 text-xs text-foreground [color-scheme:dark] focus:border-primary focus:outline-none"
               />
@@ -107,6 +109,10 @@ function TeamSideEditor({
                 className="min-w-0 w-full rounded-md border border-border bg-background px-2 py-1.5 text-xs text-center font-mono text-foreground placeholder:text-muted-foreground/60 focus:border-primary focus:outline-none"
               />
             </div>
+            <label className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
+              <input type="checkbox" checked={!!person.verified} disabled={!person.name.trim() || !parseDobString(person.dob)} onChange={e => update(person.id, { verified: e.target.checked })} aria-label={`Verify ${teamName} ${ROLE_LABEL[person.role]}`} />
+              {person.verified ? "✓ Verified by you" : "Not verified"}
+            </label>
           </div>
         ))}
       </div>
@@ -133,7 +139,7 @@ export function GamePeopleEditor({
     <div className="mt-3 rounded-xl border border-primary/35 bg-background/80 p-3 space-y-3">
       <div className="flex items-center justify-between gap-2">
         <div>
-          <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary">Edit QB, Coaches, Owners &amp; Players</p>
+          <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary">Edit People</p>
           <p className="text-[10px] text-muted-foreground">Birthdays · MM/DD/YYYY</p>
         </div>
         {hasCustomOverride && (

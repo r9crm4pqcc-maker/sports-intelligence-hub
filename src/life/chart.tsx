@@ -1,3 +1,5 @@
+import { GemstonePanel } from "@/components/gemstone-panel";
+import { MAIN_LUCKY_NUMBER } from "@/lib/gemstone-timing";
 import { Button } from "@/components/ui/button";
 import SkyPage from "./sky";
 import VedicPage from "./vedic";
@@ -84,7 +86,7 @@ export default function ChartPage() {
       {tab === "western" && <SkyPage />}
       {tab === "vedic" && <VedicPage />}
       {tab === "colors" && <Card><CardTitle>Power colors</CardTitle><p>{chart.colors.primary} · {chart.colors.secondary} · {chart.colors.accent}</p></Card>}
-      {tab === "gems" && <Card><CardTitle>Gemstones</CardTitle><p className="text-sm text-muted-foreground mb-3">Traditional numerology associations, in the existing source order.</p><ol className="list-decimal list-inside space-y-2">{(NUMBER_MEANINGS_FULL[chart.lifePath.compound] ?? chart.meaning)?.crystal?.split(",").map(gem => <li key={gem}>{gem.trim()}</li>)}</ol><p className="text-xs text-muted-foreground mt-3">Start / stop timing: not specified in the existing guidance.</p></Card>}
+      {tab === "gems" && <GemstonePanel personalChart={profile.year === 2009 && profile.month === 9 && profile.day === 8} />}
 
       {tab === "chinese" && <Card>
         <div id="chinese"><CardTitle>Chinese animal</CardTitle></div>
@@ -117,7 +119,7 @@ export default function ChartPage() {
 
       {tab === "lucky" && <Card>
         <div id="lucky"><CardTitle>Lucky numbers</CardTitle></div>
-        <Stat label="Main lucky number" value={String(chart.lucky.includes(28) ? 28 : chart.lucky[0])} /><p className="mt-3 text-sm">Also use: {chart.lucky.filter(n => n !== 28).join(", ")}</p>
+        <Stat label="Main lucky number" value={String(MAIN_LUCKY_NUMBER)} /><p className="mt-3 text-sm">Also use: {chart.lucky.filter(n => n !== MAIN_LUCKY_NUMBER).join(", ")}</p>
       </Card>}
 
       {tab === "name" && <Card>
@@ -319,7 +321,7 @@ export function YearCard({ profile, cycleYear, face }: { profile: BirthProfile; 
           const row = calcPersonalYear(profile.month, profile.day, profile.month, profile.day, y);
           const n = yearFace(row.compound, row.reduced);
           return (
-            <Button key={y} type="button" onClick={() => setPick(i)} className={`rounded-xl border px-2 py-2 text-sm ${i === pick ? "border-primary text-primary" : "border-border text-muted-foreground"}`}>
+            <Button key={y} type="button" onClick={() => setPick(i)} className={`h-auto flex flex-col rounded-lg border px-2 py-2 text-sm text-year-label hover:text-year-label ${i === pick ? "border-primary bg-primary/20 hover:bg-primary/25" : "border-border bg-muted hover:bg-muted/80"}`}>
               <span className="block font-medium">{y}</span>
               <span className="text-xs">{i === 0 ? "" : i === 1 ? "Now · " : ""}Year {n}</span>
             </Button>

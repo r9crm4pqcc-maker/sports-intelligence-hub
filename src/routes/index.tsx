@@ -4,9 +4,9 @@ import HomePage from "@/life/home";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Life Code — Decode Suite" },
+      { title: "The Sauce — Decode Suite" },
       { name: "description", content: "Your daily numerology, date library, calendar, and sports prediction tools in one place." },
-      { property: "og:title", content: "Life Code — Decode Suite" },
+      { property: "og:title", content: "The Sauce — Decode Suite" },
       { property: "og:description", content: "Your daily numerology, date library, calendar, and sports prediction tools in one place." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

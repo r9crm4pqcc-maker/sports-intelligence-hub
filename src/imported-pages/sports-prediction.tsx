@@ -1,4 +1,6 @@
 // @ts-nocheck
+import { Button } from "@/components/ui/button";
+import { ResearchReview } from "@/components/research-review";
 import { useSportsResearch } from "@/lib/use-sports-research";
 import { useState, useMemo, useEffect, useCallback, useRef, memo } from "react";
 import { ArrowLeft, ChevronDown, ChevronUp, RefreshCw, Loader2, AlertCircle, Calendar } from "lucide-react";
@@ -848,7 +850,7 @@ const GameCard = memo(function GameCard({ game, year, month, day, idx, league, l
   const fullPart=(part)=> <FullDecode part={part} title={`${game.awayTeam} @ ${game.homeTeam} · ${month}/${day}/${year}`} data={full} homeName={game.homeTeam} awayName={game.awayTeam} verdict={verdict} editable={!learned} headToHead={{allTime:auto?.allTimeSeries,season:auto?.seasonSeries}} partThreeTitle={isFight ? "FIGHTERS & COACHES" : undefined} />;
 
   return (
-    <div className={`glass-card rounded-2xl overflow-hidden ${qualified ? "border-primary/60 shadow-[0_0_28px_-14px_rgba(24,220,104,0.45)]" : ""}`}>
+    <div className={`glass-card rounded-2xl overflow-hidden ${qualified ? "border-primary/60 shadow-[var(--shadow-gold)]" : ""}`}>
       <div className="p-4 sm:p-5">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
@@ -924,12 +926,12 @@ const GameCard = memo(function GameCard({ game, year, month, day, idx, league, l
           <button type="button" onClick={() => setOpenDecode((v) => !v)} className="rounded-lg py-2 text-[11px] font-bold tracking-[0.12em] bg-muted text-foreground border border-border hover:border-primary/50 transition-colors">
             {openDecode ? "HIDE FULL DECODE" : "SHOW FULL DECODE"}
           </button>
-          <button type="button" onClick={() => setOpenPeopleEditor((v) => !v)} className={`rounded-lg py-2 text-[11px] font-bold tracking-[0.12em] border transition-colors ${openPeopleEditor || peopleOverride ? "bg-primary/15 text-primary border-primary/50" : "bg-muted text-foreground border-border hover:border-primary/50"}`}>
-            {openPeopleEditor ? "CLOSE QB / PEOPLE" : peopleOverride ? "QB / PEOPLE (EDITED)" : "EDIT QB / PEOPLE"}
-          </button>
+          <Button type="button" onClick={() => setOpenPeopleEditor((v) => !v)} className={`rounded-lg py-2 text-[11px] font-bold tracking-[0.12em] border transition-colors ${openPeopleEditor || peopleOverride ? "bg-primary/15 text-primary border-primary/50" : "bg-muted text-foreground border-border hover:border-primary/50"}`}>
+            {openPeopleEditor ? "Close People" : "Edit People"}
+          </Button>
         </div>
         {researched.status && <p className="text-[10px] text-muted-foreground mt-2" role="status">{researched.status}</p>}
-        {!!researched.facts.length && <details className="mt-2 text-xs"><summary className="text-primary cursor-pointer">Research sources</summary>{researched.facts.map(f => <p key={f.id} className="mt-2"><a href={f.sourceUrl} target="_blank" rel="noopener noreferrer" className="text-primary underline">{f.value}</a> · {f.quote}</p>)}</details>}
+        <ResearchReview facts={researched.facts} isVerified={researched.isVerified} onVerify={researched.verify} missingCount={researched.missingCount} />
         {openPeopleEditor && (
           <GamePeopleEditor
             awayTeam={game.awayTeam}

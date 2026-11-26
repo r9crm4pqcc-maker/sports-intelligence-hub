@@ -1,5 +1,9 @@
 # Roadmap
 
+- [x] Rename app The Sauce; orange/black theme; Edit People label; Tools placement; white year text and lucky number 99
+- [x] Require research confirmation, credible sources and verification indicators
+- [x] Apply uploaded gemstone rankings and transit timing; verified saved test progress and person verification on desktop/mobile
+
 - [x] Organize Home, Chart, Dates & Timing, Soccer / Sports, People & Lookup, Tools, Settings
 - [x] Keep daily guidance on Home; add calendar ritual unless explicitly prohibited
 - [x] Autosave sports people and database edits; display/input dates as MM/DD/YYYY

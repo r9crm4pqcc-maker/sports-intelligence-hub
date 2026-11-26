@@ -1,6 +1,16 @@
 import type { VoteInput, VotePerson } from "./vote-decode";
 export type ResearchRequest = { id: string; team: string; role: string; name: string; field: "dob" | "name" | "founded" };
 export type ResearchFact = { id: string; value: string; sourceUrl: string; quote: string };
+export function researchFactKey(fact: ResearchFact): string { return JSON.stringify([fact.id, fact.value, fact.sourceUrl, fact.quote]); }
+export function approvedResearchFacts(facts: ResearchFact[], approved: string[]): ResearchFact[] { return facts.filter(f => approved.includes(researchFactKey(f))); }
+export function sourceCredibility(url: string): "Official / primary" | "Established sports reference" | "Unverified source" {
+  let host: string;
+  try { host = new URL(url).hostname.replace(/^www\./, ""); } catch { return "Unverified source"; }
+  const matches = (domains: string[]) => domains.some(d => host === d || host.endsWith(`.${d}`));
+  if (/\.(edu|gov)$/.test(host) || matches(["nfl.com", "nba.com", "nhl.com", "mlb.com", "ncaa.com", "chicagobears.com", "detroitlions.com", "bengals.com", "steelers.com", "jaguars.com", "chiefs.com", "philadelphiaeagles.com", "49ers.com", "packers.com", "baltimoreravens.com", "buccaneers.com", "buffalobills.com", "seahawks.com", "dallascowboys.com", "patriots.com", "houstontexans.com", "newyorkjets.com", "giants.com", "colts.com", "titansonline.com", "tennesseetitans.com", "raiders.com", "denverbroncos.com", "chargers.com", "miamidolphins.com", "panthers.com", "azcardinals.com", "therams.com", "clevelandbrowns.com", "neworleanssaints.com", "atlantafalcons.com", "vikings.com", "commanders.com"])) return "Official / primary";
+  if (matches(["espn.com", "sports-reference.com", "pro-football-reference.com", "basketball-reference.com", "hockey-reference.com", "baseball-reference.com", "reuters.com", "apnews.com", "bbc.com", "rotowire.com"])) return "Established sports reference";
+  return "Unverified source";
+}
 export function missingSportsFacts(input: VoteInput): ResearchRequest[] {
   if (input.individual) return [];
   const tasks: ResearchRequest[] = [];

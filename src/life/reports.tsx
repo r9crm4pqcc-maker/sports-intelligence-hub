@@ -32,7 +32,7 @@ export default function ReportsPage() {
     if (perm !== "granted") { setPing("Notifications stayed off."); return; }
     localStorage.removeItem("life-ping");
     setPing("On. The daily line fires when you open the app.");
-    try { new Notification("Life Code", { body: day.headline }); } catch { /* ignore */ }
+    try { new Notification("The Sauce", { body: day.headline }); } catch { /* ignore */ }
   }
 
   return (
@@ -151,7 +151,7 @@ function WallSheet({ y, m, yearAnimal, life, sel, onPick }: { y: number; m: numb
             const warn = x.read.tones.includes("fatal") || x.read.tones.includes("challenging");
             const on = x.d === sel;
             return (
-              <button key={x.d} type="button" onClick={() => onPick(x.d)} className="min-w-0 overflow-hidden min-h-24 text-left p-0.5 sm:p-1 border-b border-r border-border/60" style={{ background: on ? "rgba(24,220,104,0.22)" : hot && !x.read.tones.includes("fatal") ? "rgba(24,220,104,0.1)" : "transparent", outline: on ? "1px solid #18DC68" : "none" }}>
+              <button key={x.d} type="button" onClick={() => onPick(x.d)} className={`min-w-0 overflow-hidden min-h-24 text-left p-0.5 sm:p-1 border-b border-r border-border/60 ${on ? "bg-primary/20 outline outline-primary" : hot && !x.read.tones.includes("fatal") ? "bg-primary/10" : "bg-transparent"}`}>
                 <span className="block text-xs sm:text-sm font-black leading-none text-white">{x.d}{warn ? " ▲" : ""}{x.read.tones.includes("soulmate") ? " ★" : ""}</span>
                 <span className="block text-[10px] sm:text-xs font-semibold leading-none mt-0.5 truncate text-primary">{x.read.labelU}</span>
                 <span title={`${calendarRelationLabel(x.relation)} with your Life Path under Universal Day ${x.read.labelU}`} className="block text-[9px] sm:text-xs font-bold leading-tight mt-0.5 text-white/80 break-words">{calendarRelationLabel(x.relation)}</span>

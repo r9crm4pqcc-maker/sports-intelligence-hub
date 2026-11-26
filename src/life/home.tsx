@@ -24,7 +24,7 @@ export function useDailyPing(headline: string, iso: string) {
     if (Notification.permission !== "granted" || localStorage.getItem("life-alerts") !== "on") return;
     if (localStorage.getItem("life-ping") === iso) return;
     localStorage.setItem("life-ping", iso);
-    try { new Notification("Life Code", { body: headline }); } catch { /* browser blocked it */ }
+    try { new Notification("The Sauce", { body: headline }); } catch { /* browser blocked it */ }
   }, [headline, iso]);
 }
 
