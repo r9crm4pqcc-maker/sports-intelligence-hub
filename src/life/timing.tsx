@@ -3,6 +3,7 @@ import { Link } from "@/lib/wouter";
 import { useLife } from "./context";
 import { Card, Page } from "./kit";
 import { GOALS, daysInMonth, openOn, scanMonth, yearWindows, type Goal } from "@/lib/life-studio";
+import { dailySecretsFor } from "@/lib/timing-secrets";
 
 export default function TimingPage() {
   const { profile } = useLife();
@@ -19,6 +20,7 @@ export default function TimingPage() {
   const month = scanMonth(profile, cursor.y, cursor.m, goal);
   const windows = yearWindows(profile, cursor.y, goal);
   const opened = openOn(profile, item, from);
+  const secrets = dailySecretsFor(from.y, from.m, from.d);
 
   return (
     <Page kicker="Goal timing" title="Best days" lede="Pick a goal, scan a month, then look at the strongest windows in the year. Scores are 0–10 from your chart. They are not odds.">
@@ -74,6 +76,49 @@ export default function TimingPage() {
           ))}
           {!opened.hits.length && <li className="text-muted-foreground">None of those dates in the next year.</li>}
         </ul>
+      </Card>
+      <Card>
+        <h2 className="font-display text-lg mb-1">Today&apos;s rituals &amp; timing ({secrets.iso} · Day {secrets.universalDay})</h2>
+        <p className="text-xs text-muted-foreground mb-3">What to do today, what to avoid, and your next exact ritual dates.</p>
+        {secrets.doToday.length > 0 && (
+          <div className="mb-3">
+            <p className="text-xs font-semibold uppercase tracking-wide text-primary mb-1.5">Do today</p>
+            <ul className="space-y-1.5 text-sm">
+              {secrets.doToday.map((s) => (
+                <li key={s.title}><span className="font-medium text-foreground">{s.title}:</span> <span className="text-muted-foreground">{s.detail}</span></li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {secrets.avoidToday.length > 0 && (
+          <div className="mb-3">
+            <p className="text-xs font-semibold uppercase tracking-wide text-destructive mb-1.5">Avoid today</p>
+            <ul className="space-y-1.5 text-sm">
+              {secrets.avoidToday.map((s) => (
+                <li key={s.title}><span className="font-medium text-foreground">{s.title}:</span> <span className="text-muted-foreground">{s.detail}</span></li>
+              ))}
+            </ul>
+          </div>
+        )}
+        <div className="mb-3">
+          <p className="text-xs font-semibold uppercase tracking-wide text-primary mb-1.5">Next exact dates</p>
+          <ul className="space-y-1.5 text-sm">
+            {secrets.upcoming.map((u) => (
+              <li key={u.action} className="flex flex-wrap justify-between gap-2">
+                <Link href={`/day/${u.iso}`} className="font-medium text-primary hover:underline">{u.label}</Link>
+                <span className="text-muted-foreground flex-1">{u.action}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1.5">Everyday rules</p>
+          <ul className="space-y-1.5 text-sm">
+            {secrets.alwaysOn.map((s) => (
+              <li key={s.title}><span className="font-medium text-foreground">{s.title}:</span> <span className="text-muted-foreground">{s.detail}</span></li>
+            ))}
+          </ul>
+        </div>
       </Card>
     </Page>
   );
