@@ -42,12 +42,13 @@ export default function ChartPage() {
       <nav className="flex flex-wrap gap-2 pb-1 text-xs" role="tablist" aria-label="Chart categories">
         {tabs.map((t) => (
           <Button
+            variant="outline"
             key={t.id}
             type="button"
             role="tab"
             aria-selected={tab === t.id}
             onClick={() => setTab(t.id)}
-            className={`shrink-0 rounded-full border px-3.5 py-1.5 font-medium transition-colors ${tab === t.id ? "bg-primary/15 border-primary text-primary" : "border-border bg-card text-muted-foreground hover:text-foreground hover:border-primary/40"}`}
+            className={`shrink-0 rounded-full border px-3.5 py-1.5 font-medium transition-colors ${tab === t.id ? "bg-primary/15 border-primary text-primary hover:bg-primary/15 hover:text-primary" : "border-border bg-card text-muted-foreground hover:bg-muted hover:text-foreground hover:border-primary/40"}`}
           >
             {t.label}
           </Button>

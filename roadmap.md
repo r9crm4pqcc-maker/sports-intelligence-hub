@@ -1,11 +1,12 @@
 # Roadmap
 
-- [ ] Organize Home, Chart, Dates & Timing, Soccer / Sports, People & Lookup, Tools, Settings
-- [ ] Keep daily guidance on Home; add calendar ritual unless explicitly prohibited
-- [ ] Autosave sports people and database edits; display/input dates as MM/DD/YYYY
-- [ ] Automatically research missing sports facts from cited web sources without overwriting manual corrections
-- [ ] Add requested chart, soccer, settings capabilities using verified existing rules; hold gemstone timing pending source rules
-- [ ] Test central flows, inspect app health, and commit changes
+- [x] Organize Home, Chart, Dates & Timing, Soccer / Sports, People & Lookup, Tools, Settings
+- [x] Keep daily guidance on Home; add calendar ritual unless explicitly prohibited
+- [x] Autosave sports people and database edits; display/input dates as MM/DD/YYYY
+- [x] Automatically research missing sports facts from cited web sources without overwriting manual corrections
+- [x] Add requested chart, soccer, settings capabilities using verified existing rules; use existing gemstone associations; do not invent unspecified start/stop dates
+- [x] Test sports autosave, dates, categories, rituals and mobile layout; 37 sports tests passed
+- [ ] Verify signed-in research and Cloud gear tracking end to end — blocked because temporary test sign-in was declined
 
 - [x] Import Life Code / Sports AI app from zip
 - [x] Story Reading on every game, own hit record

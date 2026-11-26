@@ -8,6 +8,13 @@
       "when": 1795716606973,
       "tag": "0000_sports_research_cache",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1795717209856,
+      "tag": "0001_soccer_gear_tracker",
+      "breakpoints": true
     }
   ]
 }

@@ -156,7 +156,7 @@ function WallSheet({ y, m, yearAnimal, life, sel, onPick }: { y: number; m: numb
                 <span className="block text-[10px] sm:text-xs font-semibold leading-none mt-0.5 truncate text-primary">{x.read.labelU}</span>
                 <span title={`${calendarRelationLabel(x.relation)} with your Life Path under Universal Day ${x.read.labelU}`} className="block text-[9px] sm:text-xs font-bold leading-tight mt-0.5 text-white/80 break-words">{calendarRelationLabel(x.relation)}</span>
                 {x.animal !== days[0].animal && x.d === turn?.d && <span className="block text-[10px] font-bold truncate text-primary">{x.animal}</span>}
-                <span className="block text-[10px] leading-tight mt-0.5 text-white/70 break-words line-clamp-2">{cellLine(x.read.tones)}</span>
+                <span className="block text-[10px] leading-tight mt-0.5 text-white/70 break-words line-clamp-2">{x.read.tones.map(t => LIST_LABEL[t]).join(" · ")}</span>
               </button>
             );
           })}

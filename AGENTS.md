@@ -40,3 +40,11 @@ use the editor.
 - Uploaded knowledge documents are applied as app logic, not stored as article pages. Why: the user wants the knowledge active, not a reading library.
 - Planet transits come from astronomy-engine in src/lib/transits.ts (sidereal = tropical − Lahiri ayanamsa) and are display-only in Game Energies and the Western/Vedic "sky right now" cards. Why: adds the requested transits without moving scored picks.
 - src/lib/nfl-season-2026.json holds exact app-captured NFL inputs with the user's own picks as labels; NFL weights are fitted against it. Why: the user's picks are the ground truth for NFL reading.
+
+## Category and research architecture
+- Keep Chart category panels in the imported chart page and date-cycle content in its own route; legacy chart URLs remain available so saved links do not break.
+- Sports dates remain ISO internally; use the shared US date conversion and input components at presentation boundaries so date parsing and scoring stay timezone-independent.
+- Missing sports facts are researched through an authenticated server function, cached per user in Cloud with RLS, and applied only to empty fields before manual overrides so human corrections always win.
+- Research jobs run serially in the browser while the match board remains interactive; each fact requires a searched source URL and verbatim evidence, and unknown historical starters are never guessed.
+- Soccer gear activation is stored per signed-in user in Cloud; use Suspense Query reads and RLS-scoped browser mutations to prevent access to another user's entries.
+- Keep gemstone associations in existing numerology source order and show unspecified wear timing as unspecified; no calculated schedule exists to reuse.

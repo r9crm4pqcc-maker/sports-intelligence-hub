@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      soccer_gear: {
+        Row: {
+          activation_date: string
+          active: boolean
+          id: string
+          name: string
+          user_id: string
+        }
+        Insert: {
+          activation_date: string
+          active?: boolean
+          id?: string
+          name: string
+          user_id: string
+        }
+        Update: {
+          activation_date?: string
+          active?: boolean
+          id?: string
+          name?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       sports_research_cache: {
         Row: {
           checked_at: string

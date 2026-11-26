@@ -83,18 +83,19 @@ function TeamSideEditor({
                 )}
               </div>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-[1fr_135px_58px] gap-1.5">
+            <div className="grid grid-cols-[minmax(0,1fr)_48px] gap-1.5">
               <input
                 type="text"
                 value={person.name}
                 onChange={(e) => update(person.id, { name: e.target.value })}
                 placeholder={`${ROLE_LABEL[person.role]} name`}
-                className="rounded-md border border-border bg-background px-2.5 py-1.5 text-xs text-foreground placeholder:text-muted-foreground/60 focus:border-primary focus:outline-none"
+                aria-label={`${teamName} ${ROLE_LABEL[person.role]} name`}
+                className="col-span-2 min-w-0 w-full rounded-md border border-border bg-background px-2.5 py-1.5 text-xs text-foreground placeholder:text-muted-foreground/60 focus:border-primary focus:outline-none"
               />
               <UsDateInput
                 value={person.dob}
                 onChange={(dob) => update(person.id, { dob })}
-                className="rounded-md border border-border bg-background px-2 py-1.5 text-xs text-foreground [color-scheme:dark] focus:border-primary focus:outline-none"
+                className="min-w-0 w-full rounded-md border border-border bg-background px-2 py-1.5 text-xs text-foreground [color-scheme:dark] focus:border-primary focus:outline-none"
               />
               <input
                 type="text"
@@ -103,7 +104,7 @@ function TeamSideEditor({
                 onChange={(e) => update(person.id, { jersey: e.target.value.replace(/[^0-9]/g, "") })}
                 placeholder="#"
                 title="Jersey number"
-                className="rounded-md border border-border bg-background px-2 py-1.5 text-xs text-center font-mono text-foreground placeholder:text-muted-foreground/60 focus:border-primary focus:outline-none"
+                className="min-w-0 w-full rounded-md border border-border bg-background px-2 py-1.5 text-xs text-center font-mono text-foreground placeholder:text-muted-foreground/60 focus:border-primary focus:outline-none"
               />
             </div>
           </div>

@@ -1,3 +1,4 @@
+import { calendarRitualsFor } from "@/lib/calendar-rituals";
 import { colorsForDay } from "@/lib/colorology";
 import { dailySecretsFor } from "@/lib/timing-secrets";
 import { buildCalendarDayFit } from "./day";
@@ -45,7 +46,8 @@ export default function HomePage() {
       <section className="border-t border-border pt-5"><h2 className="font-display text-lg">Power Colors to Wear Today</h2><div className="flex flex-wrap gap-2 mt-3">{colors?.best.map(c => <Tag key={c.name} tone="good">{c.name}</Tag>)}</div></section>
       <section className="border-t border-border pt-5"><h2 className="font-display text-lg">Best Number to Use Today</h2><p className="text-4xl font-display font-bold text-primary mt-3">{read.personal.reduced}</p></section>
       <section className="border-t border-border pt-5"><h2 className="font-display text-lg">What to Avoid Today</h2><ul className="mt-3 space-y-2 text-sm text-muted-foreground">{[...read.avoids, ...(secrets?.avoidToday.map(s => `${s.title}: ${s.detail}`) ?? [])].map(x => <li key={x}>{x}</li>)}</ul></section>
-      {!!secrets?.doToday.length && <section className="border-t border-border pt-5"><h2 className="font-display text-lg">Today’s Rituals & Timing</h2><ul className="mt-3 space-y-2 text-sm">{secrets.doToday.map(s => <li key={s.title}><span className="text-primary">{s.title}</span> · {s.detail}</li>)}</ul></section>}
+      {!!secrets?.doToday.length && <section className="border-t border-border pt-5"><h2 className="font-display text-lg">Today’s Rituals & Timing</h2><ul className="mt-3 space-y-2 text-sm">{calendarRitualsFor(read.y, read.m, read.d).allowed.map(s => <li key={s.title}><span className="text-primary">{s.title}</span> · {s.detail}</li>)}</ul></section>}
+      <details className="border-t border-border pt-5"><summary className="cursor-pointer font-display text-lg">Everyday rules</summary><ul className="mt-3 space-y-2 text-sm text-muted-foreground">{secrets?.alwaysOn.map(s => <li key={s.title}>{s.title} · {s.detail}</li>)}</ul></details>
     </>}
   </div>;
 }

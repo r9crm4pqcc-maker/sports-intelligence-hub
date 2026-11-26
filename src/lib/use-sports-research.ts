@@ -8,6 +8,8 @@ import type { VoteInput } from "./vote-decode";
 let queue: Promise<unknown> = Promise.resolve();
 export function useSportsResearch(input: VoteInput, ready: boolean) {
   const research = useServerFn(researchSportsFacts);
+  const [sessionRevision, setSessionRevision] = useState(0);
+  useEffect(() => { const { data } = supabase.auth.onAuthStateChange(() => setSessionRevision(v => v + 1)); return () => data.subscription.unsubscribe(); }, []);
   const [result, setResult] = useState<{ key: string; facts: ResearchFact[]; status: string }>({ key: "", facts: [], status: "" });
   const tasks = useMemo(() => missingSportsFacts(input), [input]);
   const date = `${input.year}-${String(input.month).padStart(2, "0")}-${String(input.day).padStart(2, "0")}`;
@@ -28,7 +30,7 @@ export function useSportsResearch(input: VoteInput, ready: boolean) {
       });
     });
     return () => { alive = false; };
-  }, [key, ready]);
+  }, [key, ready, sessionRevision]);
   const facts = result.key === key ? result.facts : [];
   return { input: useMemo(() => applyResearchedFacts(input, facts), [input, facts]), facts, status: result.key === key ? result.status : "" };
 }
