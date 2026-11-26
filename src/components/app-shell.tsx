@@ -7,7 +7,7 @@ const NAV_GROUPS = [
   { title: "2 · Chart", items: [{ label: "Your Chart", icon: UserRound, href: "/chart" }] },
   { title: "3 · Dates & Timing", items: [
     { label: "Date Library", icon: CalendarDays, href: "/dates" },
-    { label: "Goal Timing", icon: Target, href: "/timing" },
+    { label: "Date Types", icon: Target, href: "/timing" },
     { label: "Calendar", icon: Sun, href: "/reports" },
     { label: "Personal Cycles", icon: Orbit, href: "/cycles" },
   ] },

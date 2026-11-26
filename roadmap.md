@@ -1,5 +1,7 @@
 # Roadmap
 
+- [x] Remove item-opening and lucky-number timing sections; replace goal selection with general date types and verify
+
 - [x] Rename app The Sauce; orange/black theme; Edit People label; Tools placement; white year text and lucky number 99
 - [x] Require research confirmation, credible sources and verification indicators
 - [x] Apply uploaded gemstone rankings and transit timing; verified saved test progress and person verification on desktop/mobile

@@ -48,3 +48,4 @@ use the editor.
 - Research jobs run serially in the browser while the match board remains interactive; each fact requires a searched source URL and verbatim evidence, and unknown historical starters are never guessed.
 - Soccer gear activation is stored per signed-in user in Cloud; use Suspense Query reads and RLS-scoped browser mutations to prevent access to another user's entries.
 - Gemstone timing uses a pure rules module and live Lahiri transits with the documented natal rising; never infer test success or clearance from a date alone. Why: source-defined restrictions and user-recorded test progress remain explicit.
+- Date-type presentation derives from readDay tones through a shared formatter, without goal scoring. Why: the timing calendar and today's labels must use the same existing classification rules.
