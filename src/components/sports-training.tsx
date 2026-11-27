@@ -12,7 +12,7 @@ export function SportsTrainingProvider({ children }: { children: ReactNode }) {
   const pending = useRef(new Set<string>());
   const running = useRef(false);
   latest.current = document;
-  const start = (state: SportsFeedback, league: string) => {
+  const start = (state: SportsFeedback, league: string, targetId?: string) => {
     if (running.current) { pending.current.add(league); return; }
     running.current = true;
     const next = new Worker(new URL("../lib/sports-tuning.worker.ts", import.meta.url), { type: "module" }); worker.current = next;
@@ -23,11 +23,11 @@ export function SportsTrainingProvider({ children }: { children: ReactNode }) {
       if (waiting) { pending.current.delete(waiting); start(updated, waiting); }
     };
     next.onerror = () => { setTraining("Correction saved. Tuning paused; select the pick again to retry."); next.terminate(); worker.current = null; running.current = false; };
-    next.postMessage({ state, league });
+    next.postMessage({ state, league, targetId });
   };
   useEffect(() => () => worker.current?.terminate(), []);
   useEffect(() => { if (document.ready && !running.current && document.value.pending?.length) { const league = document.value.pending[0]; if (league) start(document.value, league); } }, [document.ready, document.value.pending]);
-  const save = (row: WinnerCorrection) => { const state = { ...document.value, corrections: replaceCorrection(document.value.corrections, row), pending: [...new Set([...(document.value.pending || []), row.league])] }; document.change(state); start(state, row.league); };
+  const save = (row: WinnerCorrection) => { const state = { ...document.value, corrections: replaceCorrection(document.value.corrections, row), pending: [...new Set([...(document.value.pending || []), row.league])] }; document.change(state); start(state, row.league, row.id); };
   const remove = (id: string, league: string) => { const remaining = document.value.corrections.filter(r => r.id !== id); const leagues = { ...document.value.leagues }; if (!remaining.some(r => r.league === league)) delete leagues[league]; const state = { ...document.value, leagues, corrections: remaining, pending: [...new Set([...(document.value.pending || []), league])] }; document.change(state); start(state, league); };
   return <TrainingContext.Provider value={{ state: document.value, save, remove, ready: document.ready, status: training || document.value.report || document.status, saveStatus: document.status }}>{children}</TrainingContext.Provider>;
 }
