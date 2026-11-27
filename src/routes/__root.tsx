@@ -11,8 +11,8 @@ import {
 import { useEffect, type ReactNode } from "react";
 import { ClientOnly } from "@tanstack/react-router";
 import { AppShell } from "@/components/app-shell";
-import { AuthGate } from "@/components/auth-gate";
 import { LifeProvider } from "@/life/context";
+import { supabase } from "@/integrations/supabase/client";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -127,18 +127,24 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
+  useEffect(() => {
+    const { data } = supabase.auth.onAuthStateChange((event) => {
+      if (event !== "SIGNED_IN" && event !== "SIGNED_OUT" && event !== "USER_UPDATED") return;
+      if (event !== "SIGNED_OUT") void queryClient.invalidateQueries();
+    });
+    return () => data.subscription.unsubscribe();
+  }, [queryClient]);
+
   return (
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <TooltipProvider>
         <ClientOnly fallback={<div className="grid min-h-screen place-items-center text-sm text-muted-foreground">Loading…</div>}>
-          <AuthGate>
-            <LifeProvider>
-              <AppShell>
-                <Outlet />
-              </AppShell>
-            </LifeProvider>
-          </AuthGate>
+          <LifeProvider>
+            <AppShell>
+              <Outlet />
+            </AppShell>
+          </LifeProvider>
         </ClientOnly>
         <Toaster />
       </TooltipProvider>
